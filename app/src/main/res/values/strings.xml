@@ -271,7 +271,7 @@ This writes images to bootloader partitions. Review model, slot, and file names 
     <string name="layout_icon_down">▼</string>
     <string name="layout_terminal_hidden">⚙ terminal hidden</string>
     <string name="layout_prompt">➤</string>
-    <string name="layout_help">?  Help</string>
+    <string name="layout_help">\?  Help</string>
     <string name="layout_command_hint">adb shell / adb shell getprop / fastboot getvar all</string>
     <string name="layout_xiaomi_rom_title">XIAOMI FASTBOOT ROM</string>
     <string name="layout_xiaomi_rom_intro">Import a Xiaomi/Redmi/POCO Fastboot ROM .zip/.tgz/.tar, analyze flash_all scripts, block lock scenarios, verify product, then flash the safe plan.</string>
