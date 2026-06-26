@@ -1,0 +1,17 @@
+NekoFlash 2.5.6 build attempt
+
+Static validation:
+  python3 scripts/check_project.py
+  result: OK
+
+XML validation:
+  activity_main.xml, values/strings.xml, values-ru/strings.xml parsed successfully with Python XML parser.
+
+APK build:
+  Not executed in this container as a reliable Android SDK/Gradle network environment is not available.
+  Build locally with:
+    ./gradlew assembleDebug
+
+Version:
+  versionCode 54
+  versionName 2.5.6-nekoflash
