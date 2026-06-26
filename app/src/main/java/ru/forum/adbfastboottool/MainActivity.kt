@@ -67,7 +67,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var importFileLauncher: ActivityResultLauncher<Intent>
 
     // Управление вкладками вынесено в TabController (декомпозиция MainActivity).
-    private val tabController = TabController(this)
+    // by lazy — чтобы не обращаться к this в инициализаторе поля (leaking this).
+    private val tabController by lazy { TabController(this) }
     // Совместимость: остальной код читает currentTab/selectedWindow как раньше.
     private val currentTab: String get() = tabController.commandContext
     private val selectedWindow: String get() = tabController.selectedWindow
