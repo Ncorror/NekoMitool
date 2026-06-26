@@ -1,1 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ADB protocol (class=255, subclass=66, protocol=1) -->
+    <usb-device class="255" subclass="66" protocol="1" />
+    <!-- Fastboot protocol (class=255, subclass=66, protocol=3) -->
+    <usb-device class="255" subclass="66" protocol="3" />
 
+    <!--
+        Дополнительные VID производителей (десятичные значения).
+        Hex → Dec: 0x2717=10007 Xiaomi, 0x18D1=6353 Google,
+                   0x04E8=1256  Samsung, 0x22D9=8921 OPPO,
+                   0x12D1=4817  Huawei,  0x19D2=6610 ZTE
+    -->
+    <usb-device vendor-id="10007" /> <!-- Xiaomi   0x2717 -->
+    <usb-device vendor-id="6353"  /> <!-- Google   0x18D1 -->
+    <usb-device vendor-id="1256"  /> <!-- Samsung  0x04E8 -->
+    <usb-device vendor-id="8921"  /> <!-- OPPO     0x22D9 -->
+    <usb-device vendor-id="4817"  /> <!-- Huawei   0x12D1 -->
+    <usb-device vendor-id="6610"  /> <!-- ZTE      0x19D2 -->
+</resources>
