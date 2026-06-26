@@ -271,7 +271,7 @@ ADB:
     <string name="layout_icon_down">▼</string>
     <string name="layout_terminal_hidden">⚙ терминал скрыт</string>
     <string name="layout_prompt">➤</string>
-    <string name="layout_help">?  Справка</string>
+    <string name="layout_help">\?  Справка</string>
     <string name="layout_command_hint">adb shell / adb shell getprop / fastboot getvar all</string>
     <string name="layout_xiaomi_rom_title">XIAOMI FASTBOOT ROM</string>
     <string name="layout_xiaomi_rom_intro">Импортируйте Fastboot ROM Xiaomi/Redmi/POCO .zip/.tgz/.tar: приложение анализирует flash_all, блокирует lock-сценарии, сверяет product и строит безопасный план прошивки.</string>
