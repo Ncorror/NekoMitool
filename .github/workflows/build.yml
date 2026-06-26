@@ -52,10 +52,12 @@ jobs:
       - name: Print Gradle version
         run: ./gradlew --version
 
-      - name: Build Debug and Release APK
-        run: ./gradlew assembleDebug assembleRelease --no-daemon --stacktrace 2>&1 | tee build_log.txt
+      - name: Build Debug APK
+        run: |
+          set -o pipefail
+          ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee build_log.txt
 
-      - name: Show compile errors if build failed
+      - name: Show build errors if failed
         if: failure()
         run: |
           echo "==================== ОШИБКИ СБОРКИ ===================="
@@ -64,10 +66,18 @@ jobs:
 
       - name: Prepare forum artifacts
         run: |
+          set -e
           VERSION_NAME=$(grep -E 'versionName "' app/build.gradle | sed -E 's/.*versionName "([^"]+)".*/\1/')
+          echo "Версия: $VERSION_NAME"
+          echo "=== Поиск собранных APK ==="
+          find app/build/outputs -name "*.apk" -print || true
+          APK=$(find app/build/outputs/apk/debug -name "*.apk" | head -1)
+          if [ -z "$APK" ]; then
+            echo "❌ Debug APK не найден — сборка не создала артефакт"
+            exit 1
+          fi
           mkdir -p forum-build
-          cp app/build/outputs/apk/debug/app-debug.apk "forum-build/NekoFlash-${VERSION_NAME}-debug.apk"
-          if [ -f app/build/outputs/apk/release/app-release-unsigned.apk ]; then cp app/build/outputs/apk/release/app-release-unsigned.apk "forum-build/NekoFlash-${VERSION_NAME}-release-unsigned.apk"; fi
+          cp "$APK" "forum-build/NekoMiFlash-${VERSION_NAME}-debug.apk"
           cd forum-build
           sha256sum *.apk > checksums-sha256.txt
           ls -lh
