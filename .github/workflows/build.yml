@@ -52,8 +52,15 @@ jobs:
       - name: Print Gradle version
         run: ./gradlew --version
 
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug assembleRelease --no-daemon --stacktrace
+      - name: Build Debug and Release APK
+        run: ./gradlew assembleDebug assembleRelease --no-daemon --stacktrace 2>&1 | tee build_log.txt
+
+      - name: Show compile errors if build failed
+        if: failure()
+        run: |
+          echo "==================== ОШИБКИ СБОРКИ ===================="
+          grep -E "^e: |error:|FAILED|What went wrong|Unresolved|Caused by|resource .* not found" build_log.txt | head -50 || echo "Маркеры ошибок не найдены — смотрите полный лог выше"
+          echo "======================================================"
 
       - name: Prepare forum artifacts
         run: |
