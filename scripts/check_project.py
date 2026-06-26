@@ -63,6 +63,30 @@ def check_string_parity() -> None:
         print(f"strings parity: OK ({len(base)} keys)")
 
 
+def check_string_values_aapt_safe() -> None:
+    """
+    Значение <string>, начинающееся с '?' или '@', AAPT трактует как ссылку
+    на ресурс/атрибут (?attr/..., @id/...) и падает с 'resource not found'.
+    Такие значения должны быть экранированы '\\?' / '\\@'.
+    """
+    import re
+    bad = []
+    for rel in ("app/src/main/res/values/strings.xml", "app/src/main/res/values-ru/strings.xml"):
+        path = ROOT / rel
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        # значение строки: <string name="x">VALUE</string>
+        for m in re.finditer(r'<string name="(\w+)"[^>]*>(.*?)</string>', text, re.DOTALL):
+            name, value = m.group(1), m.group(2)
+            if value[:1] in ("?", "@"):
+                bad.append(f"{rel}: {name} starts with '{value[:1]}' (escape as '\\{value[:1]}')")
+    if bad:
+        fail("AAPT-unsafe string values:\n  " + "\n  ".join(bad))
+    else:
+        print("string values AAPT-safe: OK")
+
+
 def check_versions() -> None:
     build = (ROOT / "app/build.gradle").read_text(encoding="utf-8")
     code = re.search(r"versionCode\s+(\d+)", build)
@@ -234,6 +258,7 @@ def check_xiaomi_fastboot_rom_hooks() -> None:
 def main() -> int:
     check_xml_files()
     check_string_parity()
+    check_string_values_aapt_safe()
     check_versions()
     check_gradle_wrapper()
     check_workflows()
