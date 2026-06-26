@@ -1,1 +1,48 @@
-.
+name: Установка Gradle Wrapper
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-wrapper:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Gradle 8.4
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.4
+
+      - name: Generate official Gradle Wrapper
+        run: gradle wrapper --gradle-version 8.4 --distribution-type bin
+
+      - name: Verify wrapper files
+        run: |
+          test -f gradle/wrapper/gradle-wrapper.jar
+          test -f gradle/wrapper/gradle-wrapper.properties
+          chmod +x gradlew
+          ./gradlew --version
+
+      - name: Commit wrapper files
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add gradle/wrapper/gradle-wrapper.jar gradle/wrapper/gradle-wrapper.properties gradlew gradlew.bat
+          if git diff --cached --quiet; then
+            echo "No wrapper changes to commit"
+          else
+            git commit -m "Add official Gradle Wrapper"
+            git push
+          fi
