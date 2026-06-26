@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Кастомный селектор чекбокса для онбординга.
+    - disabled (разрешения не выданы) → серый, нельзя нажать
+    - checked → оранжевый с галочкой
+    - default → пустая рамка
+    Используется как android:button у CheckBox.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false" android:drawable="@drawable/checkbox_disabled" />
+    <item android:state_checked="true"  android:drawable="@drawable/checkbox_checked" />
+    <item android:drawable="@drawable/checkbox_unchecked" />
+</selector>
