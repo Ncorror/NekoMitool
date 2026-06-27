@@ -33,17 +33,20 @@ class FlashOperationService : Service() {
         val title = intent?.getStringExtra(EXTRA_TITLE) ?: getString(R.string.app_name)
         val text  = intent?.getStringExtra(EXTRA_TEXT)  ?: getString(R.string.service_default_text)
 
-        // FIX #5: защита от двойного startForeground() — вызываем только при первом старте,
-        // при обновлении уведомления обновляем через NotificationManager напрямую.
         if (!isForegroundStarted) {
             try {
                 startForeground(NOTIFICATION_ID, buildNotification(title, text))
                 isForegroundStarted = true
             } catch (e: Exception) {
-                // Android 14: ForegroundServiceStartNotAllowedException если Activity в фоне
-                // при старте. Логируем в системный журнал — пользователю это не показываем,
-                // USB-операция продолжится без уведомления.
-                android.util.Log.w("FlashOpService", "startForeground failed: ${e.message}")
+                // КРИТИЧНО: если startForeground() не удался, мы ОБЯЗАНЫ немедленно
+                // остановить сервис. Иначе система через ~5 сек убьёт всё приложение
+                // с ForegroundServiceDidNotStartInTimeException, потому что сервис был
+                // запущен через startForegroundService(), но так и не показал уведомление.
+                // USB-операция при этом продолжится в DeviceViewModel (она не зависит
+                // от этого сервиса напрямую — он лишь держит процесс живым).
+                android.util.Log.w("FlashOpService", "startForeground failed, stopping self: ${e.message}")
+                stopSelf()
+                return START_NOT_STICKY
             }
         } else {
             // Уже запущен — просто обновляем уведомление
