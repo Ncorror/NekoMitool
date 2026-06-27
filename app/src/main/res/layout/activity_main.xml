@@ -11,14 +11,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0C10"
+    android:background="#0B0B0D"
     android:orientation="vertical">
 
     <!-- ═══ ХЕДЕР: статус + имя + кнопки ════════════════════════════════ -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:background="#111520"
+        android:background="#141417"
         android:gravity="center_vertical"
         android:paddingHorizontal="12dp"
         android:orientation="horizontal">
@@ -32,7 +32,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/layout_status_no_device"
-            android:textColor="#555E6E"
+            android:textColor="#55555E"
             android:textSize="13sp"
             android:textStyle="bold"
             android:fontFamily="monospace" />
@@ -49,7 +49,7 @@
             android:text="@string/layout_icon_scan"
             android:textSize="16sp"
             android:layout_marginStart="6dp"
-            app:backgroundTint="#1A2030"
+            app:backgroundTint="#26262B"
             app:cornerRadius="10dp" />
 
         <!-- EXPERT режим -->
@@ -64,7 +64,7 @@
             android:text="@string/layout_icon_expert"
             android:textSize="16sp"
             android:layout_marginStart="6dp"
-            app:backgroundTint="#1A2030"
+            app:backgroundTint="#26262B"
             app:cornerRadius="10dp" />
 
         <!-- СТОП (красная) — всегда видна -->
@@ -79,7 +79,7 @@
             android:text="@string/layout_icon_cancel"
             android:textSize="16sp"
             android:layout_marginStart="6dp"
-            app:backgroundTint="#3D1515"
+            app:backgroundTint="#2E1A1A"
             app:cornerRadius="10dp" />
     </LinearLayout>
 
@@ -87,7 +87,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#0D1018"
+        android:background="#141417"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
@@ -101,11 +101,11 @@
             android:minHeight="0dp"
             android:text="@string/layout_icon_home"
             android:textSize="11sp"
-            android:textColor="#F97316"
-            app:backgroundTint="#1A1E28"
+            android:textColor="#E8E0D4"
+            app:backgroundTint="#1C1C21"
             app:cornerRadius="0dp" />
 
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#1C2230" />
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#26262B" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tabFastboot"
@@ -118,11 +118,11 @@
             android:minHeight="0dp"
             android:text="@string/layout_icon_fastboot"
             android:textSize="11sp"
-            android:textColor="#94A3B8"
-            app:backgroundTint="#111520"
+            android:textColor="#8A8A93"
+            app:backgroundTint="#141417"
             app:cornerRadius="0dp" />
 
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#1C2230" />
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#26262B" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tabAdb"
@@ -135,11 +135,11 @@
             android:minHeight="0dp"
             android:text="@string/layout_icon_adb"
             android:textSize="11sp"
-            android:textColor="#94A3B8"
-            app:backgroundTint="#111520"
+            android:textColor="#8A8A93"
+            app:backgroundTint="#141417"
             app:cornerRadius="0dp" />
 
-        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#1C2230" />
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#26262B" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tabFiles"
@@ -152,8 +152,8 @@
             android:minHeight="0dp"
             android:text="@string/layout_icon_files"
             android:textSize="11sp"
-            android:textColor="#94A3B8"
-            app:backgroundTint="#111520"
+            android:textColor="#8A8A93"
+            app:backgroundTint="#141417"
             app:cornerRadius="0dp" />
     </LinearLayout>
 
@@ -180,9 +180,9 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#1E2840"
+                    app:strokeColor="#26262B"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -195,7 +195,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_device_title"
-                            android:textColor="#F97316"
+                            android:textColor="#E8E0D4"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -207,7 +207,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="@string/layout_mode_empty"
-                            android:textColor="#E2E8F0"
+                            android:textColor="#F5F5F7"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             android:fontFamily="monospace" />
@@ -218,7 +218,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/layout_model_empty"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="12sp"
                             android:fontFamily="monospace" />
 
@@ -235,7 +235,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/layout_slot_empty"
-                                android:textColor="#94A3B8"
+                                android:textColor="#8A8A93"
                                 android:textSize="12sp"
                                 android:fontFamily="monospace" />
 
@@ -245,7 +245,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/layout_bl_empty"
-                                android:textColor="#94A3B8"
+                                android:textColor="#8A8A93"
                                 android:textSize="12sp"
                                 android:fontFamily="monospace" />
                         </LinearLayout>
@@ -256,7 +256,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/layout_max_dl_empty"
-                            android:textColor="#64748B"
+                            android:textColor="#8A8A93"
                             android:textSize="11sp"
                             android:fontFamily="monospace" />
 
@@ -266,7 +266,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="@string/device_workspace_placeholder"
-                            android:textColor="#475569"
+                            android:textColor="#55555E"
                             android:textSize="11sp"
                             android:fontFamily="monospace" />
 
@@ -286,9 +286,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_refresh"
                                 android:textAllCaps="false"
-                                android:textColor="#FFFFFF"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#1E3A5F"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -301,10 +301,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_getvar_all"
                                 android:textAllCaps="false"
-                                android:textColor="#CBD5E1"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#161E2C"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="8dp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -315,9 +315,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#334155"
+                    app:strokeColor="#55555E"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -330,7 +330,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_safety_profile_title"
-                            android:textColor="#F97316"
+                            android:textColor="#E8E0D4"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -342,7 +342,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="@string/safety_profile_standard_desc"
-                            android:textColor="#CBD5E1"
+                            android:textColor="#F5F5F7"
                             android:textSize="11sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -362,10 +362,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/safety_profile_novice"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#1A2540"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -378,10 +378,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/safety_profile_standard"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#164E63"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -394,10 +394,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/safety_profile_expert"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#7C2D12"
+                                app:backgroundTint="#2E1A1A"
                                 app:cornerRadius="8dp" />
                         </LinearLayout>
 
@@ -410,10 +410,10 @@
                             android:insetBottom="0dp"
                             android:text="@string/safety_high_risk_locked"
                             android:textAllCaps="false"
-                            android:textColor="#FDE68A"
+                            android:textColor="#D4B483"
                             android:textSize="11sp"
                             android:fontFamily="monospace"
-                            app:backgroundTint="#3D1515"
+                            app:backgroundTint="#2E1A1A"
                             app:cornerRadius="8dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -423,9 +423,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#3A2A13"
+                    app:strokeColor="#1C1C21"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -438,7 +438,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_classic_dashboard_title"
-                            android:textColor="#F97316"
+                            android:textColor="#E8E0D4"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -449,7 +449,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="@string/layout_classic_dashboard_intro"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="11sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -458,10 +458,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:background="#0B1018"
+                            android:background="#08080A"
                             android:padding="9dp"
                             android:text="@string/layout_classic_dashboard_route_hint"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="11sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -475,64 +475,64 @@
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnTileXiaomiRom"
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="76dp"
                                 android:layout_weight="1"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_tile_xiaomi_rom"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:textStyle="bold"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#1A2540"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp"
                                 app:icon="@drawable/ic_nf_rom"
-                                app:iconGravity="textStart"
+                                app:iconGravity="top"
                                 app:iconPadding="6dp"
-                                app:iconTint="#F97316" />
+                                app:iconTint="#E8E0D4" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnTileRecovery"
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="76dp"
                                 android:layout_weight="1"
                                 android:layout_marginStart="6dp"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_tile_recovery"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:textStyle="bold"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#1A2540"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp"
                                 app:icon="@drawable/ic_nf_recovery"
-                                app:iconGravity="textStart"
+                                app:iconGravity="top"
                                 app:iconPadding="6dp"
-                                app:iconTint="#F97316" />
+                                app:iconTint="#E8E0D4" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnTileMagisk"
                                 android:layout_width="0dp"
-                                android:layout_height="64dp"
+                                android:layout_height="76dp"
                                 android:layout_weight="1"
                                 android:layout_marginStart="6dp"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_tile_magisk"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:textStyle="bold"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#1A2540"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp"
                                 app:icon="@drawable/ic_nf_magisk"
-                                app:iconGravity="textStart"
+                                app:iconGravity="top"
                                 app:iconPadding="6dp"
-                                app:iconTint="#F97316" />
+                                app:iconTint="#E8E0D4" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -544,61 +544,61 @@
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnTileFiles"
                                 android:layout_width="0dp"
-                                android:layout_height="58dp"
+                                android:layout_height="76dp"
                                 android:layout_weight="1"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_tile_files"
                                 android:textAllCaps="false"
-                                android:textColor="#CBD5E1"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#161E2C"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="10dp"
                                 app:icon="@drawable/ic_nf_files"
-                                app:iconGravity="textStart"
+                                app:iconGravity="top"
                                 app:iconPadding="6dp"
-                                app:iconTint="#F97316" />
+                                app:iconTint="#E8E0D4" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnTileConsole"
                                 android:layout_width="0dp"
-                                android:layout_height="58dp"
+                                android:layout_height="76dp"
                                 android:layout_weight="1"
                                 android:layout_marginStart="6dp"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_tile_console"
                                 android:textAllCaps="false"
-                                android:textColor="#CBD5E1"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#161E2C"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="10dp"
                                 app:icon="@drawable/ic_nf_terminal"
-                                app:iconGravity="textStart"
+                                app:iconGravity="top"
                                 app:iconPadding="6dp"
-                                app:iconTint="#F97316" />
+                                app:iconTint="#E8E0D4" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnTileReports"
                                 android:layout_width="0dp"
-                                android:layout_height="58dp"
+                                android:layout_height="76dp"
                                 android:layout_weight="1"
                                 android:layout_marginStart="6dp"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_tile_reports"
                                 android:textAllCaps="false"
-                                android:textColor="#CBD5E1"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#161E2C"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="10dp"
                                 app:icon="@drawable/ic_nf_reports"
-                                app:iconGravity="textStart"
+                                app:iconGravity="top"
                                 app:iconPadding="6dp"
-                                app:iconTint="#F97316" />
+                                app:iconTint="#E8E0D4" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -608,9 +608,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#3A2A13"
+                    app:strokeColor="#1C1C21"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -623,7 +623,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_operation_center_title"
-                            android:textColor="#F97316"
+                            android:textColor="#E8E0D4"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -634,10 +634,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:background="#0B1018"
+                            android:background="#08080A"
                             android:padding="8dp"
                             android:text="@string/layout_operation_center_idle"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="12sp"
                             android:fontFamily="monospace" />
 
@@ -647,7 +647,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="@string/layout_operation_center_last_event_empty"
-                            android:textColor="#64748B"
+                            android:textColor="#8A8A93"
                             android:textSize="11sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -657,10 +657,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:background="#0B1018"
+                            android:background="#08080A"
                             android:padding="8dp"
                             android:text="@string/layout_operation_steps_empty"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="10sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -680,10 +680,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_operation_console"
                                 android:textAllCaps="false"
-                                android:textColor="#CBD5E1"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#161E2C"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -696,10 +696,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_operation_reports"
                                 android:textAllCaps="false"
-                                android:textColor="#CBD5E1"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#161E2C"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -712,10 +712,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_operation_log"
                                 android:textAllCaps="false"
-                                android:textColor="#CBD5E1"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#161E2C"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="8dp" />
                         </LinearLayout>
 
@@ -734,10 +734,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_operation_forum_zip"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#1A2540"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -750,10 +750,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_operation_cancel"
                                 android:textAllCaps="false"
-                                android:textColor="#FCA5A5"
+                                android:textColor="#D88B8B"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#3D1515"
+                                app:backgroundTint="#2E1A1A"
                                 app:cornerRadius="8dp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -764,9 +764,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#1E2840"
+                    app:strokeColor="#26262B"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -779,7 +779,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_reboot_title"
-                            android:textColor="#F97316"
+                            android:textColor="#E8E0D4"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -800,9 +800,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_reboot_system"
                                 android:textAllCaps="false"
-                                android:textColor="#CBD5E1"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#161E2C"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -815,9 +815,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_reboot_bootloader"
                                 android:textAllCaps="false"
-                                android:textColor="#CBD5E1"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#161E2C"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -830,9 +830,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_reboot_recovery"
                                 android:textAllCaps="false"
-                                android:textColor="#CBD5E1"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#161E2C"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="8dp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -854,9 +854,9 @@
                         android:insetBottom="0dp"
                         android:text="@string/layout_service_button"
                         android:textAllCaps="false"
-                        android:textColor="#64748B"
+                        android:textColor="#8A8A93"
                         android:textSize="12sp"
-                        app:backgroundTint="#0E1320"
+                        app:backgroundTint="#141417"
                         app:cornerRadius="8dp" />
 
                     <com.google.android.material.button.MaterialButton
@@ -869,9 +869,9 @@
                         android:insetBottom="0dp"
                         android:text="@string/language_short"
                         android:textAllCaps="false"
-                        android:textColor="#64748B"
+                        android:textColor="#8A8A93"
                         android:textSize="12sp"
-                        app:backgroundTint="#0E1320"
+                        app:backgroundTint="#141417"
                         app:cornerRadius="8dp" />
                 </LinearLayout>
 
@@ -896,9 +896,9 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#1E2840"
+                    app:strokeColor="#26262B"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -911,7 +911,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_flash_partition_title"
-                            android:textColor="#F97316"
+                            android:textColor="#E8E0D4"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -933,11 +933,11 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_partition_boot"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="13sp"
                                 android:textStyle="bold"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#1A2540"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -950,10 +950,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_partition_init_boot"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#1A2540"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -966,10 +966,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_partition_recovery"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#1A2540"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
                         </LinearLayout>
 
@@ -988,10 +988,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_partition_vendor_boot"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#1A2540"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -1004,10 +1004,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_partition_dtbo"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="13sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#1A2540"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
 
                             <!-- Заглушка для выравнивания -->
@@ -1025,9 +1025,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#3A2A13"
+                    app:strokeColor="#1C1C21"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -1040,7 +1040,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_xiaomi_rom_title"
-                            android:textColor="#F97316"
+                            android:textColor="#E8E0D4"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -1051,7 +1051,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="@string/layout_xiaomi_rom_intro"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="11sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -1060,10 +1060,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:background="#0B1018"
+                            android:background="#08080A"
                             android:padding="9dp"
                             android:text="@string/layout_xiaomi_rom_steps_hint"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="11sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -1077,9 +1077,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_xiaomi_rom_analyze"
                             android:textAllCaps="false"
-                            android:textColor="#E2E8F0"
+                            android:textColor="#F5F5F7"
                             android:textSize="12sp"
-                            app:backgroundTint="#1A2540"
+                            app:backgroundTint="#1C1C21"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -1091,10 +1091,10 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_xiaomi_rom_wizard"
                             android:textAllCaps="false"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#F5F5F7"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            app:backgroundTint="#14532D"
+                            app:backgroundTint="#2E3A2E"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -1106,9 +1106,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_xiaomi_rom_resume"
                             android:textAllCaps="false"
-                            android:textColor="#E2E8F0"
+                            android:textColor="#F5F5F7"
                             android:textSize="12sp"
-                            app:backgroundTint="#3A2A13"
+                            app:backgroundTint="#1C1C21"
                             app:cornerRadius="10dp" />
 
                         <LinearLayout
@@ -1126,10 +1126,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_xiaomi_rom_flash_clean"
                                 android:textAllCaps="false"
-                                android:textColor="#FFFFFF"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
-                                app:backgroundTint="#7C2D12"
+                                app:backgroundTint="#2E1A1A"
                                 app:cornerRadius="10dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -1142,9 +1142,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_xiaomi_rom_flash_save_data"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#164E63"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -1155,9 +1155,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#1E3A8A"
+                    app:strokeColor="#1C1C21"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -1170,7 +1170,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_recovery_tools_title"
-                            android:textColor="#60A5FA"
+                            android:textColor="#9BA3AF"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -1181,7 +1181,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="@string/layout_recovery_tools_intro"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="11sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -1190,10 +1190,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:background="#0B1018"
+                            android:background="#08080A"
                             android:padding="9dp"
                             android:text="@string/layout_recovery_tools_steps_hint"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="11sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -1213,9 +1213,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_recovery_check_slot"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#1A2540"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -1228,9 +1228,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_recovery_switch_slot"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#1A2540"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
                         </LinearLayout>
 
@@ -1249,9 +1249,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_recovery_reboot_fastbootd"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#164E63"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -1264,9 +1264,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_recovery_reboot_bootloader"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#164E63"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
                         </LinearLayout>
 
@@ -1285,9 +1285,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_recovery_flash_boot"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#1E40AF"
+                                app:backgroundTint="#3A3833"
                                 app:cornerRadius="10dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -1300,9 +1300,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_recovery_flash_init_boot"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#1E40AF"
+                                app:backgroundTint="#3A3833"
                                 app:cornerRadius="10dp" />
                         </LinearLayout>
 
@@ -1321,9 +1321,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_recovery_flash_vendor_boot"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#1E40AF"
+                                app:backgroundTint="#3A3833"
                                 app:cornerRadius="10dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -1336,9 +1336,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_recovery_flash_vbmeta"
                                 android:textAllCaps="false"
-                                android:textColor="#FDE68A"
+                                android:textColor="#D4B483"
                                 android:textSize="12sp"
-                                app:backgroundTint="#713F12"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -1349,9 +1349,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#581C87"
+                    app:strokeColor="#1C1C21"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -1364,7 +1364,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_magisk_helper_title"
-                            android:textColor="#C084FC"
+                            android:textColor="#B0A8C8"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -1375,7 +1375,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="@string/layout_magisk_helper_intro"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="11sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -1384,10 +1384,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:background="#0B1018"
+                            android:background="#08080A"
                             android:padding="9dp"
                             android:text="@string/layout_magisk_helper_steps_hint"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="11sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -1401,10 +1401,10 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_magisk_auto_flash"
                             android:textAllCaps="false"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#F5F5F7"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            app:backgroundTint="#6B21A8"
+                            app:backgroundTint="#3A3833"
                             app:cornerRadius="10dp" />
 
                         <LinearLayout
@@ -1422,9 +1422,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_magisk_flash_boot"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#3B0764"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -1437,9 +1437,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_magisk_flash_init_boot"
                                 android:textAllCaps="false"
-                                android:textColor="#E2E8F0"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
-                                app:backgroundTint="#3B0764"
+                                app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
                         </LinearLayout>
 
@@ -1452,9 +1452,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_magisk_guide"
                             android:textAllCaps="false"
-                            android:textColor="#E2E8F0"
+                            android:textColor="#F5F5F7"
                             android:textSize="12sp"
-                            app:backgroundTint="#1A2540"
+                            app:backgroundTint="#1C1C21"
                             app:cornerRadius="10dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -1464,9 +1464,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#1E2840"
+                    app:strokeColor="#26262B"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -1479,7 +1479,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_flash_queue_title"
-                            android:textColor="#F97316"
+                            android:textColor="#E8E0D4"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -1501,10 +1501,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_add_boot"
                                 android:textAllCaps="false"
-                                android:textColor="#94A3B8"
+                                android:textColor="#8A8A93"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#0F1620"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -1517,10 +1517,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_add_init_boot"
                                 android:textAllCaps="false"
-                                android:textColor="#94A3B8"
+                                android:textColor="#8A8A93"
                                 android:textSize="10sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#0F1620"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -1533,10 +1533,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_add_recovery"
                                 android:textAllCaps="false"
-                                android:textColor="#94A3B8"
+                                android:textColor="#8A8A93"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#0F1620"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="8dp" />
                         </LinearLayout>
 
@@ -1555,10 +1555,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_add_vendor_boot"
                                 android:textAllCaps="false"
-                                android:textColor="#94A3B8"
+                                android:textColor="#8A8A93"
                                 android:textSize="10sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#0F1620"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -1571,10 +1571,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_add_dtbo"
                                 android:textAllCaps="false"
-                                android:textColor="#94A3B8"
+                                android:textColor="#8A8A93"
                                 android:textSize="11sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#0F1620"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="8dp" />
 
                             <!-- Распорка для выравнивания сетки 3×2 (раздел vbmeta удалён) -->
@@ -1591,10 +1591,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:background="#0B1018"
+                            android:background="#08080A"
                             android:padding="8dp"
                             android:text="@string/layout_queue_empty_short"
-                            android:textColor="#475569"
+                            android:textColor="#55555E"
                             android:textSize="11sp"
                             android:fontFamily="monospace" />
 
@@ -1614,10 +1614,10 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_start_queue"
                                 android:textAllCaps="false"
-                                android:textColor="#FFFFFF"
+                                android:textColor="#F5F5F7"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
-                                app:backgroundTint="#C2410C"
+                                app:backgroundTint="#3A3833"
                                 app:cornerRadius="10dp" />
 
                             <com.google.android.material.button.MaterialButton
@@ -1630,9 +1630,9 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_clear"
                                 android:textAllCaps="false"
-                                android:textColor="#64748B"
+                                android:textColor="#8A8A93"
                                 android:textSize="12sp"
-                                app:backgroundTint="#0F1620"
+                                app:backgroundTint="#141417"
                                 app:cornerRadius="10dp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -1657,9 +1657,9 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#1E2840"
+                    app:strokeColor="#26262B"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -1672,7 +1672,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_adb_sideload_title"
-                            android:textColor="#F97316"
+                            android:textColor="#E8E0D4"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -1683,7 +1683,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="@string/layout_sideload_recovery_hint"
-                            android:textColor="#475569"
+                            android:textColor="#55555E"
                             android:textSize="12sp"
                             android:fontFamily="monospace" />
 
@@ -1696,20 +1696,20 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_choose_zip_sideload"
                             android:textAllCaps="false"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#F5F5F7"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            app:backgroundTint="#0F6B3A"
+                            app:backgroundTint="#2E3A2E"
                             app:cornerRadius="12dp" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:background="#071510"
+                            android:background="#08080A"
                             android:padding="10dp"
                             android:text="@string/layout_sideload_hash_note"
-                            android:textColor="#22863A"
+                            android:textColor="#7FB88A"
                             android:textSize="11sp"
                             android:fontFamily="monospace" />
                     </LinearLayout>
@@ -1734,9 +1734,9 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#1E2840"
+                    app:strokeColor="#26262B"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -1749,7 +1749,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_files_title"
-                            android:textColor="#F97316"
+                            android:textColor="#E8E0D4"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -1759,10 +1759,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:background="#0B1018"
+                            android:background="#08080A"
                             android:padding="9dp"
                             android:text="@string/layout_files_steps_hint"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="11sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -1776,10 +1776,10 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_import_file"
                             android:textAllCaps="false"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#F5F5F7"
                             android:textSize="13sp"
                             android:textStyle="bold"
-                            app:backgroundTint="#1E3A5F"
+                            app:backgroundTint="#1C1C21"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -1791,9 +1791,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_analyze_image"
                             android:textAllCaps="false"
-                            android:textColor="#CBD5E1"
+                            android:textColor="#F5F5F7"
                             android:textSize="13sp"
-                            app:backgroundTint="#161E2C"
+                            app:backgroundTint="#141417"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -1805,9 +1805,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_copy_workspace_path"
                             android:textAllCaps="false"
-                            android:textColor="#64748B"
+                            android:textColor="#8A8A93"
                             android:textSize="12sp"
-                            app:backgroundTint="#0E1320"
+                            app:backgroundTint="#141417"
                             app:cornerRadius="10dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -1831,9 +1831,9 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#111825"
+                    app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#1E2840"
+                    app:strokeColor="#26262B"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -1846,7 +1846,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/layout_service_title_caps"
-                            android:textColor="#F97316"
+                            android:textColor="#E8E0D4"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
@@ -1856,10 +1856,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:background="#0B1018"
+                            android:background="#08080A"
                             android:padding="9dp"
                             android:text="@string/layout_reports_steps_hint"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="11sp"
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
@@ -1873,9 +1873,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_refresh_device_data"
                             android:textAllCaps="false"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#F5F5F7"
                             android:textSize="13sp"
-                            app:backgroundTint="#1E3A5F"
+                            app:backgroundTint="#1C1C21"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -1887,10 +1887,10 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_self_test"
                             android:textAllCaps="false"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#F5F5F7"
                             android:textSize="13sp"
                             android:textStyle="bold"
-                            app:backgroundTint="#14532D"
+                            app:backgroundTint="#2E3A2E"
                             app:cornerRadius="10dp" />
 
                         <TextView
@@ -1898,12 +1898,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:background="#0B1220"
+                            android:background="#08080A"
                             android:fontFamily="monospace"
                             android:lineSpacingExtra="2dp"
                             android:padding="10dp"
                             android:text="@string/layout_self_test_not_run"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textIsSelectable="true"
                             android:textSize="12sp" />
 
@@ -1916,10 +1916,10 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_self_test_report_txt"
                             android:textAllCaps="false"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#F5F5F7"
                             android:textSize="13sp"
                             android:textStyle="bold"
-                            app:backgroundTint="#166534"
+                            app:backgroundTint="#2E3A2E"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -1931,10 +1931,10 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_self_test_forum_zip"
                             android:textAllCaps="false"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#F5F5F7"
                             android:textSize="13sp"
                             android:textStyle="bold"
-                            app:backgroundTint="#15803D"
+                            app:backgroundTint="#2E3A2E"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -1946,10 +1946,10 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_open_reports"
                             android:textAllCaps="false"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#F5F5F7"
                             android:textSize="13sp"
                             android:textStyle="bold"
-                            app:backgroundTint="#1D4ED8"
+                            app:backgroundTint="#3A3833"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -1961,9 +1961,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/button_auto_off"
                             android:textAllCaps="false"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="12sp"
-                            app:backgroundTint="#161E2C"
+                            app:backgroundTint="#141417"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -1975,9 +1975,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/button_debug_off"
                             android:textAllCaps="false"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="12sp"
-                            app:backgroundTint="#161E2C"
+                            app:backgroundTint="#141417"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -1989,9 +1989,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_battery_optimization"
                             android:textAllCaps="false"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="12sp"
-                            app:backgroundTint="#161E2C"
+                            app:backgroundTint="#141417"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -2003,9 +2003,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_permissions"
                             android:textAllCaps="false"
-                            android:textColor="#94A3B8"
+                            android:textColor="#8A8A93"
                             android:textSize="12sp"
-                            app:backgroundTint="#161E2C"
+                            app:backgroundTint="#141417"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -2017,10 +2017,10 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_forum_report_zip"
                             android:textAllCaps="false"
-                            android:textColor="#FFFFFF"
+                            android:textColor="#F5F5F7"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            app:backgroundTint="#7C3200"
+                            app:backgroundTint="#3A3833"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -2032,9 +2032,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_share_log_file"
                             android:textAllCaps="false"
-                            android:textColor="#64748B"
+                            android:textColor="#8A8A93"
                             android:textSize="12sp"
-                            app:backgroundTint="#0E1320"
+                            app:backgroundTint="#141417"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -2046,9 +2046,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_clear_log"
                             android:textAllCaps="false"
-                            android:textColor="#64748B"
+                            android:textColor="#8A8A93"
                             android:textSize="12sp"
-                            app:backgroundTint="#0E1320"
+                            app:backgroundTint="#141417"
                             app:cornerRadius="10dp" />
 
                         <com.google.android.material.button.MaterialButton
@@ -2060,9 +2060,9 @@
                             android:insetBottom="0dp"
                             android:text="@string/layout_help"
                             android:textAllCaps="false"
-                            android:textColor="#64748B"
+                            android:textColor="#8A8A93"
                             android:textSize="12sp"
-                            app:backgroundTint="#0E1320"
+                            app:backgroundTint="#141417"
                             app:cornerRadius="10dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -2095,38 +2095,63 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#1A2030" />
+        android:background="#26262B" />
 
-    <!-- ═══ ЛОГ — ПОСТОЯННЫЙ, НИЖНЯЯ ТРЕТЬ ══════════════════════════════ -->
+    <!-- ═══ ЛОГ — СВОРАЧИВАЕМАЯ КОНСОЛЬ ══════════════════════════════ -->
     <LinearLayout
+        android:id="@+id/consolePanel"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.85"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#080B10">
+        android:background="#08080A">
 
-        <!-- Заголовок лога: CONSOLE + кнопки ввода -->
+        <!-- Заголовок CONSOLE — кликабельный, сворачивает/разворачивает -->
         <LinearLayout
+            android:id="@+id/consoleHeader"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:background="#0D1018"
+            android:layout_height="36dp"
+            android:background="#141417"
             android:gravity="center_vertical"
             android:paddingHorizontal="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true">
+
+            <!-- Стрелка состояния (▼ развёрнуто / ▲ свёрнуто) -->
+            <TextView
+                android:id="@+id/tvConsoleToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/layout_icon_down"
+                android:textColor="#E8E0D4"
+                android:textSize="11sp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="monospace" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/layout_console_title"
-                android:textColor="#F97316"
+                android:textColor="#E8E0D4"
                 android:textSize="10sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.15"
                 android:fontFamily="monospace" />
 
-            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+            <!-- Превью последней строки (видно когда свёрнуто) -->
+            <TextView
+                android:id="@+id/tvConsolePeek"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="#55555E"
+                android:textSize="10sp"
+                android:fontFamily="monospace" />
 
-            <!-- Кнопки истории -->
+            <!-- Кнопки истории (видны когда развёрнуто) -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnHistoryUp"
                 android:layout_width="28dp"
@@ -2137,8 +2162,8 @@
                 android:minHeight="0dp"
                 android:text="@string/layout_icon_up"
                 android:textSize="10sp"
-                android:textColor="#475569"
-                app:backgroundTint="#0E1320"
+                android:textColor="#55555E"
+                app:backgroundTint="#141417"
                 app:cornerRadius="6dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -2151,86 +2176,82 @@
                 android:minHeight="0dp"
                 android:text="@string/layout_icon_down"
                 android:textSize="10sp"
-                android:textColor="#475569"
+                android:textColor="#55555E"
                 android:layout_marginStart="4dp"
-                app:backgroundTint="#0E1320"
+                app:backgroundTint="#141417"
                 app:cornerRadius="6dp" />
-
-            <!-- Expert-toggle подпись -->
-            <TextView
-                android:id="@+id/tvExpertModeHint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@string/layout_terminal_hidden"
-                android:textColor="#2D3748"
-                android:textSize="10sp"
-                android:fontFamily="monospace"
-                android:visibility="visible" />
         </LinearLayout>
 
-        <!-- Лог -->
-        <ScrollView
-            android:id="@+id/scrollViewLog"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fillViewport="true"
-            android:paddingHorizontal="10dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="2dp">
-
-            <TextView
-                android:id="@+id/tvLog"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:lineSpacingExtra="2dp"
-                android:textColor="#1A7A4A"
-                android:textSize="11sp" />
-        </ScrollView>
-
-        <!-- Строка ввода команды (показывается только в Expert) -->
+        <!-- Тело консоли: лог + ввод (скрывается при сворачивании) -->
         <LinearLayout
-            android:id="@+id/consoleInputBar"
+            android:id="@+id/consoleBody"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="#0D1018"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="8dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:layout_height="260dp"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/etCommand"
-                android:layout_width="0dp"
-                android:layout_height="32dp"
+            <!-- Лог -->
+            <ScrollView
+                android:id="@+id/scrollViewLog"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="#111825"
-                android:fontFamily="monospace"
-                android:hint="@string/layout_command_hint"
-                android:textColorHint="#2D3748"
-                android:textColor="#E2E8F0"
-                android:textSize="12sp"
-                android:imeOptions="actionSend"
-                android:inputType="textNoSuggestions"
-                android:maxLines="1"
-                android:paddingHorizontal="10dp" />
+                android:fillViewport="true"
+                android:paddingHorizontal="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="2dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSend"
-                android:layout_width="48dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="6dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:text="@string/layout_prompt"
-                android:textColor="#0A0C10"
-                android:textSize="16sp"
-                app:backgroundTint="#F97316"
-                app:cornerRadius="8dp" />
+                <TextView
+                    android:id="@+id/tvLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:lineSpacingExtra="1dp"
+                    android:textColor="#7FB88A"
+                    android:textSize="10sp" />
+            </ScrollView>
+
+            <!-- Строка ввода команды (показывается только в Expert) -->
+            <LinearLayout
+                android:id="@+id/consoleInputBar"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="#141417"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="8dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/etCommand"
+                    android:layout_width="0dp"
+                    android:layout_height="32dp"
+                    android:layout_weight="1"
+                    android:background="#141417"
+                    android:fontFamily="monospace"
+                    android:hint="@string/layout_command_hint"
+                    android:textColorHint="#55555E"
+                    android:textColor="#F5F5F7"
+                    android:textSize="12sp"
+                    android:imeOptions="actionSend"
+                    android:inputType="textNoSuggestions"
+                    android:maxLines="1"
+                    android:paddingHorizontal="10dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSend"
+                    android:layout_width="48dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="6dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:text="@string/layout_prompt"
+                    android:textColor="#0B0B0D"
+                    android:textSize="16sp"
+                    app:backgroundTint="#E8E0D4"
+                    app:cornerRadius="8dp" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

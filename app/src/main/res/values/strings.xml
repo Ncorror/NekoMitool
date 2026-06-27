@@ -269,7 +269,6 @@ This writes images to bootloader partitions. Review model, slot, and file names 
     <string name="layout_console_title">CONSOLE</string>
     <string name="layout_icon_up">▲</string>
     <string name="layout_icon_down">▼</string>
-    <string name="layout_terminal_hidden">⚙ terminal hidden</string>
     <string name="layout_prompt">➤</string>
     <string name="layout_help">\?  Help</string>
     <string name="layout_command_hint">adb shell / adb shell getprop / fastboot getvar all</string>
@@ -354,12 +353,12 @@ Android 13+ devices often use init_boot. Older devices usually use boot.</string
     <!-- 2.5.1 Classic Recovery UI -->
     <string name="layout_classic_dashboard_title">CLASSIC RECOVERY DASHBOARD</string>
     <string name="layout_classic_dashboard_intro">Large recovery-style tiles for the main workflows. Device state stays visible above; the console stays visible below.</string>
-    <string name="layout_tile_xiaomi_rom">Xiaomi ROM\nWizard</string>
-    <string name="layout_tile_recovery">Recovery\nBootloop</string>
-    <string name="layout_tile_magisk">Magisk\nRoot</string>
-    <string name="layout_tile_files">Files\nImport</string>
-    <string name="layout_tile_console">Terminal\nConsole</string>
-    <string name="layout_tile_reports">Reports\nService</string>
+    <string name="layout_tile_xiaomi_rom">🐱 Xiaomi ROM\nWizard</string>
+    <string name="layout_tile_recovery">🩹 Recovery\nBootloop</string>
+    <string name="layout_tile_magisk">✨ Magisk\nRoot</string>
+    <string name="layout_tile_files">📂 Files\nImport</string>
+    <string name="layout_tile_console">😼 Terminal\nConsole</string>
+    <string name="layout_tile_reports">🐾 Reports\nService</string>
     <string name="classic_recovery_ui_log">Classic Recovery dashboard opened</string>
 
     <!-- 2.5.2 Operation Center UI -->
@@ -386,7 +385,7 @@ Android 13+ devices often use init_boot. Older devices usually use boot.</string
     <string name="safety_profile_expert">Expert</string>
     <string name="safety_profile_novice_desc">NOVICE: diagnostics, reports, file import and analysis only. Flash/write actions are hidden or blocked.</string>
     <string name="safety_profile_standard_desc">STANDARD: guided flash actions are available; terminal stays locked and high-risk write actions are blocked.</string>
-    <string name="safety_profile_expert_desc">EXPERT: full terminal is visible. High-risk actions still require a separate typed unlock.</string>
+    <string name="safety_profile_expert_desc">EXPERT: full terminal visible.</string>
     <string name="safety_profile_expert_unlocked_desc">EXPERT + HIGH RISK: full terminal and high-risk write actions are enabled. Typed confirmations are still required.</string>
     <string name="safety_header_novice">SAFE</string>
     <string name="safety_header_standard">STD</string>
@@ -405,7 +404,7 @@ Android 13+ devices often use init_boot. Older devices usually use boot.</string
     <string name="safety_high_risk_blocked_message">Action blocked: %1$s. Current profile: %2$s. Switch to Expert and unlock high-risk actions to continue.</string>
     <string name="safety_action_blocked_log">Safety profile blocked action: %1$s</string>
 
-    <string name="layout_classic_dashboard_route_hint">Route map: use Xiaomi ROM for full Fastboot packages, Recovery for bootloop repairs, Magisk for patched boot images, Files for imports, Reports for safe diagnostics.</string>
+    <string name="layout_classic_dashboard_route_hint">Xiaomi ROM · Recovery · Magisk · Files · Reports</string>
     <string name="layout_xiaomi_rom_steps_hint">Workflow: import ROM → analyze scripts → check device/product/ARB → choose clean all or save data → review dry-run plan → flash with step queue and reports.</string>
     <string name="layout_recovery_tools_steps_hint">Workflow: check current slot first → use reboot fastbootd/bootloader when needed → flash only the stock image that matches the active slot and product.</string>
     <string name="layout_magisk_helper_steps_hint">Workflow: patch boot/init_boot in Magisk first → import patched image → let NekoMiFlash detect the target partition → confirm partition before flash.</string>

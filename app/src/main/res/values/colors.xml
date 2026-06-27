@@ -1,4 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#1A1A1A</color>
+
+    <!-- ═══ NekoMiFlash — монохромная neko-палитра ═══ -->
+    <!-- Фоны -->
+    <color name="bg_base">#0B0B0D</color>        <!-- глубокий чёрный фон -->
+    <color name="bg_card">#141417</color>        <!-- карточки/секции -->
+    <color name="bg_elevated">#1C1C21</color>    <!-- приподнятые элементы -->
+    <color name="bg_console">#08080A</color>     <!-- фон консоли -->
+    <color name="bg_input">#1C1C21</color>       <!-- поля ввода -->
+
+    <!-- Границы -->
+    <color name="stroke">#26262B</color>
+    <color name="stroke_soft">#1C1C21</color>
+
+    <!-- Текст -->
+    <color name="text_primary">#F5F5F7</color>   <!-- почти белый -->
+    <color name="text_secondary">#8A8A93</color> <!-- серый -->
+    <color name="text_muted">#55555E</color>     <!-- приглушённый -->
+
+    <!-- Акцент (тёплый кремовый, как мех на иконке) -->
+    <color name="accent">#E8E0D4</color>
+    <color name="accent_dim">#3A3833</color>     <!-- фон акцентных кнопок -->
+    <color name="on_accent">#0B0B0D</color>      <!-- текст на акценте -->
+
+    <!-- Логи: спокойные, контрастные, не режущие -->
+    <color name="log_info">#9BA3AF</color>       <!-- 🐾 серо-голубой -->
+    <color name="log_success">#7FB88A</color>    <!-- ✨ мягкий зелёный -->
+    <color name="log_warning">#D4B483</color>    <!-- 💤 тёплый песочный -->
+    <color name="log_error">#D88B8B</color>      <!-- 🙀 приглушённый красный -->
+    <color name="log_command">#B0A8C8</color>    <!-- 😸 лавандовый для команд -->
+    <color name="log_system">#55555E</color>     <!-- [система] -->
+
+    <!-- Статусы устройства -->
+    <color name="status_none">#55555E</color>
+    <color name="status_connecting">#D4B483</color>
+    <color name="status_active">#7FB88A</color>
+    <color name="status_error">#D88B8B</color>
+
+    <!-- Опасное действие -->
+    <color name="danger">#D88B8B</color>
+    <color name="danger_dim">#2E1A1A</color>
 </resources>

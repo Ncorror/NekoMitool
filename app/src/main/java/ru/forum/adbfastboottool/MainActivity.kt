@@ -54,6 +54,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvLog: TextView
     private lateinit var etCommand: EditText
     private lateinit var scrollViewLog: ScrollView
+    // Состояние сворачиваемой консоли (по умолчанию свёрнута).
+    private var consoleExpanded = false
     private lateinit var tvStatus: TextView
     private lateinit var tvSelfTestStatus: TextView
     private lateinit var tvOperationCenterStatus: TextView
@@ -151,6 +153,7 @@ class MainActivity : AppCompatActivity() {
         tvLog = findViewById(R.id.tvLog)
         etCommand = findViewById(R.id.etCommand)
         scrollViewLog = findViewById(R.id.scrollViewLog)
+        setupCollapsibleConsole()
         tvStatus = findViewById(R.id.tvStatus)
         tvSelfTestStatus = findViewById(R.id.tvSelfTestStatus)
         tvOperationCenterStatus = findViewById(R.id.tvOperationCenterStatus)
@@ -167,11 +170,11 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.connectionState.observe(this) { state ->
             val (text, color) = when (state) {
-                DeviceViewModel.ConnectionState.NONE -> getString(R.string.status_no_device) to "#4B5563"
-                DeviceViewModel.ConnectionState.CONNECTING -> getString(R.string.status_connecting) to "#D97706"
-                DeviceViewModel.ConnectionState.FASTBOOT -> getString(R.string.status_fastboot) to "#F97316"
-                DeviceViewModel.ConnectionState.ADB -> getString(R.string.status_adb) to "#10B981"
-                DeviceViewModel.ConnectionState.ERROR -> getString(R.string.status_error) to "#EF4444"
+                DeviceViewModel.ConnectionState.NONE -> getString(R.string.status_no_device) to "#55555E"
+                DeviceViewModel.ConnectionState.CONNECTING -> getString(R.string.status_connecting) to "#D4B483"
+                DeviceViewModel.ConnectionState.FASTBOOT -> getString(R.string.status_fastboot) to "#E8E0D4"
+                DeviceViewModel.ConnectionState.ADB -> getString(R.string.status_adb) to "#7FB88A"
+                DeviceViewModel.ConnectionState.ERROR -> getString(R.string.status_error) to "#D88B8B"
             }
             tvStatus.text = text
             tvStatus.setTextColor(android.graphics.Color.parseColor(color))
@@ -2438,10 +2441,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun renderSelfTestStatus(status: DeviceViewModel.SelfTestStatus) {
         val (prefix, color) = when (status.result) {
-            DeviceViewModel.SelfTestResult.NOT_RUN -> "SELF-TEST: NOT RUN" to "#94A3B8"
-            DeviceViewModel.SelfTestResult.RUNNING -> "SELF-TEST: RUNNING" to "#F59E0B"
-            DeviceViewModel.SelfTestResult.PASS -> "SELF-TEST: PASS" to "#22C55E"
-            DeviceViewModel.SelfTestResult.WARN_FAIL -> "SELF-TEST: WARN/FAIL" to "#EF4444"
+            DeviceViewModel.SelfTestResult.NOT_RUN -> "SELF-TEST: NOT RUN" to "#8A8A93"
+            DeviceViewModel.SelfTestResult.RUNNING -> "SELF-TEST: RUNNING" to "#D4B483"
+            DeviceViewModel.SelfTestResult.PASS -> "SELF-TEST: PASS" to "#7FB88A"
+            DeviceViewModel.SelfTestResult.WARN_FAIL -> "SELF-TEST: WARN/FAIL" to "#D88B8B"
         }
         val reportInfo = listOfNotNull(
             status.textReportPath?.let { "TXT: ${File(it).name}" },
@@ -2552,7 +2555,6 @@ class MainActivity : AppCompatActivity() {
             SafetyProfile.EXPERT -> getString(R.string.safety_header_expert)
         }
         findViewById<View>(R.id.consoleInputBar).visibility = if (expertModeEnabled) View.VISIBLE else View.GONE
-        findViewById<View>(R.id.tvExpertModeHint).visibility = if (expertModeEnabled) View.GONE else View.VISIBLE
 
         val description = when (safetyProfile) {
             SafetyProfile.NOVICE -> getString(R.string.safety_profile_novice_desc)
@@ -2637,7 +2639,7 @@ class MainActivity : AppCompatActivity() {
         if (!::tvOperationStepQueue.isInitialized) return
         if (steps.isEmpty()) {
             tvOperationStepQueue.text = getString(R.string.layout_operation_steps_empty)
-            tvOperationStepQueue.setTextColor(android.graphics.Color.parseColor("#64748B"))
+            tvOperationStepQueue.setTextColor(android.graphics.Color.parseColor("#8A8A93"))
             return
         }
         val runningIndex = steps.indexOfFirst { it.status == DeviceViewModel.OperationStepStatus.RUNNING }
@@ -2681,10 +2683,10 @@ class MainActivity : AppCompatActivity() {
         val hasRunning = steps.any { it.status == DeviceViewModel.OperationStepStatus.RUNNING }
         val allOk = steps.isNotEmpty() && steps.all { it.status == DeviceViewModel.OperationStepStatus.OK || it.status == DeviceViewModel.OperationStepStatus.SKIPPED }
         val color = when {
-            hasFailed -> "#F87171"
-            hasRunning -> "#F59E0B"
-            allOk -> "#34D399"
-            else -> "#94A3B8"
+            hasFailed -> "#D88B8B"
+            hasRunning -> "#D4B483"
+            allOk -> "#7FB88A"
+            else -> "#8A8A93"
         }
         tvOperationStepQueue.setTextColor(android.graphics.Color.parseColor(color))
     }
@@ -2701,15 +2703,15 @@ class MainActivity : AppCompatActivity() {
         }
         val recentText = recent?.let { if (it.length > 260) it.take(257) + "…" else it }
         val (status, color) = when {
-            active -> getString(R.string.layout_operation_center_running) to "#F59E0B"
-            recentText == null -> getString(R.string.layout_operation_center_idle) to "#94A3B8"
+            active -> getString(R.string.layout_operation_center_running) to "#D4B483"
+            recentText == null -> getString(R.string.layout_operation_center_idle) to "#8A8A93"
             recentText.contains("❌") || recentText.contains("ОШИБКА") || recentText.contains("FAILED", ignoreCase = true) || recentText.contains("БЛОКИРОВКА") ->
-                getString(R.string.layout_operation_center_failed) to "#F87171"
+                getString(R.string.layout_operation_center_failed) to "#D88B8B"
             recentText.contains("✅") || recentText.contains("COMPLETED", ignoreCase = true) || recentText.contains("ЗАВЕРШЕНА") ->
-                getString(R.string.layout_operation_center_completed) to "#34D399"
+                getString(R.string.layout_operation_center_completed) to "#7FB88A"
             recentText.contains("⚠") || recentText.contains("WARN", ignoreCase = true) ->
-                getString(R.string.layout_operation_center_warning) to "#F59E0B"
-            else -> getString(R.string.layout_operation_center_idle) to "#94A3B8"
+                getString(R.string.layout_operation_center_warning) to "#D4B483"
+            else -> getString(R.string.layout_operation_center_idle) to "#8A8A93"
         }
         tvOperationCenterStatus.text = status
         tvOperationCenterStatus.setTextColor(android.graphics.Color.parseColor(color))
@@ -2725,6 +2727,37 @@ class MainActivity : AppCompatActivity() {
     // а не перестраиваем весь HTML с нуля. Устраняет лаги при getvar:all (100+ строк).
     private var renderedCount = 0
 
+    // ─── Сворачиваемая консоль ───────────────────────────────────────────────
+    private fun setupCollapsibleConsole() {
+        val header = findViewById<View>(R.id.consoleHeader)
+        header.setOnClickListener { setConsoleExpanded(!consoleExpanded) }
+        // По умолчанию свёрнута — на экране только полоска-заголовок.
+        setConsoleExpanded(false)
+    }
+
+    private fun setConsoleExpanded(expanded: Boolean) {
+        consoleExpanded = expanded
+        findViewById<View>(R.id.consoleBody).visibility = if (expanded) View.VISIBLE else View.GONE
+        // Стрелка: ▼ когда развёрнуто, ▲ когда свёрнуто.
+        findViewById<TextView>(R.id.tvConsoleToggle).text =
+            getString(if (expanded) R.string.layout_icon_down else R.string.layout_icon_up)
+        // Кнопки истории нужны только в развёрнутом виде.
+        findViewById<View>(R.id.btnHistoryUp).visibility = if (expanded) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.btnHistoryDown).visibility = if (expanded) View.VISIBLE else View.GONE
+        // Превью последней строки видно только когда свёрнуто.
+        findViewById<View>(R.id.tvConsolePeek).visibility = if (expanded) View.GONE else View.VISIBLE
+        if (expanded) {
+            scrollViewLog.post { scrollViewLog.fullScroll(ScrollView.FOCUS_DOWN) }
+        }
+    }
+
+    /** Обновляет превью последней строки лога в свёрнутом заголовке. */
+    private fun updateConsolePeek(lastLine: String) {
+        if (!consoleExpanded) {
+            findViewById<TextView>(R.id.tvConsolePeek).text = lastLine.trim()
+        }
+    }
+
     private fun renderLog(lines: List<String>) {
         if (lines.isEmpty()) { tvLog.text = ""; renderedCount = 0; return }
 
@@ -2736,20 +2769,32 @@ class MainActivity : AppCompatActivity() {
 
         val sb = android.text.SpannableStringBuilder()
         newLines.forEach { line ->
-            val color = when {
-                line.contains("ОШИБКА") || line.contains("БЛОКИРОВКА") || line.contains("❌") -> "#F87171"
-                line.startsWith("💡") -> "#FBBF24"
-                line.contains("✅") || line.contains("===") || line.contains("ЗАВЕРШЕНА") -> "#34D399"
-                line.startsWith(">") || line.startsWith("->") || line.startsWith("<-") -> "#94A3B8"
-                line.startsWith("⏳") || line.startsWith("⚠") -> "#F59E0B"
-                line.startsWith("[") -> "#475569"
-                else -> "#1A7A4A"
+            // Категоризация строки лога → цвет (моно-neko палитра) + neko-эмодзи.
+            val (color, emoji) = when {
+                line.contains("ОШИБКА") || line.contains("БЛОКИРОВКА") || line.contains("❌") ->
+                    "#D88B8B" to "🙀 "  // error — приглушённый красный
+                line.startsWith("💡") ->
+                    "#D4B483" to ""     // подсказка (эмодзи уже в тексте)
+                line.contains("✅") || line.contains("===") || line.contains("ЗАВЕРШЕНА") ->
+                    "#7FB88A" to "✨ "  // success — мягкий зелёный
+                line.startsWith(">") || line.startsWith("->") || line.startsWith("<-") ->
+                    "#B0A8C8" to "😸 "  // команда — лавандовый
+                line.startsWith("⏳") || line.startsWith("⚠") ->
+                    "#D4B483" to "💤 "  // warning — тёплый песочный
+                line.startsWith("[") ->
+                    "#55555E" to "🐾 "  // system — серый
+                else ->
+                    "#9BA3AF" to "🐾 "  // info — серо-голубой
             }
-            val safe = TextUtils.htmlEncode(line)
+            // Не дублируем эмодзи, если строка уже начинается с emoji/маркера.
+            val prefix = if (emoji.isNotEmpty() && line.firstOrNull()?.isLetterOrDigit() != false) emoji else ""
+            val safe = TextUtils.htmlEncode(prefix + line)
             sb.append(Html.fromHtml("<font color=\"$color\">$safe</font><br>", Html.FROM_HTML_MODE_LEGACY))
         }
         tvLog.append(sb)
         renderedCount = lines.size
+        // Превью последней строки для свёрнутой консоли.
+        lines.lastOrNull()?.let { updateConsolePeek(it) }
         scrollViewLog.post { scrollViewLog.fullScroll(ScrollView.FOCUS_DOWN) }
     }
 
