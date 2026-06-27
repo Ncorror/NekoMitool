@@ -225,7 +225,6 @@ This writes images to bootloader partitions. Review model, slot, and file names 
     <string name="layout_bl_empty">BL: —</string>
     <string name="layout_max_dl_empty">Max DL: —</string>
     <string name="layout_refresh">↻ Refresh</string>
-    <string name="layout_getvar_all">getvar:all</string>
     <string name="layout_reboot_title">REBOOT</string>
     <string name="layout_reboot_system">System</string>
     <string name="layout_reboot_bootloader">Bootloader</string>
@@ -372,9 +371,6 @@ Root</string>
     <string name="layout_operation_center_last_event_empty">Last event: —</string>
     <string name="layout_operation_center_last_event">Last event: %1$s</string>
     <string name="layout_operation_console">Console</string>
-    <string name="layout_operation_reports">Reports</string>
-    <string name="layout_operation_log">Log</string>
-    <string name="layout_operation_forum_zip">Forum ZIP</string>
     <string name="layout_operation_cancel">Cancel operation</string>
 
     <string name="layout_operation_steps_empty">Step queue: no active plan yet</string>
@@ -435,4 +431,5 @@ Root</string>
     <string name="terminal_autoscroll_on">↓ Auto</string>
     <string name="terminal_autoscroll_off">↓ Off</string>
     <string name="terminal_clear">Clear</string>
+    <string name="layout_icon_import">📂</string>
 </resources>

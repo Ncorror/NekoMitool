@@ -38,6 +38,20 @@
             android:fontFamily="monospace" />
 
         <!-- SCAN -->
+        <!-- Импорт файла — глобально доступен с любой вкладки -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnHeaderImport"
+            android:layout_width="40dp"
+            android:layout_height="36dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:text="@string/layout_icon_import"
+            android:textSize="16sp"
+            app:backgroundTint="#26262B"
+            app:cornerRadius="10dp" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnScan"
             android:layout_width="40dp"
@@ -291,12 +305,6 @@
                                 app:cornerRadius="8dp" />
 
                             <!-- getvar:all скрыт — дублирует «Обновить» (тоже шлёт getvar). -->
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnGetvar"
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:visibility="gone"
-                                android:text="@string/layout_getvar_all" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -680,26 +688,6 @@
                                 app:cornerRadius="8dp" />
 
                             <!-- Старые report-кнопки сохранены скрытыми (обработчики/ID живы) -->
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnOperationCenterReports"
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:visibility="gone"
-                                android:text="@string/layout_operation_reports" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnOperationCenterLog"
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:visibility="gone"
-                                android:text="@string/layout_operation_log" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnOperationCenterForumZip"
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:visibility="gone"
-                                android:text="@string/layout_operation_forum_zip" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -755,26 +743,6 @@
 
                             <!-- Старые reboot-кнопки сохранены скрытыми: их обработчики
                                  и ID остаются живыми, BottomSheet вызывает ту же логику. -->
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnRebootSystem"
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:visibility="gone"
-                                android:text="@string/layout_reboot_system" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnRebootBootloader"
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:visibility="gone"
-                                android:text="@string/layout_reboot_bootloader" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnRebootRecovery"
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:visibility="gone"
-                                android:text="@string/layout_reboot_recovery" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -2167,16 +2135,10 @@
                     app:cornerRadius="8dp" />
             </LinearLayout>
         </LinearLayout>
-        <LinearLayout android:id="@+id/pageHelp"       android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone" android:orientation="vertical" />
 
-        <!-- Скрытые кнопки Wizard (btnWizard*) — нужны только коду -->
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnWizardFlash"    android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnWizardSideload" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnWizardPrepare"  android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-        <!-- Скрытые дублёры tabDiagnostics/tabReports/tabHelp -->
+        <!-- Скрытые дублёры tabDiagnostics/tabReports -->
         <com.google.android.material.button.MaterialButton android:id="@+id/tabDiagnostics" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
         <com.google.android.material.button.MaterialButton android:id="@+id/tabReports"     android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
-        <com.google.android.material.button.MaterialButton android:id="@+id/tabHelp"        android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
         <!-- btnRebootMenu для совместимости с кодом (не виден) -->
         <!-- btnFlashMenu для совместимости с кодом (не виден) -->
         <!-- btnHomeConsole -->

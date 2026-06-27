@@ -243,6 +243,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnExportLog).setOnClickListener { showLogActions() }
         findViewById<Button>(R.id.btnClearLog).setOnClickListener { viewModel.clearLog() }
         findViewById<Button>(R.id.btnImportFile).setOnClickListener { startImportFilePicker() }
+        // Глобальная кнопка импорта в хедере — тот же выбор файла, доступен везде.
+        findViewById<View>(R.id.btnHeaderImport).setOnClickListener { startImportFilePicker() }
         findViewById<Button>(R.id.btnAnalyzeFile).setOnClickListener { showFirmwareAnalysisSelector() }
         findViewById<Button>(R.id.btnXiaomiRomAnalyze).setOnClickListener { chooseXiaomiRomForAnalysis() }
         findViewById<Button>(R.id.btnXiaomiRomWizard).setOnClickListener { chooseXiaomiRomWizard() }
@@ -290,9 +292,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnTileConsole).setOnClickListener { switchTab("console") }
         findViewById<Button>(R.id.btnTileReports).setOnClickListener { switchTab("diagnostics") }
         findViewById<Button>(R.id.btnOperationCenterConsole).setOnClickListener { switchTab("console") }
-        findViewById<Button>(R.id.btnOperationCenterReports).setOnClickListener { openReportsFolder() }
-        findViewById<Button>(R.id.btnOperationCenterLog).setOnClickListener { showLogActions() }
-        findViewById<Button>(R.id.btnOperationCenterForumZip).setOnClickListener { createForumReport() }
         findViewById<View>(R.id.btnReportsMenu).setOnClickListener { showReportsMenu() }
         findViewById<Button>(R.id.btnOperationCenterCancel).setOnClickListener { viewModel.cancelActiveOperation() }
         findViewById<Button>(R.id.btnOperationConsole).setOnClickListener { switchTab("console") }
@@ -316,30 +315,12 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnFlashVendorBoot).setOnClickListener { flashPartBtn("vendor_boot") }
         findViewById<View>(R.id.btnFlashDtbo).setOnClickListener       { flashPartBtn("dtbo") }
 
-        // v4 UI: прямые кнопки reboot вместо меню
-        fun rebootCmd(cmd: String) {
-            if (viewModel.fastbootProtocol?.isConnected == true)
-                viewModel.runFastbootCommand(cmd)
-            else
-                viewModel.log("ОШИБКА: Нет Fastboot-соединения")
-        }
-        findViewById<View>(R.id.btnRebootSystem).setOnClickListener    { rebootCmd("reboot") }
-        findViewById<View>(R.id.btnRebootBootloader).setOnClickListener { rebootCmd("reboot-bootloader") }
-        findViewById<View>(R.id.btnRebootRecovery).setOnClickListener  { rebootCmd("reboot-recovery") }
         // Единое меню Reboot (BottomSheet) — собирает все варианты перезагрузки.
         findViewById<View>(R.id.btnRebootMenu).setOnClickListener { showRebootMenu() }
 
         findViewById<Button>(R.id.btnAdbSideload).setOnClickListener {
             showFileSelector(".zip") { file ->
                 showSideloadConfirmation(file)
-            }
-        }
-
-        findViewById<Button>(R.id.btnGetvar).setOnClickListener {
-            if (viewModel.fastbootProtocol?.isConnected == true) {
-                viewModel.runFastbootCommand("getvar:all")
-            } else {
-                viewModel.log("ОШИБКА: Нет Fastboot-соединения")
             }
         }
 
@@ -367,11 +348,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.tabFiles).setOnClickListener { switchTab("files") }
         findViewById<Button>(R.id.tabDiagnostics).setOnClickListener { switchTab("diagnostics") }
         findViewById<Button>(R.id.tabReports).setOnClickListener { switchTab("console") }
-        findViewById<Button>(R.id.tabHelp).setOnClickListener { switchTab("help") }
-
-        findViewById<Button>(R.id.btnWizardFlash).setOnClickListener { switchTab("fastboot") }
-        findViewById<Button>(R.id.btnWizardSideload).setOnClickListener { switchTab("adb") }
-        findViewById<Button>(R.id.btnWizardPrepare).setOnClickListener { switchTab("files") }
     }
 
     // ─── USB ─────────────────────────────────────────────────────────────────

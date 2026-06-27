@@ -35,8 +35,7 @@ class TabController(private val activity: Activity) {
         "files" to R.id.pageFiles,
         "diagnostics" to R.id.pageDiagnostics,
         "operation" to R.id.pageOperation,
-        "console" to R.id.pageReports,
-        "help" to R.id.pageHelp
+        "console" to R.id.pageReports
     )
 
     /** Кнопки нижней навигации (только 4 таба с иконками). */

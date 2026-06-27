@@ -225,7 +225,6 @@ ADB:
     <string name="layout_bl_empty">BL: —</string>
     <string name="layout_max_dl_empty">Max DL: —</string>
     <string name="layout_refresh">↻ Обновить</string>
-    <string name="layout_getvar_all">getvar:all</string>
     <string name="layout_reboot_title">ПЕРЕЗАГРУЗКА</string>
     <string name="layout_reboot_system">Система</string>
     <string name="layout_reboot_bootloader">Загрузчик</string>
@@ -372,9 +371,6 @@ Root</string>
     <string name="layout_operation_center_last_event_empty">Последнее событие: —</string>
     <string name="layout_operation_center_last_event">Последнее событие: %1$s</string>
     <string name="layout_operation_console">Консоль</string>
-    <string name="layout_operation_reports">Reports</string>
-    <string name="layout_operation_log">Лог</string>
-    <string name="layout_operation_forum_zip">Forum ZIP</string>
     <string name="layout_operation_cancel">Отменить операцию</string>
 
     <string name="layout_operation_steps_empty">Очередь шагов: активный план ещё не создан</string>
@@ -435,4 +431,5 @@ Root</string>
     <string name="terminal_autoscroll_on">↓ Авто</string>
     <string name="terminal_autoscroll_off">↓ Стоп</string>
     <string name="terminal_clear">Очистить</string>
+    <string name="layout_icon_import">📂</string>
 </resources>
