@@ -7,12 +7,18 @@ android {
     namespace 'ru.forum.adbfastboottool'
     compileSdk 34
 
+    // AGP 8.x по умолчанию НЕ генерирует BuildConfig — включаем явно,
+    // т.к. код использует BuildConfig.VERSION_NAME / VERSION_CODE / DEBUG.
+    buildFeatures {
+        buildConfig true
+    }
+
     defaultConfig {
         applicationId "ru.forum.adbfastboottool"
         minSdk 26
         targetSdk 34
-        versionCode 60
-        versionName "2.6.4-nekomiflash"
+        versionCode 61
+        versionName "2.6.5-nekomiflash"
     }
 
     buildTypes {

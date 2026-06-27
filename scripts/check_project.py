@@ -63,6 +63,31 @@ def check_string_parity() -> None:
         print(f"strings parity: OK ({len(base)} keys)")
 
 
+def check_kotlin_char_literals() -> None:
+    """
+    Ловит повреждённые символьные литералы вида  append('  с переносом строки
+    внутри кавычек (escape \\n потерял слеш при копировании/распаковке).
+    Такое не видно глазом, но валит компиляцию 'Incorrect character literal'.
+    """
+    import re, os
+    bad = []
+    src_dir = ROOT / "app/src/main/java"
+    for root, _, files in os.walk(src_dir):
+        for fn in files:
+            if not fn.endswith(".kt"):
+                continue
+            path = os.path.join(root, fn)
+            lines = open(path, encoding="utf-8").read().split("\n")
+            for i, line in enumerate(lines, 1):
+                # строка заканчивается одиночной кавычкой-литералом без закрытия
+                if re.search(r"\('$", line.rstrip()) or re.search(r"=\s*'$", line.rstrip()):
+                    bad.append(f"{os.path.relpath(path, ROOT)}:{i}")
+    if bad:
+        fail("Broken char literals (unclosed '): " + ", ".join(bad))
+    else:
+        print("kotlin char literals: OK")
+
+
 def check_string_values_aapt_safe() -> None:
     """
     Значение <string>, начинающееся с '?' или '@', AAPT трактует как ссылку
@@ -259,6 +284,7 @@ def main() -> int:
     check_xml_files()
     check_string_parity()
     check_string_values_aapt_safe()
+    check_kotlin_char_literals()
     check_versions()
     check_gradle_wrapper()
     check_workflows()

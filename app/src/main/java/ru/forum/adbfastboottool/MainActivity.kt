@@ -2672,8 +2672,7 @@ class MainActivity : AppCompatActivity() {
                     append(" — ")
                     append(it.take(72))
                 }
-                append('
-')
+                append('\n')
             }
             if (hiddenCount > 0) append(getString(R.string.layout_operation_steps_more, hiddenCount))
         }.trimEnd()
