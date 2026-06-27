@@ -353,10 +353,11 @@ Android 13+ devices often use init_boot. Older devices usually use boot.</string
     <!-- 2.5.1 Classic Recovery UI -->
     <string name="layout_classic_dashboard_title">CLASSIC RECOVERY DASHBOARD</string>
     <string name="layout_classic_dashboard_intro">Large recovery-style tiles for the main workflows. Device state stays visible above; the console stays visible below.</string>
-    <string name="layout_tile_xiaomi_rom">🐱 Xiaomi ROM\nWizard</string>
-    <string name="layout_tile_recovery">🩹 Recovery\nBootloop</string>
+    <string name="layout_tile_xiaomi_rom">🐱 Flash ROM</string>
+    <string name="layout_tile_recovery">🩹 Recovery
+Root</string>
     <string name="layout_tile_magisk">✨ Magisk\nRoot</string>
-    <string name="layout_tile_files">📂 Files\nImport</string>
+    <string name="layout_tile_files">📂 Files</string>
     <string name="layout_tile_console">😼 Terminal\nConsole</string>
     <string name="layout_tile_reports">🐾 Reports\nService</string>
     <string name="classic_recovery_ui_log">Classic Recovery dashboard opened</string>
@@ -411,4 +412,27 @@ Android 13+ devices often use init_boot. Older devices usually use boot.</string
     <string name="layout_files_steps_hint">File workflow: import ROM/images into the workspace, inspect images before flashing, copy the workspace path for manual checks, then return to Fastboot tools.</string>
     <string name="layout_reports_steps_hint">Reports workflow: run self-test, collect forum ZIP, open reports folder, and share sanitized logs without serials or private paths.</string>
 
+    <string name="layout_reboot_menu">⟳ Reboot</string>
+    <string name="layout_reboot_fastbootd">Fastbootd</string>
+    <string name="layout_reports_menu">📋 Reports</string>
+    <string name="reports_sheet_title">📋 Reports &amp; Logs</string>
+    <string name="reports_open_folder">📂  Open reports folder</string>
+    <string name="reports_forum_zip">📦  Create forum report (zip)</string>
+    <string name="reports_log_actions">📄  Log: export / clear</string>
+    <string name="reports_selftest">🧪  Self-test report</string>
+    <string name="reports_selftest_forum">🧪  Self-test forum bundle</string>
+    <string name="layout_settings_menu">⚙ Settings</string>
+    <string name="settings_sheet_title">⚙️ Settings</string>
+    <string name="settings_section_profile">Safety profile</string>
+    <string name="settings_open_language">🌐  Language</string>
+    <string name="settings_open_permissions">🔐  Permissions</string>
+    <string name="settings_open_battery">🔋  Battery optimization</string>
+    <string name="terminal_title">😼 TERMINAL</string>
+    <string name="terminal_filter_all">All</string>
+    <string name="terminal_filter_info">Info</string>
+    <string name="terminal_filter_warn">Warn</string>
+    <string name="terminal_filter_error">Error</string>
+    <string name="terminal_autoscroll_on">↓ Auto</string>
+    <string name="terminal_autoscroll_off">↓ Off</string>
+    <string name="terminal_clear">Clear</string>
 </resources>

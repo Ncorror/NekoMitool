@@ -56,6 +56,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var scrollViewLog: ScrollView
     // Состояние сворачиваемой консоли (по умолчанию свёрнута).
     private var consoleExpanded = false
+    // Состояние полноэкранного терминала (вкладка).
+    private var terminalAutoscroll = true
+    private var terminalFilter = 0  // 0=все, 1=info, 2=warn, 3=error
+    private var lastLogLines: List<String> = emptyList()
     private lateinit var tvStatus: TextView
     private lateinit var tvSelfTestStatus: TextView
     private lateinit var tvOperationCenterStatus: TextView
@@ -154,6 +158,7 @@ class MainActivity : AppCompatActivity() {
         etCommand = findViewById(R.id.etCommand)
         scrollViewLog = findViewById(R.id.scrollViewLog)
         setupCollapsibleConsole()
+        setupTerminal()
         tvStatus = findViewById(R.id.tvStatus)
         tvSelfTestStatus = findViewById(R.id.tvSelfTestStatus)
         tvOperationCenterStatus = findViewById(R.id.tvOperationCenterStatus)
@@ -164,7 +169,9 @@ class MainActivity : AppCompatActivity() {
         enableOverlayProtection()
 
         viewModel.logLines.observe(this) { lines ->
+            lastLogLines = lines
             renderLog(lines)
+            renderTerminalLog(lines)
             updateOperationCenter(lines)
         }
 
@@ -255,6 +262,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnMagiskGuide).setOnClickListener { showMagiskGuide() }
         findViewById<Button>(R.id.btnBatteryOpt).setOnClickListener { showBatteryOptimizationDialog() }
         findViewById<Button>(R.id.btnPermissions).setOnClickListener { showPermissionsDialog() }
+        findViewById<View>(R.id.btnSettingsMenu).setOnClickListener { showSettingsMenu() }
         findViewById<Button>(R.id.btnAutoScan).setOnClickListener { toggleAutoScan() }
         findViewById<Button>(R.id.btnDebugLog).setOnClickListener { toggleDebugLog() }
         findViewById<Button>(R.id.btnRefreshInfo).setOnClickListener { refreshDeviceDataFromUi() }
@@ -284,6 +292,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnOperationCenterReports).setOnClickListener { openReportsFolder() }
         findViewById<Button>(R.id.btnOperationCenterLog).setOnClickListener { showLogActions() }
         findViewById<Button>(R.id.btnOperationCenterForumZip).setOnClickListener { createForumReport() }
+        findViewById<View>(R.id.btnReportsMenu).setOnClickListener { showReportsMenu() }
         findViewById<Button>(R.id.btnOperationCenterCancel).setOnClickListener { viewModel.cancelActiveOperation() }
         findViewById<Button>(R.id.btnOperationConsole).setOnClickListener { switchTab("console") }
         findViewById<Button>(R.id.btnOperationStop).setOnClickListener { viewModel.cancelActiveOperation() }
@@ -316,7 +325,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnRebootSystem).setOnClickListener    { rebootCmd("reboot") }
         findViewById<View>(R.id.btnRebootBootloader).setOnClickListener { rebootCmd("reboot-bootloader") }
         findViewById<View>(R.id.btnRebootRecovery).setOnClickListener  { rebootCmd("reboot-recovery") }
-        // Совместимость: btnRebootMenu скрыт, но код ниже в setupButtons его не трогает
+        // Единое меню Reboot (BottomSheet) — собирает все варианты перезагрузки.
+        findViewById<View>(R.id.btnRebootMenu).setOnClickListener { showRebootMenu() }
 
         findViewById<Button>(R.id.btnAdbSideload).setOnClickListener {
             showFileSelector(".zip") { file ->
@@ -1651,6 +1661,163 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    /**
+     * Единое меню перезагрузки (BottomSheet). Собирает все варианты reboot
+     * в одну панель вместо разбросанных кнопок. Вызывает существующую логику —
+     * скрытые кнопки btnReboot* остаются обработчиками той же команды.
+     */
+    private fun showRebootMenu() {
+        if (viewModel.fastbootProtocol?.isConnected != true) {
+            viewModel.log("ОШИБКА: Нет Fastboot-соединения для перезагрузки")
+            return
+        }
+        val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(this)
+        val items = listOf(
+            "🔄  " + getString(R.string.layout_reboot_system) to "reboot",
+            "⚙\uFE0F  " + getString(R.string.layout_reboot_bootloader) to "reboot-bootloader",
+            "🛠\uFE0F  " + getString(R.string.layout_reboot_recovery) to "reboot-recovery",
+            "⚡  " + getString(R.string.layout_reboot_fastbootd) to "reboot:fastboot"
+        )
+        val container = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setBackgroundColor(android.graphics.Color.parseColor("#141417"))
+            setPadding(0, dp(8), 0, dp(16))
+        }
+        // Заголовок
+        container.addView(android.widget.TextView(this).apply {
+            text = getString(R.string.layout_reboot_menu)
+            setTextColor(android.graphics.Color.parseColor("#E8E0D4"))
+            textSize = 14f
+            typeface = android.graphics.Typeface.MONOSPACE
+            setPadding(dp(20), dp(12), dp(20), dp(12))
+        })
+        items.forEach { (label, cmd) ->
+            container.addView(android.widget.TextView(this).apply {
+                text = label
+                setTextColor(android.graphics.Color.parseColor("#F5F5F7"))
+                textSize = 15f
+                typeface = android.graphics.Typeface.MONOSPACE
+                setPadding(dp(24), dp(16), dp(24), dp(16))
+                isClickable = true
+                setOnClickListener {
+                    viewModel.runFastbootCommand(cmd)
+                    switchTab("console")
+                    dialog.dismiss()
+                }
+            })
+        }
+        dialog.setContentView(container)
+        dialog.show()
+    }
+
+    /**
+     * Единое меню отчётов и логов (BottomSheet). Собирает 5 разбросанных
+     * report-функций в одну панель. Вызывает существующие методы —
+     * скрытые кнопки остаются их дублёрами.
+     */
+    private fun showReportsMenu() {
+        val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(this)
+        val items = listOf(
+            getString(R.string.reports_open_folder) to { openReportsFolder() },
+            getString(R.string.reports_forum_zip) to { createForumReport() },
+            getString(R.string.reports_log_actions) to { showLogActions() },
+            getString(R.string.reports_selftest) to { runSelfTestReportFromUi() },
+            getString(R.string.reports_selftest_forum) to { runSelfTestForumReportFromUi() }
+        )
+        val container = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setBackgroundColor(android.graphics.Color.parseColor("#141417"))
+            setPadding(0, dp(8), 0, dp(16))
+        }
+        container.addView(android.widget.TextView(this).apply {
+            text = getString(R.string.reports_sheet_title)
+            setTextColor(android.graphics.Color.parseColor("#E8E0D4"))
+            textSize = 14f
+            typeface = android.graphics.Typeface.MONOSPACE
+            setPadding(dp(20), dp(12), dp(20), dp(12))
+        })
+        items.forEach { (label, action) ->
+            container.addView(android.widget.TextView(this).apply {
+                text = label
+                setTextColor(android.graphics.Color.parseColor("#F5F5F7"))
+                textSize = 15f
+                typeface = android.graphics.Typeface.MONOSPACE
+                setPadding(dp(24), dp(16), dp(24), dp(16))
+                isClickable = true
+                setOnClickListener {
+                    action()
+                    dialog.dismiss()
+                }
+            })
+        }
+        dialog.setContentView(container)
+        dialog.show()
+    }
+
+    /**
+     * Единое меню настроек (BottomSheet): профиль безопасности (выбор из 3 +
+     * high-risk toggle для Expert), язык, разрешения, оптимизация батареи.
+     * Вызывает существующие методы — скрытые кнопки профиля остаются дублёрами,
+     * а updateSafetyProfileUi() продолжает обновлять их состояние.
+     */
+    private fun showSettingsMenu() {
+        val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(this)
+        val container = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setBackgroundColor(android.graphics.Color.parseColor("#141417"))
+            setPadding(0, dp(8), 0, dp(16))
+        }
+
+        fun header(text: String) = android.widget.TextView(this).apply {
+            this.text = text
+            setTextColor(android.graphics.Color.parseColor("#E8E0D4"))
+            textSize = 12f
+            typeface = android.graphics.Typeface.MONOSPACE
+            setPadding(dp(20), dp(14), dp(20), dp(6))
+        }
+        fun row(text: String, onClick: () -> Unit) = android.widget.TextView(this).apply {
+            this.text = text
+            setTextColor(android.graphics.Color.parseColor("#F5F5F7"))
+            textSize = 15f
+            typeface = android.graphics.Typeface.MONOSPACE
+            setPadding(dp(24), dp(14), dp(24), dp(14))
+            isClickable = true
+            setOnClickListener { onClick(); dialog.dismiss() }
+        }
+
+        container.addView(header(getString(R.string.settings_sheet_title)))
+
+        // Профиль безопасности — выбор из трёх, текущий помечен ●
+        container.addView(header(getString(R.string.settings_section_profile)))
+        val profiles = listOf(
+            SafetyProfile.NOVICE to getString(R.string.safety_profile_novice),
+            SafetyProfile.STANDARD to getString(R.string.safety_profile_standard),
+            SafetyProfile.EXPERT to getString(R.string.safety_profile_expert)
+        )
+        profiles.forEach { (profile, label) ->
+            val mark = if (safetyProfile == profile) "●  " else "○  "
+            container.addView(row(mark + label) { setSafetyProfile(profile) })
+        }
+        // High-risk toggle доступен только в Expert
+        if (safetyProfile == SafetyProfile.EXPERT) {
+            val hrLabel = if (highRiskActionsUnlocked)
+                getString(R.string.safety_high_risk_unlocked)
+            else
+                getString(R.string.safety_high_risk_locked)
+            container.addView(row("⚠\uFE0F  $hrLabel") { toggleHighRiskActions() })
+        }
+
+        // Прочие настройки
+        container.addView(header("·"))
+        container.addView(row(getString(R.string.settings_open_language)) { showLanguageDialog() })
+        container.addView(row(getString(R.string.settings_open_permissions)) { showPermissionsDialog() })
+        container.addView(row(getString(R.string.settings_open_battery)) { showBatteryOptimizationDialog() })
+
+        val scroll = android.widget.ScrollView(this).apply { addView(container) }
+        dialog.setContentView(scroll)
+        dialog.show()
+    }
+
     private fun recoveryRebootFastbootdFromUi() {
         if (!ensureFastbootForTool()) return
         viewModel.log("Recovery tool: rebooting to fastbootd/userspace via fastboot reboot fastboot")
@@ -2631,6 +2798,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun switchTab(tab: String) {
         tabController.switchTab(tab)
+        // На вкладке Терминал (console) скрываем нижнюю мини-консоль —
+        // иначе лог дублируется (полный экран + полоска снизу).
+        val onTerminal = tabController.selectedWindow == "console"
+        findViewById<View>(R.id.consolePanel).visibility =
+            if (onTerminal) View.GONE else View.VISIBLE
+        if (onTerminal) renderTerminalLog(lastLogLines)
     }
 
 
@@ -2756,6 +2929,81 @@ class MainActivity : AppCompatActivity() {
         if (!consoleExpanded) {
             findViewById<TextView>(R.id.tvConsolePeek).text = lastLine.trim()
         }
+    }
+
+    // ─── Полноэкранный терминал (вкладка) ────────────────────────────────────
+    private fun setupTerminal() {
+        val send = {
+            val et = findViewById<EditText>(R.id.etTerminalCommand)
+            val cmd = et.text.toString().trim()
+            if (cmd.isNotEmpty()) {
+                // Переиспользуем существующий обработчик: кладём текст в etCommand
+                // (нижняя консоль) и вызываем ту же проверенную логику разбора.
+                etCommand.setText(cmd)
+                handleCommandInput()
+                et.setText("")
+            }
+        }
+        findViewById<View>(R.id.btnTerminalSend).setOnClickListener { send() }
+        findViewById<EditText>(R.id.etTerminalCommand).setOnEditorActionListener { _, _, _ -> send(); true }
+
+        findViewById<View>(R.id.btnTerminalClear).setOnClickListener { viewModel.clearLog() }
+
+        // Автопрокрутка вкл/выкл
+        findViewById<MaterialButton>(R.id.btnTerminalAutoscroll).setOnClickListener {
+            terminalAutoscroll = !terminalAutoscroll
+            (it as MaterialButton).text = getString(
+                if (terminalAutoscroll) R.string.terminal_autoscroll_on else R.string.terminal_autoscroll_off)
+            it.setTextColor(android.graphics.Color.parseColor(if (terminalAutoscroll) "#7FB88A" else "#8A8A93"))
+            if (terminalAutoscroll) scrollTerminalToBottom()
+        }
+
+        // Фильтр уровня: цикл Все → Info → Warn → Error
+        findViewById<MaterialButton>(R.id.btnTerminalFilter).setOnClickListener {
+            terminalFilter = (terminalFilter + 1) % 4
+            (it as MaterialButton).text = getString(when (terminalFilter) {
+                1 -> R.string.terminal_filter_info
+                2 -> R.string.terminal_filter_warn
+                3 -> R.string.terminal_filter_error
+                else -> R.string.terminal_filter_all
+            })
+            renderTerminalLog(lastLogLines)
+        }
+    }
+
+    /** Классификация строки лога по уровню (для фильтра/цвета). 1=info 2=warn 3=error */
+    private fun logLevel(line: String): Int = when {
+        line.contains("ОШИБКА") || line.contains("БЛОКИРОВКА") || line.contains("❌") || line.contains("🙀") -> 3
+        line.startsWith("⏳") || line.startsWith("⚠") || line.contains("💤") -> 2
+        else -> 1
+    }
+
+    private fun renderTerminalLog(lines: List<String>) {
+        val tv = findViewById<TextView>(R.id.tvTerminalLog)
+        val filtered = if (terminalFilter == 0) lines else lines.filter { logLevel(it) == terminalFilter }
+        val sb = android.text.SpannableStringBuilder()
+        filtered.forEach { line ->
+            val (color, emoji) = when (logLevel(line)) {
+                3 -> "#D88B8B" to "🙀 "
+                2 -> "#D4B483" to "💤 "
+                else -> when {
+                    line.contains("✅") || line.contains("===") || line.contains("ЗАВЕРШЕНА") -> "#7FB88A" to "✨ "
+                    line.startsWith(">") -> "#B0A8C8" to "😸 "
+                    line.startsWith("[") -> "#55555E" to "🐾 "
+                    else -> "#9BA3AF" to "🐾 "
+                }
+            }
+            val prefix = if (line.firstOrNull()?.isLetterOrDigit() != false) emoji else ""
+            val safe = TextUtils.htmlEncode(prefix + line)
+            sb.append(Html.fromHtml("<font color=\"$color\">$safe</font><br>", Html.FROM_HTML_MODE_LEGACY))
+        }
+        tv.text = sb
+        if (terminalAutoscroll) scrollTerminalToBottom()
+    }
+
+    private fun scrollTerminalToBottom() {
+        val sv = findViewById<ScrollView>(R.id.scrollTerminalLog)
+        sv.post { sv.fullScroll(ScrollView.FOCUS_DOWN) }
     }
 
     private fun renderLog(lines: List<String>) {
