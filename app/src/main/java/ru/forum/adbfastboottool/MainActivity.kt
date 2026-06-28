@@ -30,11 +30,13 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
+import android.widget.Toast
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -243,23 +245,25 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnSafetyHighRisk).setOnClickListener { toggleHighRiskActions() }
         findViewById<Button>(R.id.btnExportLog).setOnClickListener { showLogActions() }
         findViewById<Button>(R.id.btnClearLog).setOnClickListener { viewModel.clearLog() }
-        findViewById<Button>(R.id.btnImportFile).setOnClickListener { startImportFilePicker() }
         // Импорт файла из угла блока прошивки (в контексте Fastboot).
         findViewById<View>(R.id.btnBlockImportFastboot).setOnClickListener { startImportFilePicker() }
+        findViewById<View>(R.id.btnBlockImportQueue).setOnClickListener { startImportFilePicker() }
+        findViewById<View>(R.id.btnBlockImportXiaomi).setOnClickListener { startImportFilePicker() }
+        // Режим перезагрузки в блоке прошивки — то же меню, что было на главной.
+        findViewById<View>(R.id.btnFlashRebootMode).setOnClickListener { showRebootMenu() }
         // Тонкая кнопка терминала над плитками Fastboot.
         findViewById<View>(R.id.btnFastbootTerminal).setOnClickListener { switchTab("console") }
-        findViewById<Button>(R.id.btnAnalyzeFile).setOnClickListener { showFirmwareAnalysisSelector() }
         findViewById<Button>(R.id.btnXiaomiRomAnalyze).setOnClickListener { chooseXiaomiRomForAnalysis() }
         findViewById<Button>(R.id.btnXiaomiRomWizard).setOnClickListener { chooseXiaomiRomWizard() }
         findViewById<Button>(R.id.btnXiaomiRomResume).setOnClickListener { resumeLastXiaomiRomFlashFromUi() }
-        findViewById<Button>(R.id.btnXiaomiRomFlashClean).setOnClickListener { chooseXiaomiRomAndConfirm(XiaomiFastbootRomManager.FlashMode.CLEAN_ALL) }
-        findViewById<Button>(R.id.btnXiaomiRomFlashSaveData).setOnClickListener { chooseXiaomiRomAndConfirm(XiaomiFastbootRomManager.FlashMode.SAVE_USER_DATA) }
+        guardClick(R.id.btnXiaomiRomFlashClean) { chooseXiaomiRomAndConfirm(XiaomiFastbootRomManager.FlashMode.CLEAN_ALL) }
+        guardClick(R.id.btnXiaomiRomFlashSaveData) { chooseXiaomiRomAndConfirm(XiaomiFastbootRomManager.FlashMode.SAVE_USER_DATA) }
         findViewById<Button>(R.id.btnRecoveryCheckSlot).setOnClickListener { recoveryCheckSlotFromUi() }
-        findViewById<Button>(R.id.btnRecoverySwitchSlot).setOnClickListener { recoverySwitchSlotFromUi() }
-        findViewById<Button>(R.id.btnRecoveryFlashVbmeta).setOnClickListener { chooseVbmetaOff() }
+        guardClick(R.id.btnRecoverySwitchSlot) { recoverySwitchSlotFromUi() }
+        guardClick(R.id.btnRecoveryFlashVbmeta) { chooseVbmetaOff() }
         findViewById<Button>(R.id.btnBatteryOpt).setOnClickListener { showBatteryOptimizationDialog() }
         findViewById<Button>(R.id.btnPermissions).setOnClickListener { showPermissionsDialog() }
-        findViewById<View>(R.id.btnSettingsMenu).setOnClickListener { showSettingsMenu() }
+        buildSettingsPage()
         findViewById<Button>(R.id.btnAutoScan).setOnClickListener { toggleAutoScan() }
         findViewById<Button>(R.id.btnDebugLog).setOnClickListener { toggleDebugLog() }
         findViewById<Button>(R.id.btnRefreshInfo).setOnClickListener { refreshDeviceDataFromUi() }
@@ -271,14 +275,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnHomeService).setOnClickListener { switchTab("diagnostics") }
         findViewById<Button>(R.id.btnHomeConsole).setOnClickListener { switchTab("console") }
         findViewById<Button>(R.id.btnTileXiaomiRom).setOnClickListener {
-            viewModel.log(getString(R.string.classic_recovery_ui_log) + ": Xiaomi ROM")
             switchTab("fastboot")
         }
-        findViewById<Button>(R.id.btnTileRecovery).setOnClickListener {
-            viewModel.log(getString(R.string.classic_recovery_ui_log) + ": Recovery / Bootloop")
-            switchTab("fastboot")
-        }
-        findViewById<Button>(R.id.btnTileFiles).setOnClickListener { switchTab("files") }
         findViewById<Button>(R.id.btnTileConsole).setOnClickListener { switchTab("console") }
         findViewById<Button>(R.id.btnTileReports).setOnClickListener { switchTab("diagnostics") }
         findViewById<Button>(R.id.btnOperationCenterConsole).setOnClickListener { switchTab("console") }
@@ -293,7 +291,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnQueueRecovery).setOnClickListener { chooseFlashQueueFile("recovery") }
         findViewById<Button>(R.id.btnQueueDtbo).setOnClickListener { chooseFlashQueueFile("dtbo") }
         findViewById<Button>(R.id.btnQueueClear).setOnClickListener { clearFlashQueue() }
-        findViewById<Button>(R.id.btnQueueStart).setOnClickListener { confirmFlashQueue() }
+        guardClick(R.id.btnQueueStart) { confirmFlashQueue() }
 
         // v4 UI: прямые кнопки разделов (vbmeta УДАЛЕНА)
         fun flashPartBtn(partition: String) {
@@ -321,7 +319,6 @@ class MainActivity : AppCompatActivity() {
             viewModel.cancelActiveOperation()
         }
 
-        findViewById<Button>(R.id.btnCopyPath).setOnClickListener { copyWorkspacePath() }
         findViewById<Button>(R.id.btnHistoryUp).setOnClickListener { navigateHistory(-1) }
         findViewById<Button>(R.id.btnHistoryDown).setOnClickListener { navigateHistory(1) }
 
@@ -336,9 +333,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.tabHome).setOnClickListener { switchTab("home") }
+
+        // Кнопка «Назад»: если мы не на главном экране — возвращаемся на него,
+        // а не закрываем приложение. На главном — стандартный выход.
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (tabController.selectedWindow != "home") {
+                    switchTab("home")
+                } else {
+                    // На главном экране — отключаем наш перехват и отдаём
+                    // системе стандартное поведение (выход).
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        })
         findViewById<Button>(R.id.tabFastboot).setOnClickListener { switchTab("fastboot") }
         findViewById<Button>(R.id.tabAdb).setOnClickListener { switchTab("adb") }
-        findViewById<Button>(R.id.tabFiles).setOnClickListener { switchTab("files") }
+        findViewById<Button>(R.id.tabSettings).setOnClickListener { switchTab("settings") }
         findViewById<Button>(R.id.tabDiagnostics).setOnClickListener { switchTab("diagnostics") }
         findViewById<Button>(R.id.tabReports).setOnClickListener { switchTab("console") }
     }
@@ -1730,35 +1742,55 @@ class MainActivity : AppCompatActivity() {
      * Вызывает существующие методы — скрытые кнопки профиля остаются дублёрами,
      * а updateSafetyProfileUi() продолжает обновлять их состояние.
      */
-    private fun showSettingsMenu() {
-        val dialog = com.google.android.material.bottomsheet.BottomSheetDialog(this)
-        val container = android.widget.LinearLayout(this).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
-            setBackgroundColor(android.graphics.Color.parseColor("#141417"))
-            setPadding(0, dp(8), 0, dp(16))
-        }
+    /**
+     * Наполняет страницу Настроек (pageSettings) программно. Переиспользует те же
+     * действия, что и старое меню: профиль безопасности, high-risk, язык, разрешения,
+     * батарея, плюс сервисные пункты (очистка папки, about). Вызывается из onCreate
+     * и после смены профиля, чтобы отметки были актуальны.
+     */
+    private fun buildSettingsPage() {
+        val container = findViewById<android.widget.LinearLayout>(R.id.settingsContainer)
+        container.removeAllViews()
 
-        fun header(text: String) = android.widget.TextView(this).apply {
+        fun sectionTitle(text: String) = android.widget.TextView(this).apply {
             this.text = text
             setTextColor(android.graphics.Color.parseColor("#E8E0D4"))
             textSize = 12f
             typeface = android.graphics.Typeface.MONOSPACE
-            setPadding(dp(20), dp(14), dp(20), dp(6))
+            setPadding(dp(6), dp(18), dp(6), dp(8))
+            letterSpacing = 0.1f
         }
-        fun row(text: String, onClick: () -> Unit) = android.widget.TextView(this).apply {
-            this.text = text
-            setTextColor(android.graphics.Color.parseColor("#F5F5F7"))
-            textSize = 15f
-            typeface = android.graphics.Typeface.MONOSPACE
-            setPadding(dp(24), dp(14), dp(24), dp(14))
+        fun card(): android.widget.LinearLayout = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            background = android.graphics.drawable.GradientDrawable().apply {
+                setColor(android.graphics.Color.parseColor("#141417"))
+                cornerRadius = dp(12).toFloat()
+                setStroke(dp(1), android.graphics.Color.parseColor("#26262B"))
+            }
+            setPadding(dp(4), dp(4), dp(4), dp(4))
+        }
+        fun row(text: String, sub: String? = null, onClick: () -> Unit) = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
             isClickable = true
-            setOnClickListener { onClick(); dialog.dismiss() }
+            setPadding(dp(20), dp(14), dp(20), dp(14))
+            addView(android.widget.TextView(this@MainActivity).apply {
+                this.text = text
+                setTextColor(android.graphics.Color.parseColor("#F5F5F7"))
+                textSize = 15f
+                typeface = android.graphics.Typeface.MONOSPACE
+            })
+            if (sub != null) addView(android.widget.TextView(this@MainActivity).apply {
+                this.text = sub
+                setTextColor(android.graphics.Color.parseColor("#8A8A93"))
+                textSize = 12f
+                typeface = android.graphics.Typeface.MONOSPACE
+            })
+            setOnClickListener { onClick() }
         }
 
-        container.addView(header(getString(R.string.settings_sheet_title)))
-
-        // Профиль безопасности — выбор из трёх, текущий помечен ●
-        container.addView(header(getString(R.string.settings_section_profile)))
+        // ── Профиль безопасности ──
+        container.addView(sectionTitle(getString(R.string.settings_section_profile)))
+        val profileCard = card()
         val profiles = listOf(
             SafetyProfile.NOVICE to getString(R.string.safety_profile_novice),
             SafetyProfile.STANDARD to getString(R.string.safety_profile_standard),
@@ -1766,27 +1798,62 @@ class MainActivity : AppCompatActivity() {
         )
         profiles.forEach { (profile, label) ->
             val mark = if (safetyProfile == profile) "●  " else "○  "
-            container.addView(row(mark + label) { setSafetyProfile(profile) })
+            profileCard.addView(row(mark + label) { setSafetyProfile(profile); buildSettingsPage() })
         }
-        // High-risk toggle доступен только в Expert
         if (safetyProfile == SafetyProfile.EXPERT) {
             val hrLabel = if (highRiskActionsUnlocked)
                 getString(R.string.safety_high_risk_unlocked)
             else
                 getString(R.string.safety_high_risk_locked)
-            container.addView(row("⚠\uFE0F  $hrLabel") { toggleHighRiskActions() })
+            profileCard.addView(row("⚠\uFE0F  $hrLabel") { toggleHighRiskActions(); buildSettingsPage() })
         }
+        container.addView(profileCard)
 
-        // Прочие настройки
-        container.addView(header("·"))
-        container.addView(row(getString(R.string.settings_open_language)) { showLanguageDialog() })
-        container.addView(row(getString(R.string.settings_open_permissions)) { showPermissionsDialog() })
-        container.addView(row(getString(R.string.settings_open_battery)) { showBatteryOptimizationDialog() })
+        // ── Система ──
+        container.addView(sectionTitle(getString(R.string.settings_section_system)))
+        val sysCard = card()
+        sysCard.addView(row(getString(R.string.settings_open_language)) { showLanguageDialog() })
+        sysCard.addView(row(getString(R.string.settings_open_permissions)) { showPermissionsDialog() })
+        sysCard.addView(row(getString(R.string.settings_open_battery)) { showBatteryOptimizationDialog() })
+        container.addView(sysCard)
 
-        val scroll = android.widget.ScrollView(this).apply { addView(container) }
-        dialog.setContentView(scroll)
-        dialog.show()
+        // ── Сервис ──
+        container.addView(sectionTitle(getString(R.string.settings_section_service)))
+        val svcCard = card()
+        svcCard.addView(row(getString(R.string.settings_clear_workspace),
+            getString(R.string.settings_clear_workspace_sub)) { confirmClearWorkspace() })
+        svcCard.addView(row(getString(R.string.settings_about),
+            getString(R.string.settings_about_sub, appVersionName())) { showAboutDialog() })
+        container.addView(svcCard)
     }
+
+    private fun appVersionName(): String = try {
+        packageManager.getPackageInfo(packageName, 0).versionName ?: "—"
+    } catch (e: Exception) { "—" }
+
+    private fun confirmClearWorkspace() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.settings_clear_workspace))
+            .setMessage(getString(R.string.settings_clear_workspace_confirm, workspacePath.absolutePath))
+            .setNegativeButton(getString(R.string.cancel_upper), null)
+            .setPositiveButton(getString(R.string.settings_clear_workspace_do)) { _, _ ->
+                var count = 0
+                try {
+                    workspacePath.listFiles()?.forEach { if (it.isFile && it.delete()) count++ }
+                } catch (_: Exception) {}
+                viewModel.log(getString(R.string.settings_clear_workspace_done, count))
+            }
+            .show()
+    }
+
+    private fun showAboutDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.settings_about))
+            .setMessage(getString(R.string.settings_about_body, appVersionName()))
+            .setPositiveButton(getString(R.string.close_upper), null)
+            .show()
+    }
+
 
     /**
      * vbmeta off — прошивка vbmeta с отключением verity/verification.
@@ -1976,13 +2043,26 @@ class MainActivity : AppCompatActivity() {
         preflight.toDisplayText().lines().forEach { if (it.isNotBlank()) viewModel.log(it) }
 
         val sizeMb = "%.2f".format(file.length().toDouble() / 1024.0 / 1024.0)
+
+        // Авто-определение A/B: slot-count = 2 → устройство со слотами (рекомендуем оба),
+        // 1 или пусто → старое устройство без слотов (обычная прошивка).
+        val slotCount = diagnostics?.slotCount?.trim()
+        val isSlotted = isSlottedPartition(partition)
+        val slotHint = when {
+            !isSlotted -> ""
+            slotCount == "2" -> "\n\n" + getString(R.string.slot_hint_ab_device)
+            slotCount == "1" || slotCount.isNullOrBlank() -> "\n\n" + getString(R.string.slot_hint_single_device)
+            else -> ""
+        }
+
         val builder = MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.preflight_title))
+            .setIcon(R.drawable.ic_nf_recovery_green)
             .setMessage(
                 "Раздел: $partition\n" +
                     "Файл: ${file.name}\n" +
                     "Размер: $sizeMb MB\n\n" +
-                    preflight.toDisplayText()
+                    preflight.toDisplayText() + slotHint
             )
             .setNegativeButton(getString(R.string.cancel_upper), null)
 
@@ -1993,6 +2073,16 @@ class MainActivity : AppCompatActivity() {
                     confirmCriticalFlash(partition) { viewModel.runFlash(partition, file) }
                 } else {
                     viewModel.runFlash(partition, file)
+                }
+            }
+            // Прошивка в оба слота (A/B) — только для slotted-разделов.
+            if (isSlotted) {
+                builder.setNeutralButton(getString(R.string.flash_both_slots_button)) { _, _ ->
+                    if (PreflightValidator.requiresDoubleConfirm(partition)) {
+                        confirmCriticalFlash(partition) { viewModel.runFlashBothSlots(partition, file) }
+                    } else {
+                        viewModel.runFlashBothSlots(partition, file)
+                    }
                 }
             }
         } else {
@@ -2343,12 +2433,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun copyWorkspacePath() {
-        val path = "/sdcard/Download/$folderName"
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        clipboard.setPrimaryClip(ClipData.newPlainText("ADB Fastboot folder", path))
-        viewModel.log(getString(R.string.workspace_path_copied, path))
-    }
 
     private fun showLogActions() {
         val file = viewModel.currentLogFile()
@@ -2723,8 +2807,30 @@ class MainActivity : AppCompatActivity() {
 
     private fun setButtonSafetyState(id: Int, enabled: Boolean) {
         val view = findViewById<View>(id)
-        view.isEnabled = enabled
         view.alpha = if (enabled) 1.0f else 0.38f
+        view.setTag(R.id.tag_safety_blocked, !enabled)
+        // Кнопка всегда остаётся активной — клик в заблокированном состоянии
+        // обрабатывается обёрткой onClickGuarded (показывает «вы не эксперт»).
+        view.isEnabled = true
+    }
+
+    /**
+     * Вешает обработчик клика с проверкой режима. Если кнопка помечена
+     * заблокированной (tag_safety_blocked), показывает уведомление вместо действия.
+     */
+    private fun guardClick(id: Int, action: () -> Unit) {
+        val view = findViewById<View>(id)
+        view.setOnClickListener {
+            if (view.getTag(R.id.tag_safety_blocked) == true) {
+                Toast.makeText(
+                    this,
+                    getString(R.string.safety_not_expert_toast),
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                action()
+            }
+        }
     }
 
     private fun ensureGuidedFlashAllowed(partition: String): Boolean {
@@ -2749,6 +2855,20 @@ class MainActivity : AppCompatActivity() {
             .setMessage(message)
             .setPositiveButton(getString(R.string.close_upper), null)
             .show()
+    }
+
+    /**
+     * Slotted-разделы (имеют копии _a/_b на A/B устройствах). Для них имеет смысл
+     * прошивка в оба слота. userdata/metadata/super — общие, не slotted.
+     */
+    private fun isSlottedPartition(partition: String): Boolean {
+        val clean = partition.trim().lowercase(Locale.US)
+            .removeSuffix("_a").removeSuffix("_b")
+        return clean in setOf(
+            "boot", "init_boot", "vendor_boot", "dtbo", "vbmeta",
+            "vbmeta_system", "vbmeta_vendor", "recovery", "system", "vendor",
+            "product", "odm", "vendor_kernel_boot"
+        )
     }
 
     private fun isHighRiskPartition(partition: String): Boolean {

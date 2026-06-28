@@ -215,9 +215,8 @@ This writes images to bootloader partitions. Review model, slot, and file names 
     <string name="layout_icon_expert">⚙</string>
     <string name="layout_icon_cancel">✕</string>
     <string name="layout_icon_home">⌂ HOME</string>
-    <string name="layout_icon_fastboot">⚡ FASTBOOT</string>
+    <string name="layout_icon_fastboot">⚡ FLASH</string>
     <string name="layout_icon_adb">↯ SIDELOAD</string>
-    <string name="layout_icon_files">☰ FILES</string>
     <string name="layout_device_title">DEVICE</string>
     <string name="layout_mode_empty">Mode: —</string>
     <string name="layout_model_empty">Model: —</string>
@@ -249,10 +248,6 @@ This writes images to bootloader partitions. Review model, slot, and file names 
     <string name="layout_sideload_recovery_hint">Recovery → Apply update → Apply from ADB</string>
     <string name="layout_choose_zip_sideload">▶  Choose .zip for Sideload</string>
     <string name="layout_sideload_hash_note">Before transfer, the app checks SHA-256/MD5 if a .sha256 or .md5 file is next to the archive.</string>
-    <string name="layout_files_title">FILES</string>
-    <string name="layout_import_file">📥  Import file</string>
-    <string name="layout_analyze_image">🔍  Inspect image</string>
-    <string name="layout_copy_workspace_path">📋  Copy workspace path</string>
     <string name="layout_service_title_caps">SERVICE</string>
     <string name="layout_refresh_device_data">↻  Refresh device data</string>
     <string name="layout_self_test">🧪  Self-test / Smoke-test</string>
@@ -272,7 +267,6 @@ This writes images to bootloader partitions. Review model, slot, and file names 
     <string name="layout_help">\?  Help</string>
     <string name="layout_command_hint">adb shell / adb shell getprop / fastboot getvar all</string>
     <string name="layout_xiaomi_rom_title">XIAOMI FASTBOOT ROM</string>
-    <string name="layout_xiaomi_rom_intro">Import a Xiaomi/Redmi/POCO Fastboot ROM .zip/.tgz/.tar, analyze flash_all scripts, block lock scenarios, verify product, then flash the safe plan.</string>
     <string name="layout_xiaomi_rom_analyze">🔍  Analyze Fastboot ROM</string>
     <string name="layout_xiaomi_rom_flash_clean">Flash clean all</string>
     <string name="layout_xiaomi_rom_flash_save_data">Flash save data</string>
@@ -314,7 +308,7 @@ Step 5: flash only the selected safe plan.
 Choose mode:</string>
     <string name="xiaomi_wizard_clean">Clean all / wipe data</string>
     <string name="xiaomi_wizard_save">Save user data</string>
-    <string name="layout_recovery_tools_title">🩹 RECOVERY / SLOTS</string>
+    <string name="layout_recovery_tools_title">🩹 SLOTS &amp; VERITY</string>
     <string name="layout_recovery_tools_intro">Check/switch active slot, vbmeta off (disable verity), Xiaomi ROM keeping user data. Flash boot images is in the block above.</string>
     <string name="layout_recovery_check_slot">Check slot</string>
     <string name="layout_recovery_switch_slot">Switch slot</string>
@@ -327,12 +321,9 @@ Use this only for bootloop recovery when the other slot contains a bootable syst
     <string name="continue_upper">CONTINUE</string>
 
     <!-- 2.5.1 Classic Recovery UI -->
-    <string name="layout_tile_xiaomi_rom">🐱 Flash ROM</string>
-    <string name="layout_tile_recovery">🩹 Recovery</string>
-    <string name="layout_tile_files">📂 Files</string>
+    <string name="layout_tile_xiaomi_rom">🐱 Flash firmware</string>
     <string name="layout_tile_console">😼 Terminal\nConsole</string>
     <string name="layout_tile_reports">🐾 Reports\nService</string>
-    <string name="classic_recovery_ui_log">Classic Recovery dashboard opened</string>
 
     <!-- 2.5.2 Operation Center UI -->
     <string name="layout_operation_center_title">OPERATION CENTER</string>
@@ -374,9 +365,7 @@ Use this only for bootloop recovery when the other slot contains a bootable syst
     <string name="safety_high_risk_blocked_message">Action blocked: %1$s. Current profile: %2$s. Switch to Expert and unlock high-risk actions to continue.</string>
     <string name="safety_action_blocked_log">Safety profile blocked action: %1$s</string>
 
-    <string name="layout_xiaomi_rom_steps_hint">Workflow: import ROM → analyze scripts → check device/product/ARB → choose clean all or save data → review dry-run plan → flash with step queue and reports.</string>
     <string name="layout_recovery_tools_steps_hint">Scenario: check current slot → switch if needed → vbmeta off or flash stock image for the active slot and correct product.</string>
-    <string name="layout_files_steps_hint">File workflow: import ROM/images into the workspace, inspect images before flashing, copy the workspace path for manual checks, then return to Fastboot tools.</string>
     <string name="layout_reports_steps_hint">Reports workflow: run self-test, collect forum ZIP, open reports folder, and share sanitized logs without serials or private paths.</string>
 
     <string name="layout_reboot_menu">⟳ Reboot</string>
@@ -388,7 +377,6 @@ Use this only for bootloop recovery when the other slot contains a bootable syst
     <string name="reports_log_actions">📄  Log: export / clear</string>
     <string name="reports_selftest">🧪  Self-test report</string>
     <string name="reports_selftest_forum">🧪  Self-test forum bundle</string>
-    <string name="settings_sheet_title">⚙️ Settings</string>
     <string name="settings_section_profile">Safety profile</string>
     <string name="settings_open_language">🌐  Language</string>
     <string name="settings_open_permissions">🔐  Permissions</string>
@@ -401,7 +389,6 @@ Use this only for bootloop recovery when the other slot contains a bootable syst
     <string name="terminal_autoscroll_on">↓ Auto</string>
     <string name="terminal_autoscroll_off">↓ Off</string>
     <string name="terminal_clear">Clear</string>
-    <string name="layout_icon_settings">⚙</string>
     <string name="layout_fastboot_terminal">😼 Open terminal</string>
     <string name="vbmeta_off_warn_title">⚠️ Disable verity (vbmeta off)</string>
     <string name="vbmeta_off_warn_message">This will flash vbmeta with verity AND verification DISABLED (flags=0x3).
@@ -416,4 +403,35 @@ Proceed only if you understand the risk.</string>
     <string name="vbmeta_off_not_avb_message">The selected file has no AVB0 signature, so it is not a vbmeta image. Choose a real vbmeta.img.</string>
     <string name="layout_sideload_import">Import file</string>
     <string name="layout_sideload_check_archive">🔍 Check archive</string>
+    <string name="notif_flashing_both_slots">Flashing %1$s to both slots (A/B)</string>
+    <string name="flash_both_slots_start">🔁 Flashing %1$s to BOTH slots (A + B)</string>
+    <string name="flash_both_slots_slot">  → flashing %1$s</string>
+    <string name="flash_both_slots_slot_failed">❌ Slot %1$s failed — stopping. Other slot left unchanged.</string>
+    <string name="flash_both_slots_done">✅ %1$s flashed to both slots (A and B)</string>
+    <string name="flash_both_slots_button">Both slots A/B</string>
+    <string name="settings_section_system">SYSTEM</string>
+    <string name="settings_section_service">SERVICE</string>
+    <string name="settings_clear_workspace">🗑 Clear workspace folder</string>
+    <string name="settings_clear_workspace_sub">Delete imported files from the working folder</string>
+    <string name="settings_clear_workspace_confirm">Delete all files in:
+%1$s
+
+This cannot be undone.</string>
+    <string name="settings_clear_workspace_do">Delete</string>
+    <string name="settings_clear_workspace_done">🗑 Workspace cleared: %1$d file(s) deleted</string>
+    <string name="settings_about">ℹ️ About NekoMiFlash</string>
+    <string name="settings_about_sub">Version %1$s</string>
+    <string name="settings_about_body">NekoMiFlash v%1$s
+
+Android USB-host flashing tool (ADB/Fastboot).
+Flash without a PC — phone flashes phone.
+
+Use at your own risk. Flashing can brick a device.</string>
+    <string name="layout_icon_settings_tab">⚙ SETTINGS</string>
+    <string name="layout_flash_reboot_mode">🔄 Reboot mode</string>
+    <string name="sideload_memo_text">To import files, put the device into Recovery → Apply update → Apply from ADB (sideload mode).</string>
+    <string name="sideload_memo_icon">💡</string>
+    <string name="safety_not_expert_toast">You're not an expert, you're a novice. Switch to Expert profile in Settings.</string>
+    <string name="slot_hint_ab_device">🔁 A/B device detected (slot-count=2). Recommended: flash to BOTH slots to avoid bootloop after slot switch.</string>
+    <string name="slot_hint_single_device">📱 Single-slot device (no A/B). Use simple flash — both-slots option is not needed.</string>
 </resources>

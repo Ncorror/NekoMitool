@@ -215,9 +215,8 @@ ADB:
     <string name="layout_icon_expert">⚙</string>
     <string name="layout_icon_cancel">✕</string>
     <string name="layout_icon_home">⌂ ГЛАВНАЯ</string>
-    <string name="layout_icon_fastboot">⚡ FASTBOOT</string>
+    <string name="layout_icon_fastboot">⚡ ПРОШИТЬ</string>
     <string name="layout_icon_adb">↯ SIDELOAD</string>
-    <string name="layout_icon_files">☰ ФАЙЛЫ</string>
     <string name="layout_device_title">УСТРОЙСТВО</string>
     <string name="layout_mode_empty">Режим: —</string>
     <string name="layout_model_empty">Модель: —</string>
@@ -249,10 +248,6 @@ ADB:
     <string name="layout_sideload_recovery_hint">Recovery → Apply update → Apply from ADB</string>
     <string name="layout_choose_zip_sideload">▶  Выбрать .zip для Sideload</string>
     <string name="layout_sideload_hash_note">Перед отправкой приложение проверит SHA-256/MD5 если .sha256 или .md5 лежит рядом с архивом.</string>
-    <string name="layout_files_title">ФАЙЛЫ</string>
-    <string name="layout_import_file">📥  Импортировать файл</string>
-    <string name="layout_analyze_image">🔍  Анализ образа</string>
-    <string name="layout_copy_workspace_path">📋  Скопировать путь к папке</string>
     <string name="layout_service_title_caps">СЕРВИС</string>
     <string name="layout_refresh_device_data">↻  Обновить данные устройства</string>
     <string name="layout_self_test">🧪  Self-test / Smoke-test</string>
@@ -272,7 +267,6 @@ ADB:
     <string name="layout_help">\?  Справка</string>
     <string name="layout_command_hint">adb shell / adb shell getprop / fastboot getvar all</string>
     <string name="layout_xiaomi_rom_title">XIAOMI FASTBOOT ROM</string>
-    <string name="layout_xiaomi_rom_intro">Импортируйте Fastboot ROM Xiaomi/Redmi/POCO .zip/.tgz/.tar: приложение анализирует flash_all, блокирует lock-сценарии, сверяет product и строит безопасный план прошивки.</string>
     <string name="layout_xiaomi_rom_analyze">🔍  Анализ Fastboot ROM</string>
     <string name="layout_xiaomi_rom_flash_clean">Прошить clean all</string>
     <string name="layout_xiaomi_rom_flash_save_data">Прошить save data</string>
@@ -314,7 +308,7 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
 Выберите режим:</string>
     <string name="xiaomi_wizard_clean">Clean all / удалить данные</string>
     <string name="xiaomi_wizard_save">Save user data / сохранить данные</string>
-    <string name="layout_recovery_tools_title">🩹 ВОССТАНОВЛЕНИЕ / СЛОТЫ</string>
+    <string name="layout_recovery_tools_title">🩹 СЛОТЫ И VERITY</string>
     <string name="layout_recovery_tools_intro">Проверка/переключение active slot, vbmeta off (отключение verity), прошивка Xiaomi ROM с сохранением данных. Прошивка boot-образов — в блоке выше.</string>
     <string name="layout_recovery_check_slot">Проверить слот</string>
     <string name="layout_recovery_switch_slot">Сменить слот</string>
@@ -328,11 +322,8 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
 
     <!-- 2.5.1 Classic Recovery UI -->
     <string name="layout_tile_xiaomi_rom">🐱 Прошить</string>
-    <string name="layout_tile_recovery">🩹 Recovery</string>
-    <string name="layout_tile_files">📂 Файлы</string>
     <string name="layout_tile_console">😼 Терминал\nКонсоль</string>
     <string name="layout_tile_reports">🐾 Отчёты\nСервис</string>
-    <string name="classic_recovery_ui_log">Открыт Classic Recovery dashboard</string>
 
     <!-- 2.5.2 Operation Center UI -->
     <string name="layout_operation_center_title">OPERATION CENTER</string>
@@ -374,9 +365,7 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
     <string name="safety_high_risk_blocked_message">Действие заблокировано: %1$s. Текущий профиль: %2$s. Для продолжения включите Эксперт и отдельно разрешите high-risk действия.</string>
     <string name="safety_action_blocked_log">Профиль безопасности заблокировал действие: %1$s</string>
 
-    <string name="layout_xiaomi_rom_steps_hint">Сценарий: импорт ROM → анализ скриптов → проверка устройства/product/ARB → выбор clean all или save data → просмотр dry-run плана → прошивка с очередью шагов и отчётами.</string>
     <string name="layout_recovery_tools_steps_hint">Сценарий: проверьте слот → переключите при необходимости → vbmeta off или прошейте stock-образ под активный slot и правильный product.</string>
-    <string name="layout_files_steps_hint">Сценарий файлов: импортируйте ROM/образы в рабочую папку, проверьте образ перед прошивкой, скопируйте путь при необходимости и вернитесь в Fastboot-инструменты.</string>
     <string name="layout_reports_steps_hint">Сценарий отчётов: запустите self-test, соберите forum ZIP, откройте папку reports и отправляйте очищенные логи без серийников и приватных путей.</string>
 
     <string name="layout_reboot_menu">⟳ Перезагрузка</string>
@@ -388,7 +377,6 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
     <string name="reports_log_actions">📄  Лог: экспорт / очистка</string>
     <string name="reports_selftest">🧪  Отчёт self-test</string>
     <string name="reports_selftest_forum">🧪  Self-test форум-комплект</string>
-    <string name="settings_sheet_title">⚙️ Настройки</string>
     <string name="settings_section_profile">Профиль безопасности</string>
     <string name="settings_open_language">🌐  Язык</string>
     <string name="settings_open_permissions">🔐  Разрешения</string>
@@ -401,7 +389,6 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
     <string name="terminal_autoscroll_on">↓ Авто</string>
     <string name="terminal_autoscroll_off">↓ Стоп</string>
     <string name="terminal_clear">Очистить</string>
-    <string name="layout_icon_settings">⚙</string>
     <string name="layout_fastboot_terminal">😼 Открыть терминал</string>
     <string name="vbmeta_off_warn_title">⚠️ Отключить verity (vbmeta off)</string>
     <string name="vbmeta_off_warn_message">Будет прошит vbmeta с ОТКЛЮЧЁННЫМИ verity И verification (flags=0x3).
@@ -416,4 +403,35 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
     <string name="vbmeta_off_not_avb_message">У выбранного файла нет сигнатуры AVB0 — это не vbmeta. Выберите настоящий vbmeta.img.</string>
     <string name="layout_sideload_import">Импорт файла</string>
     <string name="layout_sideload_check_archive">🔍 Проверить архив</string>
+    <string name="notif_flashing_both_slots">Прошивка %1$s в оба слота (A/B)</string>
+    <string name="flash_both_slots_start">🔁 Прошивка %1$s в ОБА слота (A + B)</string>
+    <string name="flash_both_slots_slot">  → прошивка %1$s</string>
+    <string name="flash_both_slots_slot_failed">❌ Слот %1$s не прошился — остановка. Второй слот не тронут.</string>
+    <string name="flash_both_slots_done">✅ %1$s прошит в оба слота (A и B)</string>
+    <string name="flash_both_slots_button">В оба слота A/B</string>
+    <string name="settings_section_system">СИСТЕМА</string>
+    <string name="settings_section_service">СЕРВИС</string>
+    <string name="settings_clear_workspace">🗑 Очистить рабочую папку</string>
+    <string name="settings_clear_workspace_sub">Удалить импортированные файлы из рабочей папки</string>
+    <string name="settings_clear_workspace_confirm">Удалить все файлы в:
+%1$s
+
+Это действие необратимо.</string>
+    <string name="settings_clear_workspace_do">Удалить</string>
+    <string name="settings_clear_workspace_done">🗑 Рабочая папка очищена: удалено файлов — %1$d</string>
+    <string name="settings_about">ℹ️ О NekoMiFlash</string>
+    <string name="settings_about_sub">Версия %1$s</string>
+    <string name="settings_about_body">NekoMiFlash v%1$s
+
+Инструмент прошивки Android через USB-host (ADB/Fastboot).
+Прошивка без ПК — телефон прошивает телефон.
+
+Используйте на свой риск. Прошивка может превратить устройство в кирпич.</string>
+    <string name="layout_icon_settings_tab">⚙ НАСТРОЙКИ</string>
+    <string name="layout_flash_reboot_mode">🔄 Режим перезагрузки</string>
+    <string name="sideload_memo_text">Чтобы импортировать файлы, переведите устройство в режим Recovery Sideload (Recovery → Apply update → Apply from ADB).</string>
+    <string name="sideload_memo_icon">💡</string>
+    <string name="safety_not_expert_toast">Вы не эксперт, вы новичок. Переключите на эксперт в Настройках.</string>
+    <string name="slot_hint_ab_device">🔁 Обнаружено A/B устройство (slot-count=2). Рекомендуется: прошить в ОБА слота, чтобы избежать bootloop после переключения слота.</string>
+    <string name="slot_hint_single_device">📱 Устройство с одним слотом (без A/B). Используйте простую прошивку — вариант «оба слота» не нужен.</string>
 </resources>

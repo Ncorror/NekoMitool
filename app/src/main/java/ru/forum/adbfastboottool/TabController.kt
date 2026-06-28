@@ -32,10 +32,10 @@ class TabController(private val activity: Activity) {
         "home" to R.id.pageHome,
         "fastboot" to R.id.containerFastboot,
         "adb" to R.id.containerAdb,
-        "files" to R.id.pageFiles,
         "diagnostics" to R.id.pageDiagnostics,
         "operation" to R.id.pageOperation,
-        "console" to R.id.pageReports
+        "console" to R.id.pageReports,
+        "settings" to R.id.pageSettings
     )
 
     /** Кнопки нижней навигации (только 4 таба с иконками). */
@@ -43,7 +43,7 @@ class TabController(private val activity: Activity) {
         "home" to R.id.tabHome,
         "fastboot" to R.id.tabFastboot,
         "adb" to R.id.tabAdb,
-        "files" to R.id.tabFiles
+        "settings" to R.id.tabSettings
     )
 
     /**

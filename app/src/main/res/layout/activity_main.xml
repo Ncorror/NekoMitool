@@ -143,7 +143,7 @@
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#26262B" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/tabFiles"
+            android:id="@+id/tabSettings"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -151,7 +151,7 @@
             android:insetBottom="0dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
-            android:text="@string/layout_icon_files"
+            android:text="@string/layout_icon_settings_tab"
             android:textSize="11sp"
             android:textColor="#8A8A93"
             app:backgroundTint="#141417"
@@ -319,28 +319,14 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="0dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:text="@string/layout_safety_profile_title"
                                 android:textColor="#E8E0D4"
                                 android:textSize="11sp"
                                 android:textStyle="bold"
                                 android:letterSpacing="0.1"
                                 android:fontFamily="monospace" />
-
-                            <!-- Настройки (язык/разрешения/батарея) -->
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnSettingsMenu"
-                                android:layout_width="40dp"
-                                android:layout_height="32dp"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:minWidth="0dp"
-                                android:text="@string/layout_icon_settings"
-                                android:textSize="15sp"
-                                app:backgroundTint="#1C1C21"
-                                app:cornerRadius="8dp" />
                         </LinearLayout>
 
                         <TextView
@@ -451,9 +437,8 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnTileXiaomiRom"
-                                android:layout_width="0dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="96dp"
-                                android:layout_weight="1"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_tile_xiaomi_rom"
@@ -465,50 +450,6 @@
                                 app:backgroundTint="#1C1C21"
                                 app:cornerRadius="12dp"
                                 app:icon="@drawable/ic_nf_rom"
-                                app:iconGravity="top"
-                                app:iconPadding="8dp"
-                                app:iconSize="28dp"
-                                app:iconTint="#E8E0D4" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnTileRecovery"
-                                android:layout_width="0dp"
-                                android:layout_height="96dp"
-                                android:layout_weight="1"
-                                android:layout_marginStart="8dp"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:text="@string/layout_tile_recovery"
-                                android:textAllCaps="false"
-                                android:textColor="#F5F5F7"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                android:fontFamily="monospace"
-                                app:backgroundTint="#1C1C21"
-                                app:cornerRadius="12dp"
-                                app:icon="@drawable/ic_nf_recovery"
-                                app:iconGravity="top"
-                                app:iconPadding="8dp"
-                                app:iconSize="28dp"
-                                app:iconTint="#E8E0D4" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnTileFiles"
-                                android:layout_width="0dp"
-                                android:layout_height="96dp"
-                                android:layout_weight="1"
-                                android:layout_marginStart="8dp"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:text="@string/layout_tile_files"
-                                android:textAllCaps="false"
-                                android:textColor="#F5F5F7"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                android:fontFamily="monospace"
-                                app:backgroundTint="#1C1C21"
-                                app:cornerRadius="12dp"
-                                app:icon="@drawable/ic_nf_files"
                                 app:iconGravity="top"
                                 app:iconPadding="8dp"
                                 app:iconSize="28dp"
@@ -697,11 +638,15 @@
                             android:letterSpacing="0.1"
                             android:fontFamily="monospace" />
 
+                        <!-- Меню перезагрузки убрано с главной (пункт плана 2).
+                             Reboot доступен в Fastboot и терминале. Кнопка скрыта,
+                             но ID сохранён — showRebootMenu() остаётся доступен коду. -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:visibility="gone">
 
                             <!-- Единая кнопка «Reboot» — открывает BottomSheet с вариантами -->
                             <com.google.android.material.button.MaterialButton
@@ -948,6 +893,226 @@
                                 android:layout_weight="1"
                                 android:layout_marginStart="6dp" />
                         </LinearLayout>
+
+                        <!-- Режим перезагрузки (reboot mode) — в контексте прошивки -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnFlashRebootMode"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="10dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="@string/layout_flash_reboot_mode"
+                            android:textAllCaps="false"
+                            android:textColor="#F5F5F7"
+                            android:textSize="12sp"
+                            app:backgroundTint="#141417"
+                            app:cornerRadius="10dp"
+                            app:icon="@drawable/ic_nf_reboot"
+                            app:iconGravity="textStart"
+                            app:iconTint="#E8E0D4" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+<!-- Очередь прошивки (без vbmeta) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:cardBackgroundColor="#141417"
+                    app:cardCornerRadius="12dp"
+                    app:strokeColor="#26262B"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/layout_flash_queue_title"
+                                android:textColor="#E8E0D4"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:letterSpacing="0.1"
+                                android:fontFamily="monospace" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnBlockImportQueue"
+                                android:layout_width="36dp"
+                                android:layout_height="32dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:minWidth="0dp"
+                                app:icon="@drawable/ic_nf_import"
+                                app:iconGravity="textStart"
+                                app:iconPadding="0dp"
+                                app:iconSize="20dp"
+                                app:iconTint="@null"
+                                app:backgroundTint="#1C1C21"
+                                app:cornerRadius="8dp" />
+                        </LinearLayout>
+
+                        <!-- Кнопки добавления в очередь 3×2 (без vbmeta) -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnQueueBoot"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="@string/layout_add_boot"
+                                android:textAllCaps="false"
+                                android:textColor="#8A8A93"
+                                android:textSize="11sp"
+                                android:fontFamily="monospace"
+                                app:backgroundTint="#141417"
+                                app:cornerRadius="8dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnQueueInitBoot"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="5dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="@string/layout_add_init_boot"
+                                android:textAllCaps="false"
+                                android:textColor="#8A8A93"
+                                android:textSize="10sp"
+                                android:fontFamily="monospace"
+                                app:backgroundTint="#141417"
+                                app:cornerRadius="8dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnQueueRecovery"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="5dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="@string/layout_add_recovery"
+                                android:textAllCaps="false"
+                                android:textColor="#8A8A93"
+                                android:textSize="11sp"
+                                android:fontFamily="monospace"
+                                app:backgroundTint="#141417"
+                                app:cornerRadius="8dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnQueueVendorBoot"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="@string/layout_add_vendor_boot"
+                                android:textAllCaps="false"
+                                android:textColor="#8A8A93"
+                                android:textSize="10sp"
+                                android:fontFamily="monospace"
+                                app:backgroundTint="#141417"
+                                app:cornerRadius="8dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnQueueDtbo"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="5dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="@string/layout_add_dtbo"
+                                android:textAllCaps="false"
+                                android:textColor="#8A8A93"
+                                android:textSize="11sp"
+                                android:fontFamily="monospace"
+                                app:backgroundTint="#141417"
+                                app:cornerRadius="8dp" />
+
+                            <!-- Распорка для выравнивания сетки 3×2 (раздел vbmeta удалён) -->
+                            <Space
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="5dp" />
+                        </LinearLayout>
+
+                        <!-- Резюме очереди -->
+                        <TextView
+                            android:id="@+id/tvFlashQueueSummary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="#08080A"
+                            android:padding="8dp"
+                            android:text="@string/layout_queue_empty_short"
+                            android:textColor="#55555E"
+                            android:textSize="11sp"
+                            android:fontFamily="monospace" />
+
+                        <!-- Запустить / Очистить -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnQueueStart"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="2"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="@string/layout_start_queue"
+                                android:textAllCaps="false"
+                                android:textColor="#F5F5F7"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                app:backgroundTint="#3A3833"
+                                app:cornerRadius="10dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnQueueClear"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="8dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="@string/layout_clear"
+                                android:textAllCaps="false"
+                                android:textColor="#8A8A93"
+                                android:textSize="12sp"
+                                app:backgroundTint="#141417"
+                                app:cornerRadius="10dp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -967,37 +1132,38 @@
                         android:orientation="vertical"
                         android:padding="12dp">
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/layout_xiaomi_rom_title"
-                            android:textColor="#E8E0D4"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.1"
-                            android:fontFamily="monospace" />
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="@string/layout_xiaomi_rom_intro"
-                            android:textColor="#8A8A93"
-                            android:textSize="11sp"
-                            android:lineSpacingExtra="2dp"
-                            android:fontFamily="monospace" />
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/layout_xiaomi_rom_title"
+                                android:textColor="#E8E0D4"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:letterSpacing="0.1"
+                                android:fontFamily="monospace" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:background="#08080A"
-                            android:padding="9dp"
-                            android:text="@string/layout_xiaomi_rom_steps_hint"
-                            android:textColor="#8A8A93"
-                            android:textSize="11sp"
-                            android:lineSpacingExtra="2dp"
-                            android:fontFamily="monospace" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnBlockImportXiaomi"
+                                android:layout_width="36dp"
+                                android:layout_height="32dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:minWidth="0dp"
+                                app:icon="@drawable/ic_nf_import"
+                                app:iconGravity="textStart"
+                                app:iconPadding="0dp"
+                                app:iconSize="20dp"
+                                app:iconTint="@null"
+                                app:backgroundTint="#1C1C21"
+                                app:cornerRadius="8dp" />
+                        </LinearLayout>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnXiaomiRomAnalyze"
@@ -1203,184 +1369,6 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-<!-- Очередь прошивки (без vbmeta) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="#141417"
-                    app:cardCornerRadius="12dp"
-                    app:strokeColor="#26262B"
-                    app:strokeWidth="1dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/layout_flash_queue_title"
-                            android:textColor="#E8E0D4"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.1"
-                            android:fontFamily="monospace" />
-
-                        <!-- Кнопки добавления в очередь 3×2 (без vbmeta) -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnQueueBoot"
-                                android:layout_width="0dp"
-                                android:layout_height="40dp"
-                                android:layout_weight="1"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:text="@string/layout_add_boot"
-                                android:textAllCaps="false"
-                                android:textColor="#8A8A93"
-                                android:textSize="11sp"
-                                android:fontFamily="monospace"
-                                app:backgroundTint="#141417"
-                                app:cornerRadius="8dp" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnQueueInitBoot"
-                                android:layout_width="0dp"
-                                android:layout_height="40dp"
-                                android:layout_weight="1"
-                                android:layout_marginStart="5dp"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:text="@string/layout_add_init_boot"
-                                android:textAllCaps="false"
-                                android:textColor="#8A8A93"
-                                android:textSize="10sp"
-                                android:fontFamily="monospace"
-                                app:backgroundTint="#141417"
-                                app:cornerRadius="8dp" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnQueueRecovery"
-                                android:layout_width="0dp"
-                                android:layout_height="40dp"
-                                android:layout_weight="1"
-                                android:layout_marginStart="5dp"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:text="@string/layout_add_recovery"
-                                android:textAllCaps="false"
-                                android:textColor="#8A8A93"
-                                android:textSize="11sp"
-                                android:fontFamily="monospace"
-                                app:backgroundTint="#141417"
-                                app:cornerRadius="8dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:orientation="horizontal">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnQueueVendorBoot"
-                                android:layout_width="0dp"
-                                android:layout_height="40dp"
-                                android:layout_weight="1"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:text="@string/layout_add_vendor_boot"
-                                android:textAllCaps="false"
-                                android:textColor="#8A8A93"
-                                android:textSize="10sp"
-                                android:fontFamily="monospace"
-                                app:backgroundTint="#141417"
-                                app:cornerRadius="8dp" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnQueueDtbo"
-                                android:layout_width="0dp"
-                                android:layout_height="40dp"
-                                android:layout_weight="1"
-                                android:layout_marginStart="5dp"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:text="@string/layout_add_dtbo"
-                                android:textAllCaps="false"
-                                android:textColor="#8A8A93"
-                                android:textSize="11sp"
-                                android:fontFamily="monospace"
-                                app:backgroundTint="#141417"
-                                app:cornerRadius="8dp" />
-
-                            <!-- Распорка для выравнивания сетки 3×2 (раздел vbmeta удалён) -->
-                            <Space
-                                android:layout_width="0dp"
-                                android:layout_height="40dp"
-                                android:layout_weight="1"
-                                android:layout_marginStart="5dp" />
-                        </LinearLayout>
-
-                        <!-- Резюме очереди -->
-                        <TextView
-                            android:id="@+id/tvFlashQueueSummary"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:background="#08080A"
-                            android:padding="8dp"
-                            android:text="@string/layout_queue_empty_short"
-                            android:textColor="#55555E"
-                            android:textSize="11sp"
-                            android:fontFamily="monospace" />
-
-                        <!-- Запустить / Очистить -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnQueueStart"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="2"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:text="@string/layout_start_queue"
-                                android:textAllCaps="false"
-                                android:textColor="#F5F5F7"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                app:backgroundTint="#3A3833"
-                                app:cornerRadius="10dp" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnQueueClear"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:layout_marginStart="8dp"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:text="@string/layout_clear"
-                                android:textAllCaps="false"
-                                android:textColor="#8A8A93"
-                                android:textSize="12sp"
-                                app:backgroundTint="#141417"
-                                app:cornerRadius="10dp" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </ScrollView>
 
@@ -1462,14 +1450,15 @@
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_sideload_import"
                                 android:textAllCaps="false"
-                                android:textColor="#F5F5F7"
+                                android:textColor="#0B0B0D"
                                 android:textSize="12sp"
+                                android:textStyle="bold"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#1C1C21"
+                                app:backgroundTint="#E8E0D4"
                                 app:cornerRadius="10dp"
                                 app:icon="@drawable/ic_nf_import"
                                 app:iconGravity="textStart"
-                                app:iconSize="18dp"
+                                app:iconSize="20dp"
                                 app:iconTint="@null" />
 
                             <com.google.android.material.button.MaterialButton
@@ -1501,105 +1490,45 @@
                             android:fontFamily="monospace" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
-        </ScrollView>
 
-        <!-- ── FILES (☰) ─────────────────────────────────────────────── -->
-        <ScrollView
-            android:id="@+id/pageFiles"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="ifContentScrolls"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp">
-
+                <!-- Памятка: как импортировать файлы -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
                     app:cardBackgroundColor="#141417"
                     app:cardCornerRadius="12dp"
-                    app:strokeColor="#26262B"
+                    app:strokeColor="#D4B483"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="14dp">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/layout_files_title"
-                            android:textColor="#E8E0D4"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.1"
-                            android:fontFamily="monospace" />
+                            android:text="@string/sideload_memo_icon"
+                            android:textSize="22sp"
+                            android:layout_marginEnd="12dp" />
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:background="#08080A"
-                            android:padding="9dp"
-                            android:text="@string/layout_files_steps_hint"
-                            android:textColor="#8A8A93"
-                            android:textSize="11sp"
-                            android:lineSpacingExtra="2dp"
-                            android:fontFamily="monospace" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnImportFile"
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:layout_marginTop="10dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:text="@string/layout_import_file"
-                            android:textAllCaps="false"
-                            android:textColor="#F5F5F7"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            app:backgroundTint="#1C1C21"
-                            app:cornerRadius="10dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnAnalyzeFile"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginTop="8dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:text="@string/layout_analyze_image"
-                            android:textAllCaps="false"
-                            android:textColor="#F5F5F7"
-                            android:textSize="13sp"
-                            app:backgroundTint="#141417"
-                            app:cornerRadius="10dp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnCopyPath"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginTop="8dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:text="@string/layout_copy_workspace_path"
-                            android:textAllCaps="false"
-                            android:textColor="#8A8A93"
+                            android:layout_weight="1"
+                            android:text="@string/sideload_memo_text"
+                            android:textColor="#D4B483"
                             android:textSize="12sp"
-                            app:backgroundTint="#141417"
-                            app:cornerRadius="10dp" />
+                            android:lineSpacingExtra="3dp"
+                            android:fontFamily="monospace" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </ScrollView>
+
 
         <!-- ── СЕРВИС (скрыт, открывается из Home ⚙) ──────────────── -->
         <ScrollView
@@ -2012,6 +1941,23 @@
                     app:cornerRadius="8dp" />
             </LinearLayout>
         </LinearLayout>
+
+        <!-- ── НАСТРОЙКИ (Settings) — наполняется программно ─────────── -->
+        <ScrollView
+            android:id="@+id/pageSettings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="ifContentScrolls"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/settingsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp" />
+        </ScrollView>
+
 
         <!-- Скрытые дублёры tabDiagnostics/tabReports -->
         <com.google.android.material.button.MaterialButton android:id="@+id/tabDiagnostics" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />

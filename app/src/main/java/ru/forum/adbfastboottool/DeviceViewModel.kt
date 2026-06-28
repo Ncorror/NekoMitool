@@ -630,6 +630,45 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /**
+     * Прошивка образа в ОБА слота (A/B). На современных устройствах раздел нужно
+     * записать и в _a, и в _b, иначе после переключения слота возможен bootloop.
+     * Команды fastboot flash boot_ab НЕ существует — это две последовательные команды:
+     * flash <partition>_a, затем flash <partition>_b (один и тот же образ).
+     * Работает для любого slotted-раздела (boot, init_boot, vendor_boot, dtbo, vbmeta, ...).
+     */
+    fun runFlashBothSlots(partition: String, file: File) {
+        // Базовое имя без суффикса слота, если пользователь его уже указал.
+        val base = partition.trim().lowercase()
+            .removeSuffix("_a").removeSuffix("_b")
+        startOperation(
+            text(R.string.notif_flash_img),
+            text(R.string.notif_flashing_both_slots, base)
+        ) {
+            val proto = fastbootProtocol
+            if (proto?.isConnected != true) {
+                log(text(R.string.error_no_fastboot))
+                return@startOperation
+            }
+            log(text(R.string.flash_both_slots_start, base))
+            // Слот A
+            log(text(R.string.flash_both_slots_slot, "${base}_a"))
+            val okA = proto.flashPartition("${base}_a", file)
+            if (!okA) {
+                log(text(R.string.flash_both_slots_slot_failed, "${base}_a"))
+                return@startOperation
+            }
+            // Слот B
+            log(text(R.string.flash_both_slots_slot, "${base}_b"))
+            val okB = proto.flashPartition("${base}_b", file)
+            if (!okB) {
+                log(text(R.string.flash_both_slots_slot_failed, "${base}_b"))
+                return@startOperation
+            }
+            log(text(R.string.flash_both_slots_done, base))
+        }
+    }
+
     fun runFlashQueue(items: List<FlashQueueItem>) {
         val queue = items.filter { it.partition.isNotBlank() }
         if (queue.isEmpty()) { log(text(R.string.flash_queue_empty_log)); return }
