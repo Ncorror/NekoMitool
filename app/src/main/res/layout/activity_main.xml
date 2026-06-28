@@ -342,26 +342,18 @@
                                 android:letterSpacing="0.1"
                                 android:fontFamily="monospace" />
 
-                            <!-- Единая кнопка «Настройки» — открывает BottomSheet -->
+                            <!-- Настройки (язык/разрешения/батарея) -->
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnSettingsMenu"
-                                android:layout_width="wrap_content"
-                                android:layout_height="34dp"
+                                android:layout_width="40dp"
+                                android:layout_height="32dp"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"
                                 android:minWidth="0dp"
-                                android:paddingHorizontal="14dp"
-                                android:text="@string/layout_settings_menu"
-                                android:textAllCaps="false"
-                                android:textColor="#F5F5F7"
-                                android:textSize="11sp"
-                                android:fontFamily="monospace"
+                                android:text="@string/layout_icon_settings"
+                                android:textSize="15sp"
                                 app:backgroundTint="#1C1C21"
-                                app:cornerRadius="8dp"
-                                app:icon="@drawable/ic_nf_settings"
-                                app:iconGravity="textStart"
-                                app:iconSize="16dp"
-                                app:iconTint="#E8E0D4" />
+                                app:cornerRadius="8dp" />
                         </LinearLayout>
 
                         <TextView
@@ -375,39 +367,75 @@
                             android:lineSpacingExtra="2dp"
                             android:fontFamily="monospace" />
 
-                        <!-- Кнопки профиля сохранены скрытыми: updateSafetyProfileUi()
-                             обновляет их текст/состояние, поэтому ID должны жить. -->
+                        <!-- Видимые кнопки выбора профиля -->
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:visibility="gone"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
                             android:orientation="horizontal">
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnSafetyNovice"
                                 android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:text="@string/safety_profile_novice" />
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="@string/safety_profile_novice"
+                                android:textAllCaps="false"
+                                android:textColor="#F5F5F7"
+                                android:textSize="11sp"
+                                android:fontFamily="monospace"
+                                app:backgroundTint="#1C1C21"
+                                app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnSafetyStandard"
                                 android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:text="@string/safety_profile_standard" />
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="6dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="@string/safety_profile_standard"
+                                android:textAllCaps="false"
+                                android:textColor="#F5F5F7"
+                                android:textSize="11sp"
+                                android:fontFamily="monospace"
+                                app:backgroundTint="#1C1C21"
+                                app:cornerRadius="8dp" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnSafetyExpert"
                                 android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:text="@string/safety_profile_expert" />
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="6dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="@string/safety_profile_expert"
+                                android:textAllCaps="false"
+                                android:textColor="#F5F5F7"
+                                android:textSize="11sp"
+                                android:fontFamily="monospace"
+                                app:backgroundTint="#2E1A1A"
+                                app:cornerRadius="8dp" />
                         </LinearLayout>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnSafetyHighRisk"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:visibility="gone"
-                            android:text="@string/safety_high_risk_locked" />
+                            android:layout_height="42dp"
+                            android:layout_marginTop="8dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="@string/safety_high_risk_locked"
+                            android:textAllCaps="false"
+                            android:textColor="#D4B483"
+                            android:textSize="11sp"
+                            android:fontFamily="monospace"
+                            app:backgroundTint="#2E1A1A"
+                            app:cornerRadius="8dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -426,38 +454,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/layout_classic_dashboard_title"
-                            android:textColor="#E8E0D4"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.1"
-                            android:fontFamily="monospace" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="@string/layout_classic_dashboard_intro"
-                            android:textColor="#8A8A93"
-                            android:textSize="11sp"
-                            android:lineSpacingExtra="2dp"
-                            android:fontFamily="monospace" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:background="#08080A"
-                            android:padding="9dp"
-                            android:text="@string/layout_classic_dashboard_route_hint"
-                            android:textColor="#8A8A93"
-                            android:textSize="11sp"
-                            android:lineSpacingExtra="2dp"
-                            android:fontFamily="monospace" />
 
                         <!-- 3 главные действия: Прошить ROM · Recovery/Root · Файлы -->
                         <LinearLayout
@@ -532,20 +528,14 @@
                                 app:iconTint="#E8E0D4" />
                         </LinearLayout>
 
-                        <!-- Magisk / Console / Reports плитки скрыты (функции доступны:
-                             Magisk — вкладка Fastboot, Console — нижняя консоль,
-                             Reports — кнопка «Отчёты»). ID сохранены для обработчиков. -->
+                        <!-- Console / Reports плитки скрыты (функции доступны:
+                             Console — нижняя консоль, Reports — кнопка «Отчёты»).
+                             ID сохранены для обработчиков. -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:visibility="gone"
                             android:orientation="horizontal">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnTileMagisk"
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:text="@string/layout_tile_magisk" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnTileConsole"
@@ -1254,122 +1244,7 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Magisk / root helper -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="#141417"
-                    app:cardCornerRadius="12dp"
-                    app:strokeColor="#1C1C21"
-                    app:strokeWidth="1dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/layout_magisk_helper_title"
-                            android:textColor="#B0A8C8"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.1"
-                            android:fontFamily="monospace" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="@string/layout_magisk_helper_intro"
-                            android:textColor="#8A8A93"
-                            android:textSize="11sp"
-                            android:lineSpacingExtra="2dp"
-                            android:fontFamily="monospace" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:background="#08080A"
-                            android:padding="9dp"
-                            android:text="@string/layout_magisk_helper_steps_hint"
-                            android:textColor="#8A8A93"
-                            android:textSize="11sp"
-                            android:lineSpacingExtra="2dp"
-                            android:fontFamily="monospace" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMagiskAutoFlash"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginTop="10dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:text="@string/layout_magisk_auto_flash"
-                            android:textAllCaps="false"
-                            android:textColor="#F5F5F7"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            app:backgroundTint="#3A3833"
-                            app:cornerRadius="10dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMagiskFlashBoot"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:text="@string/layout_magisk_flash_boot"
-                                android:textAllCaps="false"
-                                android:textColor="#F5F5F7"
-                                android:textSize="12sp"
-                                app:backgroundTint="#1C1C21"
-                                app:cornerRadius="10dp" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnMagiskFlashInitBoot"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:layout_marginStart="8dp"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:text="@string/layout_magisk_flash_init_boot"
-                                android:textAllCaps="false"
-                                android:textColor="#F5F5F7"
-                                android:textSize="12sp"
-                                app:backgroundTint="#1C1C21"
-                                app:cornerRadius="10dp" />
-                        </LinearLayout>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnMagiskGuide"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginTop="8dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:text="@string/layout_magisk_guide"
-                            android:textAllCaps="false"
-                            android:textColor="#F5F5F7"
-                            android:textSize="12sp"
-                            app:backgroundTint="#1C1C21"
-                            app:cornerRadius="10dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Очередь прошивки (без vbmeta) -->
+<!-- Очередь прошивки (без vbmeta) -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

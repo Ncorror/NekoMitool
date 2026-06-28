@@ -324,38 +324,16 @@ Choose mode:</string>
     <string name="layout_recovery_flash_init_boot">Flash init_boot</string>
     <string name="layout_recovery_flash_vendor_boot">Flash vendor_boot</string>
     <string name="layout_recovery_flash_vbmeta">Flash vbmeta</string>
-    <string name="layout_magisk_helper_title">MAGISK / ROOT HELPER</string>
-    <string name="layout_magisk_helper_intro">Flash a Magisk-patched boot/init_boot image with the same preflight checks used by normal Fastboot flashing.</string>
-    <string name="layout_magisk_auto_flash">Auto flash patched image</string>
-    <string name="layout_magisk_flash_boot">Patched boot</string>
-    <string name="layout_magisk_flash_init_boot">Patched init_boot</string>
-    <string name="layout_magisk_guide">Show Magisk guide</string>
     <string name="recovery_switch_slot_title">Switch active slot</string>
     <string name="recovery_switch_slot_message">Current slot: %1$s
 Target slot: %2$s
 
 Use this only for bootloop recovery when the other slot contains a bootable system. Continue?</string>
-    <string name="magisk_auto_title">Magisk patched image</string>
-    <string name="magisk_auto_message">File: %1$s
-Detected target partition: %2$s
-
-NekoMiFlash guesses the partition from the file name. Confirm this before flashing.</string>
-    <string name="magisk_guide_title">Magisk helper</string>
-    <string name="magisk_guide_message">1. Patch the stock boot.img or init_boot.img in Magisk on the target device.
-2. Copy the patched image to /sdcard/Download/NekoMiFlash.
-3. Use Auto flash or choose boot/init_boot manually.
-4. Keep stock images available for rollback.
-
-Android 13+ devices often use init_boot. Older devices usually use boot.</string>
     <string name="continue_upper">CONTINUE</string>
 
     <!-- 2.5.1 Classic Recovery UI -->
-    <string name="layout_classic_dashboard_title">CLASSIC RECOVERY DASHBOARD</string>
-    <string name="layout_classic_dashboard_intro">Large recovery-style tiles for the main workflows. Device state stays visible above; the console stays visible below.</string>
     <string name="layout_tile_xiaomi_rom">🐱 Flash ROM</string>
-    <string name="layout_tile_recovery">🩹 Recovery
-Root</string>
-    <string name="layout_tile_magisk">✨ Magisk\nRoot</string>
+    <string name="layout_tile_recovery">🩹 Recovery</string>
     <string name="layout_tile_files">📂 Files</string>
     <string name="layout_tile_console">😼 Terminal\nConsole</string>
     <string name="layout_tile_reports">🐾 Reports\nService</string>
@@ -401,10 +379,8 @@ Root</string>
     <string name="safety_high_risk_blocked_message">Action blocked: %1$s. Current profile: %2$s. Switch to Expert and unlock high-risk actions to continue.</string>
     <string name="safety_action_blocked_log">Safety profile blocked action: %1$s</string>
 
-    <string name="layout_classic_dashboard_route_hint">Xiaomi ROM · Recovery · Magisk · Files · Reports</string>
     <string name="layout_xiaomi_rom_steps_hint">Workflow: import ROM → analyze scripts → check device/product/ARB → choose clean all or save data → review dry-run plan → flash with step queue and reports.</string>
     <string name="layout_recovery_tools_steps_hint">Workflow: check current slot first → use reboot fastbootd/bootloader when needed → flash only the stock image that matches the active slot and product.</string>
-    <string name="layout_magisk_helper_steps_hint">Workflow: patch boot/init_boot in Magisk first → import patched image → let NekoMiFlash detect the target partition → confirm partition before flash.</string>
     <string name="layout_files_steps_hint">File workflow: import ROM/images into the workspace, inspect images before flashing, copy the workspace path for manual checks, then return to Fastboot tools.</string>
     <string name="layout_reports_steps_hint">Reports workflow: run self-test, collect forum ZIP, open reports folder, and share sanitized logs without serials or private paths.</string>
 
@@ -417,7 +393,6 @@ Root</string>
     <string name="reports_log_actions">📄  Log: export / clear</string>
     <string name="reports_selftest">🧪  Self-test report</string>
     <string name="reports_selftest_forum">🧪  Self-test forum bundle</string>
-    <string name="layout_settings_menu">⚙ Settings</string>
     <string name="settings_sheet_title">⚙️ Settings</string>
     <string name="settings_section_profile">Safety profile</string>
     <string name="settings_open_language">🌐  Language</string>
@@ -432,4 +407,5 @@ Root</string>
     <string name="terminal_autoscroll_off">↓ Off</string>
     <string name="terminal_clear">Clear</string>
     <string name="layout_icon_import">📂</string>
+    <string name="layout_icon_settings">⚙</string>
 </resources>

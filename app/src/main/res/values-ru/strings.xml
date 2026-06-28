@@ -324,38 +324,16 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
     <string name="layout_recovery_flash_init_boot">Прошить init_boot</string>
     <string name="layout_recovery_flash_vendor_boot">Прошить vendor_boot</string>
     <string name="layout_recovery_flash_vbmeta">Прошить vbmeta</string>
-    <string name="layout_magisk_helper_title">MAGISK / ROOT HELPER</string>
-    <string name="layout_magisk_helper_intro">Прошивка Magisk-patched boot/init_boot через те же preflight-проверки, что и обычная Fastboot-прошивка.</string>
-    <string name="layout_magisk_auto_flash">Авто-прошивка patched image</string>
-    <string name="layout_magisk_flash_boot">Patched boot</string>
-    <string name="layout_magisk_flash_init_boot">Patched init_boot</string>
-    <string name="layout_magisk_guide">Памятка Magisk</string>
     <string name="recovery_switch_slot_title">Смена active slot</string>
     <string name="recovery_switch_slot_message">Текущий слот: %1$s
 Целевой слот: %2$s
 
 Используйте это только при восстановлении bootloop, если второй слот содержит рабочую систему. Продолжить?</string>
-    <string name="magisk_auto_title">Magisk patched image</string>
-    <string name="magisk_auto_message">Файл: %1$s
-Определённый раздел: %2$s
-
-NekoMiFlash угадывает раздел по имени файла. Перед прошивкой проверьте, что раздел выбран правильно.</string>
-    <string name="magisk_guide_title">Памятка Magisk</string>
-    <string name="magisk_guide_message">1. Пропатчите stock boot.img или init_boot.img в Magisk на целевом устройстве.
-2. Скопируйте patched image в /sdcard/Download/NekoMiFlash.
-3. Используйте авто-режим или выберите boot/init_boot вручную.
-4. Держите stock-образы для отката.
-
-Android 13+ часто использует init_boot. Более старые устройства обычно используют boot.</string>
     <string name="continue_upper">ПРОДОЛЖИТЬ</string>
 
     <!-- 2.5.1 Classic Recovery UI -->
-    <string name="layout_classic_dashboard_title">CLASSIC RECOVERY DASHBOARD</string>
-    <string name="layout_classic_dashboard_intro">Крупные recovery-плитки для основных сценариев. Состояние устройства остаётся сверху, консоль остаётся снизу.</string>
     <string name="layout_tile_xiaomi_rom">🐱 Прошить</string>
-    <string name="layout_tile_recovery">🩹 Recovery
-Root</string>
-    <string name="layout_tile_magisk">✨ Magisk\nRoot</string>
+    <string name="layout_tile_recovery">🩹 Recovery</string>
     <string name="layout_tile_files">📂 Файлы</string>
     <string name="layout_tile_console">😼 Терминал\nКонсоль</string>
     <string name="layout_tile_reports">🐾 Отчёты\nСервис</string>
@@ -401,10 +379,8 @@ Root</string>
     <string name="safety_high_risk_blocked_message">Действие заблокировано: %1$s. Текущий профиль: %2$s. Для продолжения включите Эксперт и отдельно разрешите high-risk действия.</string>
     <string name="safety_action_blocked_log">Профиль безопасности заблокировал действие: %1$s</string>
 
-    <string name="layout_classic_dashboard_route_hint">Xiaomi ROM · Recovery · Magisk · Файлы · Отчёты</string>
     <string name="layout_xiaomi_rom_steps_hint">Сценарий: импорт ROM → анализ скриптов → проверка устройства/product/ARB → выбор clean all или save data → просмотр dry-run плана → прошивка с очередью шагов и отчётами.</string>
     <string name="layout_recovery_tools_steps_hint">Сценарий: сначала проверьте текущий слот → при необходимости reboot fastbootd/bootloader → прошивайте только stock-образ под активный slot и правильный product.</string>
-    <string name="layout_magisk_helper_steps_hint">Сценарий: сначала пропатчите boot/init_boot в Magisk → импортируйте patched image → NekoMiFlash определит раздел → перед прошивкой проверьте выбранный target.</string>
     <string name="layout_files_steps_hint">Сценарий файлов: импортируйте ROM/образы в рабочую папку, проверьте образ перед прошивкой, скопируйте путь при необходимости и вернитесь в Fastboot-инструменты.</string>
     <string name="layout_reports_steps_hint">Сценарий отчётов: запустите self-test, соберите forum ZIP, откройте папку reports и отправляйте очищенные логи без серийников и приватных путей.</string>
 
@@ -417,7 +393,6 @@ Root</string>
     <string name="reports_log_actions">📄  Лог: экспорт / очистка</string>
     <string name="reports_selftest">🧪  Отчёт self-test</string>
     <string name="reports_selftest_forum">🧪  Self-test форум-комплект</string>
-    <string name="layout_settings_menu">⚙ Настройки</string>
     <string name="settings_sheet_title">⚙️ Настройки</string>
     <string name="settings_section_profile">Профиль безопасности</string>
     <string name="settings_open_language">🌐  Язык</string>
@@ -432,4 +407,5 @@ Root</string>
     <string name="terminal_autoscroll_off">↓ Стоп</string>
     <string name="terminal_clear">Очистить</string>
     <string name="layout_icon_import">📂</string>
+    <string name="layout_icon_settings">⚙</string>
 </resources>

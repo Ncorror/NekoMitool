@@ -259,10 +259,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnRecoveryFlashInitBoot).setOnClickListener { chooseRecoveryImage("init_boot") }
         findViewById<Button>(R.id.btnRecoveryFlashVendorBoot).setOnClickListener { chooseRecoveryImage("vendor_boot") }
         findViewById<Button>(R.id.btnRecoveryFlashVbmeta).setOnClickListener { chooseRecoveryImage("vbmeta") }
-        findViewById<Button>(R.id.btnMagiskAutoFlash).setOnClickListener { chooseMagiskPatchedAuto() }
-        findViewById<Button>(R.id.btnMagiskFlashBoot).setOnClickListener { chooseMagiskPatchedImage("boot") }
-        findViewById<Button>(R.id.btnMagiskFlashInitBoot).setOnClickListener { chooseMagiskPatchedImage("init_boot") }
-        findViewById<Button>(R.id.btnMagiskGuide).setOnClickListener { showMagiskGuide() }
         findViewById<Button>(R.id.btnBatteryOpt).setOnClickListener { showBatteryOptimizationDialog() }
         findViewById<Button>(R.id.btnPermissions).setOnClickListener { showPermissionsDialog() }
         findViewById<View>(R.id.btnSettingsMenu).setOnClickListener { showSettingsMenu() }
@@ -282,10 +278,6 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.btnTileRecovery).setOnClickListener {
             viewModel.log(getString(R.string.classic_recovery_ui_log) + ": Recovery / Bootloop")
-            switchTab("fastboot")
-        }
-        findViewById<Button>(R.id.btnTileMagisk).setOnClickListener {
-            viewModel.log(getString(R.string.classic_recovery_ui_log) + ": Magisk")
             switchTab("fastboot")
         }
         findViewById<Button>(R.id.btnTileFiles).setOnClickListener { switchTab("files") }
@@ -1817,40 +1809,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun chooseMagiskPatchedImage(partition: String) {
-        if (!ensureGuidedFlashAllowed(partition)) return
-        showFileSelector(".img") { file ->
-            viewModel.log("Magisk helper selected: $partition ← ${file.name}")
-            showFlashConfirmation(partition, file)
-        }
-    }
-
-    private fun chooseMagiskPatchedAuto() {
-        if (!ensureGuidedFlashAllowed("boot")) return
-        showFileSelector(".img") { file ->
-            val lower = file.name.lowercase(Locale.US)
-            val partition = when {
-                "init_boot" in lower || "initboot" in lower -> "init_boot"
-                "vendor_boot" in lower || "vendorboot" in lower -> "vendor_boot"
-                else -> "boot"
-            }
-            MaterialAlertDialogBuilder(this)
-                .setTitle(getString(R.string.magisk_auto_title))
-                .setMessage(getString(R.string.magisk_auto_message, file.name, partition))
-                .setPositiveButton(getString(R.string.continue_upper)) { _, _ -> showFlashConfirmation(partition, file) }
-                .setNegativeButton(getString(R.string.cancel_upper), null)
-                .show()
-        }
-    }
-
-    private fun showMagiskGuide() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.magisk_guide_title))
-            .setMessage(getString(R.string.magisk_guide_message))
-            .setPositiveButton(getString(R.string.close_upper), null)
-            .show()
-    }
-
     private fun chooseXiaomiRomForAnalysis() {
         showXiaomiRomSelector { file ->
             viewModel.analyzeXiaomiFastbootRom(file, workspacePath)
@@ -2717,9 +2675,6 @@ class MainActivity : AppCompatActivity() {
         setButtonSafetyState(R.id.btnRecoveryFlashInitBoot, guidedFlashAllowed)
         setButtonSafetyState(R.id.btnRecoveryFlashVendorBoot, guidedFlashAllowed)
         setButtonSafetyState(R.id.btnRecoveryFlashVbmeta, highRiskAllowed)
-        setButtonSafetyState(R.id.btnMagiskAutoFlash, guidedFlashAllowed)
-        setButtonSafetyState(R.id.btnMagiskFlashBoot, guidedFlashAllowed)
-        setButtonSafetyState(R.id.btnMagiskFlashInitBoot, guidedFlashAllowed)
         setButtonSafetyState(R.id.btnQueueStart, guidedFlashAllowed)
         listOf(R.id.btnFlashBoot, R.id.btnFlashInitBoot, R.id.btnFlashRecovery, R.id.btnFlashVendorBoot, R.id.btnFlashDtbo).forEach {
             setButtonSafetyState(it, guidedFlashAllowed)

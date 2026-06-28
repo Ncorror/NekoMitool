@@ -30,7 +30,7 @@ object ThemePalette {
     private const val KEY_VERSION = "cache_version"
 
     // Увеличивайте при смене bg_welcome.png — старый кеш палитры сбросится.
-    private const val CACHE_VERSION = 2
+    private const val CACHE_VERSION = 3
 
     // Фолбэк — текущая фирменная схема (тёмный фон + оранжевый акцент)
     private val DEFAULT = Scheme(
