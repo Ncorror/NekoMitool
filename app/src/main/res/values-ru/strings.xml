@@ -216,7 +216,7 @@ ADB:
     <string name="layout_icon_cancel">✕</string>
     <string name="layout_icon_home">⌂ ГЛАВНАЯ</string>
     <string name="layout_icon_fastboot">⚡ FASTBOOT</string>
-    <string name="layout_icon_adb">↯ ADB</string>
+    <string name="layout_icon_adb">↯ SIDELOAD</string>
     <string name="layout_icon_files">☰ ФАЙЛЫ</string>
     <string name="layout_device_title">УСТРОЙСТВО</string>
     <string name="layout_mode_empty">Режим: —</string>
@@ -314,16 +314,11 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
 Выберите режим:</string>
     <string name="xiaomi_wizard_clean">Clean all / удалить данные</string>
     <string name="xiaomi_wizard_save">Save user data / сохранить данные</string>
-    <string name="layout_recovery_tools_title">RECOVERY / BOOTLOOP TOOLS</string>
-    <string name="layout_recovery_tools_intro">Проверка слота, переключение active slot, reboot bootloader/fastbootd и прошивка stock boot-chain образов для восстановления после bootloop.</string>
+    <string name="layout_recovery_tools_title">🩹 ВОССТАНОВЛЕНИЕ / СЛОТЫ</string>
+    <string name="layout_recovery_tools_intro">Проверка/переключение active slot, vbmeta off (отключение verity), прошивка Xiaomi ROM с сохранением данных. Прошивка boot-образов — в блоке выше.</string>
     <string name="layout_recovery_check_slot">Проверить слот</string>
     <string name="layout_recovery_switch_slot">Сменить слот</string>
-    <string name="layout_recovery_reboot_fastbootd">Reboot fastbootd</string>
-    <string name="layout_recovery_reboot_bootloader">Reboot bootloader</string>
-    <string name="layout_recovery_flash_boot">Прошить boot</string>
-    <string name="layout_recovery_flash_init_boot">Прошить init_boot</string>
-    <string name="layout_recovery_flash_vendor_boot">Прошить vendor_boot</string>
-    <string name="layout_recovery_flash_vbmeta">Прошить vbmeta</string>
+    <string name="layout_recovery_flash_vbmeta">🔓 vbmeta off</string>
     <string name="recovery_switch_slot_title">Смена active slot</string>
     <string name="recovery_switch_slot_message">Текущий слот: %1$s
 Целевой слот: %2$s
@@ -380,7 +375,7 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
     <string name="safety_action_blocked_log">Профиль безопасности заблокировал действие: %1$s</string>
 
     <string name="layout_xiaomi_rom_steps_hint">Сценарий: импорт ROM → анализ скриптов → проверка устройства/product/ARB → выбор clean all или save data → просмотр dry-run плана → прошивка с очередью шагов и отчётами.</string>
-    <string name="layout_recovery_tools_steps_hint">Сценарий: сначала проверьте текущий слот → при необходимости reboot fastbootd/bootloader → прошивайте только stock-образ под активный slot и правильный product.</string>
+    <string name="layout_recovery_tools_steps_hint">Сценарий: проверьте слот → переключите при необходимости → vbmeta off или прошейте stock-образ под активный slot и правильный product.</string>
     <string name="layout_files_steps_hint">Сценарий файлов: импортируйте ROM/образы в рабочую папку, проверьте образ перед прошивкой, скопируйте путь при необходимости и вернитесь в Fastboot-инструменты.</string>
     <string name="layout_reports_steps_hint">Сценарий отчётов: запустите self-test, соберите forum ZIP, откройте папку reports и отправляйте очищенные логи без серийников и приватных путей.</string>
 
@@ -406,6 +401,19 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
     <string name="terminal_autoscroll_on">↓ Авто</string>
     <string name="terminal_autoscroll_off">↓ Стоп</string>
     <string name="terminal_clear">Очистить</string>
-    <string name="layout_icon_import">📂</string>
     <string name="layout_icon_settings">⚙</string>
+    <string name="layout_fastboot_terminal">😼 Открыть терминал</string>
+    <string name="vbmeta_off_warn_title">⚠️ Отключить verity (vbmeta off)</string>
+    <string name="vbmeta_off_warn_message">Будет прошит vbmeta с ОТКЛЮЧЁННЫМИ verity И verification (flags=0x3).
+
+Файл: %1$s
+
+Это нужно для кастомных/изменённых систем, но может вызвать BOOTLOOP, если образ или устройство не те. Оригинал не изменяется — прошивается пропатченная копия.
+
+Продолжайте только если понимаете риск.</string>
+    <string name="vbmeta_off_continue">Понимаю, продолжить</string>
+    <string name="vbmeta_off_not_avb_title">Это не vbmeta-образ</string>
+    <string name="vbmeta_off_not_avb_message">У выбранного файла нет сигнатуры AVB0 — это не vbmeta. Выберите настоящий vbmeta.img.</string>
+    <string name="layout_sideload_import">Импорт файла</string>
+    <string name="layout_sideload_check_archive">🔍 Проверить архив</string>
 </resources>

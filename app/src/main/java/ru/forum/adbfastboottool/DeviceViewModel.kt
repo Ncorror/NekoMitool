@@ -267,7 +267,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun refreshFastbootDiagnostics() {
-        startOperation(text(R.string.notif_fastboot_diagnostics), text(R.string.notif_updating_device)) {
+        startOperation(text(R.string.notif_fastboot_diagnostics), text(R.string.notif_updating_device), heavy = false) {
             val proto = fastbootProtocol
             if (proto?.isConnected == true) {
                 val diagnostics = proto.refreshDiagnostics(force = true)
@@ -282,7 +282,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
 
     fun runSelfTest() {
         updateSelfTestStatus(SelfTestResult.RUNNING, "Self-test выполняется…")
-        startOperation("Self-test", "Проверка ADB/Fastboot без записи на устройство") {
+        startOperation("Self-test", "Проверка ADB/Fastboot без записи на устройство", heavy = false) {
             try {
                 val ok = performSelfTestBody()
                 updateSelfTestStatus(
@@ -296,13 +296,9 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun runSelfTestReport(onReportCreated: ((File) -> Unit)? = null) {
-        runSelfTestReportArtifacts { artifacts -> onReportCreated?.invoke(artifacts.textFile) }
-    }
-
     fun runSelfTestReportArtifacts(onArtifactsCreated: ((SelfTestReportArtifacts) -> Unit)? = null) {
         updateSelfTestStatus(SelfTestResult.RUNNING, "Self-test report выполняется…")
-        startOperation("Self-test report", "Проверка устройства и сохранение отчёта") {
+        startOperation("Self-test report", "Проверка устройства и сохранение отчёта", heavy = false) {
             try {
                 val startedAt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())
                 val startIndex = synchronized(logLock) { lines.size }
@@ -503,7 +499,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun analyzeFirmwareFile(file: File) {
-        startOperation(text(R.string.notif_file_analysis), text(R.string.notif_checking_file, file.name)) {
+        startOperation(text(R.string.notif_file_analysis), text(R.string.notif_checking_file, file.name), heavy = false) {
             val analysis = ImageInspector.analyze(file, includeHashes = true)
             analysis.toDisplayText().lines().forEach { line -> if (line.isNotBlank()) log(line) }
         }
@@ -528,7 +524,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun inspectFastbootLogicalPartition(partition: String) {
-        startOperation(text(R.string.notif_fastboot_diagnostics), text(R.string.notif_updating_device)) {
+        startOperation(text(R.string.notif_fastboot_diagnostics), text(R.string.notif_updating_device), heavy = false) {
             val info = fastbootProtocol?.inspectLogicalPartition(partition)
             if (info == null) log(text(R.string.error_no_fastboot))
         }
@@ -678,7 +674,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
 
 
     fun analyzeXiaomiFastbootRom(file: File, workspaceDir: File) {
-        startOperation(text(R.string.notif_xiaomi_rom_analysis), text(R.string.notif_checking_file, file.name)) {
+        startOperation(text(R.string.notif_xiaomi_rom_analysis), text(R.string.notif_checking_file, file.name), heavy = false) {
             val analysis = XiaomiFastbootRomManager.analyze(file)
             analysis.toDisplayText().lines().forEach { line -> if (line.isNotBlank()) log(line) }
             val cleanPlan = XiaomiFastbootRomManager.selectPlan(analysis, XiaomiFastbootRomManager.FlashMode.CLEAN_ALL)
@@ -1450,13 +1446,18 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
      * activeJob уже внутри новой coroutine, новая операция может увидеть саму
      * себя, отменить себя же через cancelAndJoin() и не выполнить блок.
      */
-    private fun startOperation(title: String, text: String, block: suspend () -> Unit) {
+    private fun startOperation(title: String, text: String, heavy: Boolean = true, block: suspend () -> Unit) {
         val previousJob = activeJob
         val gen = operationGeneration.incrementAndGet()
 
-        releaseOperationWakeLock(logRelease = false)
-        acquireOperationWakeLock()
-        FlashOperationService.start(getApplication(), title, text)
+        // Лёгкие операции (getvar, диагностика, анализ файла) не пишут на устройство
+        // и длятся секунды — им не нужен foreground-сервис и wakelock. Поднятие сервиса
+        // для них на Android 14 провоцировало ForegroundServiceDidNotStartInTimeException.
+        if (heavy) {
+            releaseOperationWakeLock(logRelease = false)
+            acquireOperationWakeLock()
+            FlashOperationService.start(getApplication(), title, text)
+        }
         _operationActive.postValue(true)
 
         val newJob = viewModelScope.launch(Dispatchers.IO) {
@@ -1471,12 +1472,12 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
             } catch (e: Exception) {
                 log(text(R.string.operation_error, e.message ?: e.javaClass.simpleName))
             } finally {
-                // AtomicLong.get() — видимость между потоками гарантирована.
-                // Старые отменённые операции не должны гасить уведомление новой операции.
                 if (gen == operationGeneration.get()) {
                     _operationActive.postValue(false)
-                    releaseOperationWakeLock(logRelease = true)
-                    FlashOperationService.stop(getApplication())
+                    if (heavy) {
+                        releaseOperationWakeLock(logRelease = true)
+                        FlashOperationService.stop(getApplication())
+                    }
                 }
             }
         }

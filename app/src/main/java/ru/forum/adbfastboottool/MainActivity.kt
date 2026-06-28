@@ -244,8 +244,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnExportLog).setOnClickListener { showLogActions() }
         findViewById<Button>(R.id.btnClearLog).setOnClickListener { viewModel.clearLog() }
         findViewById<Button>(R.id.btnImportFile).setOnClickListener { startImportFilePicker() }
-        // Глобальная кнопка импорта в хедере — тот же выбор файла, доступен везде.
-        findViewById<View>(R.id.btnHeaderImport).setOnClickListener { startImportFilePicker() }
+        // Импорт файла из угла блока прошивки (в контексте Fastboot).
+        findViewById<View>(R.id.btnBlockImportFastboot).setOnClickListener { startImportFilePicker() }
+        // Тонкая кнопка терминала над плитками Fastboot.
+        findViewById<View>(R.id.btnFastbootTerminal).setOnClickListener { switchTab("console") }
         findViewById<Button>(R.id.btnAnalyzeFile).setOnClickListener { showFirmwareAnalysisSelector() }
         findViewById<Button>(R.id.btnXiaomiRomAnalyze).setOnClickListener { chooseXiaomiRomForAnalysis() }
         findViewById<Button>(R.id.btnXiaomiRomWizard).setOnClickListener { chooseXiaomiRomWizard() }
@@ -254,12 +256,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnXiaomiRomFlashSaveData).setOnClickListener { chooseXiaomiRomAndConfirm(XiaomiFastbootRomManager.FlashMode.SAVE_USER_DATA) }
         findViewById<Button>(R.id.btnRecoveryCheckSlot).setOnClickListener { recoveryCheckSlotFromUi() }
         findViewById<Button>(R.id.btnRecoverySwitchSlot).setOnClickListener { recoverySwitchSlotFromUi() }
-        findViewById<Button>(R.id.btnRecoveryRebootFastbootd).setOnClickListener { recoveryRebootFastbootdFromUi() }
-        findViewById<Button>(R.id.btnRecoveryRebootBootloader).setOnClickListener { recoveryRebootBootloaderFromUi() }
-        findViewById<Button>(R.id.btnRecoveryFlashBoot).setOnClickListener { chooseRecoveryImage("boot") }
-        findViewById<Button>(R.id.btnRecoveryFlashInitBoot).setOnClickListener { chooseRecoveryImage("init_boot") }
-        findViewById<Button>(R.id.btnRecoveryFlashVendorBoot).setOnClickListener { chooseRecoveryImage("vendor_boot") }
-        findViewById<Button>(R.id.btnRecoveryFlashVbmeta).setOnClickListener { chooseRecoveryImage("vbmeta") }
+        findViewById<Button>(R.id.btnRecoveryFlashVbmeta).setOnClickListener { chooseVbmetaOff() }
         findViewById<Button>(R.id.btnBatteryOpt).setOnClickListener { showBatteryOptimizationDialog() }
         findViewById<Button>(R.id.btnPermissions).setOnClickListener { showPermissionsDialog() }
         findViewById<View>(R.id.btnSettingsMenu).setOnClickListener { showSettingsMenu() }
@@ -316,6 +313,9 @@ class MainActivity : AppCompatActivity() {
                 showSideloadConfirmation(file)
             }
         }
+        // Импорт файла и проверка архива на вкладке ADB Sideload.
+        findViewById<View>(R.id.btnSideloadImport).setOnClickListener { startImportFilePicker() }
+        findViewById<View>(R.id.btnSideloadCheckArchive).setOnClickListener { showFirmwareAnalysisSelector() }
 
         findViewById<Button>(R.id.btnCancel).setOnClickListener {
             viewModel.cancelActiveOperation()
@@ -1788,25 +1788,66 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun recoveryRebootFastbootdFromUi() {
-        if (!ensureFastbootForTool()) return
-        viewModel.log("Recovery tool: rebooting to fastbootd/userspace via fastboot reboot fastboot")
-        viewModel.runFastbootCommand("reboot:fastboot")
-        switchTab("console")
-    }
-
-    private fun recoveryRebootBootloaderFromUi() {
-        if (!ensureFastbootForTool()) return
-        viewModel.log("Recovery tool: rebooting to bootloader fastboot")
-        viewModel.runFastbootCommand("reboot-bootloader")
-        switchTab("console")
-    }
-
-    private fun chooseRecoveryImage(partition: String) {
-        if (!ensureGuidedFlashAllowed(partition)) return
+    /**
+     * vbmeta off — прошивка vbmeta с отключением verity/verification.
+     * Патчит AVB-заголовок (flags на offset 120 -> 0x3: disable-verity + disable-verification)
+     * в КОПИИ образа, оригинал не трогаем. Требует Expert-профиль + typed-подтверждение.
+     * ВНИМАНИЕ: операция экспериментальная и потенциально опасная (риск bootloop).
+     */
+    private fun chooseVbmetaOff() {
+        if (!ensureGuidedFlashAllowed("vbmeta")) return
         showFileSelector(".img") { file ->
-            viewModel.log("Recovery tool selected: $partition ← ${file.name}")
-            showFlashConfirmation(partition, file)
+            val header = try {
+                file.inputStream().use { stream ->
+                    val buf = ByteArray(4)
+                    val read = stream.read(buf)
+                    if (read >= 4) buf else ByteArray(0)
+                }
+            } catch (e: Exception) { ByteArray(0) }
+            val isAvb = header.size >= 4 &&
+                header[0] == 'A'.code.toByte() && header[1] == 'V'.code.toByte() &&
+                header[2] == 'B'.code.toByte() && header[3] == '0'.code.toByte()
+            if (!isAvb) {
+                viewModel.log("ОШИБКА: файл не является vbmeta-образом (нет сигнатуры AVB0)")
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(getString(R.string.vbmeta_off_not_avb_title))
+                    .setMessage(getString(R.string.vbmeta_off_not_avb_message))
+                    .setPositiveButton(getString(R.string.close_upper), null)
+                    .show()
+                return@showFileSelector
+            }
+            MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.vbmeta_off_warn_title))
+                .setMessage(getString(R.string.vbmeta_off_warn_message, file.name))
+                .setNegativeButton(getString(R.string.cancel_upper), null)
+                .setPositiveButton(getString(R.string.vbmeta_off_continue)) { _, _ ->
+                    confirmCriticalFlash("vbmeta") {
+                        runVbmetaOff(file)
+                    }
+                }
+                .show()
+        }
+    }
+
+    /** Патчит копию vbmeta-образа (flags=0x3) и прошивает её. */
+    private fun runVbmetaOff(file: File) {
+        try {
+            val bytes = file.readBytes()
+            if (bytes.size < 124) {
+                viewModel.log("ОШИБКА: vbmeta-образ слишком мал/повреждён")
+                return
+            }
+            bytes[120] = 0
+            bytes[121] = 0
+            bytes[122] = 0
+            bytes[123] = 0x03
+            val patched = File(workspacePath, "vbmeta_verity_off.img")
+            patched.writeBytes(bytes)
+            viewModel.log("vbmeta пропатчен: verity и verification отключены (flags=0x3)")
+            viewModel.log("Прошивка пропатченного образа: " + patched.name)
+            viewModel.runFlash("vbmeta", patched)
+        } catch (e: Exception) {
+            viewModel.log("ОШИБКА патча vbmeta: " + e.message)
         }
     }
 
@@ -2672,9 +2713,6 @@ class MainActivity : AppCompatActivity() {
         setButtonSafetyState(R.id.btnXiaomiRomFlashSaveData, guidedFlashAllowed)
         setButtonSafetyState(R.id.btnXiaomiRomFlashClean, highRiskAllowed)
         setButtonSafetyState(R.id.btnRecoverySwitchSlot, highRiskAllowed)
-        setButtonSafetyState(R.id.btnRecoveryFlashBoot, guidedFlashAllowed)
-        setButtonSafetyState(R.id.btnRecoveryFlashInitBoot, guidedFlashAllowed)
-        setButtonSafetyState(R.id.btnRecoveryFlashVendorBoot, guidedFlashAllowed)
         setButtonSafetyState(R.id.btnRecoveryFlashVbmeta, highRiskAllowed)
         setButtonSafetyState(R.id.btnQueueStart, guidedFlashAllowed)
         listOf(R.id.btnFlashBoot, R.id.btnFlashInitBoot, R.id.btnFlashRecovery, R.id.btnFlashVendorBoot, R.id.btnFlashDtbo).forEach {
@@ -2827,6 +2865,19 @@ class MainActivity : AppCompatActivity() {
         val cancelButton = findViewById<Button>(R.id.btnOperationCenterCancel)
         cancelButton.isEnabled = active
         cancelButton.alpha = if (active) 1.0f else 0.45f
+
+        // Operation Center виден только во время операции или когда есть значимое
+        // событие (ошибка/успех/предупреждение). В простое — скрыт, чтобы не занимать
+        // место пустым «ОЖИДАНИЕ».
+        val hasSignificantEvent = recentText != null && (
+            recentText.contains("❌") || recentText.contains("ОШИБКА") ||
+            recentText.contains("FAILED", ignoreCase = true) || recentText.contains("БЛОКИРОВКА") ||
+            recentText.contains("✅") || recentText.contains("COMPLETED", ignoreCase = true) ||
+            recentText.contains("ЗАВЕРШЕНА") ||
+            recentText.contains("⚠") || recentText.contains("WARN", ignoreCase = true)
+        )
+        findViewById<View>(R.id.cardOperationCenter).visibility =
+            if (active || hasSignificantEvent) View.VISIBLE else View.GONE
     }
 
     // FIX #2: инкрементальный renderLog — добавляем только новые строки,
