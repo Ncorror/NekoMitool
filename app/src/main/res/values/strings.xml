@@ -319,7 +319,7 @@ Use this only for bootloop recovery when the other slot contains a bootable syst
     <string name="continue_upper">CONTINUE</string>
 
     <!-- 2.5.1 Classic Recovery UI -->
-    <string name="layout_tile_xiaomi_rom">🐱 Flash firmware</string>
+    <string name="layout_tile_xiaomi_rom">Flash firmware</string>
     <string name="layout_tile_console">😼 Terminal\nConsole</string>
     <string name="layout_tile_reports">🐾 Reports\nService</string>
 
@@ -376,7 +376,7 @@ Use this only for bootloop recovery when the other slot contains a bootable syst
     <string name="settings_open_language">🌐  Language</string>
     <string name="settings_open_permissions">🔐  Permissions</string>
     <string name="settings_open_battery">🔋  Battery optimization</string>
-    <string name="terminal_title">😼 TERMINAL</string>
+    <string name="terminal_title">TERMINAL</string>
     <string name="terminal_filter_all">All</string>
     <string name="terminal_filter_info">Info</string>
     <string name="terminal_filter_warn">Warn</string>
@@ -384,7 +384,7 @@ Use this only for bootloop recovery when the other slot contains a bootable syst
     <string name="terminal_autoscroll_on">↓ Auto</string>
     <string name="terminal_autoscroll_off">↓ Off</string>
     <string name="terminal_clear">Clear</string>
-    <string name="layout_fastboot_terminal">😼 Open terminal</string>
+    <string name="layout_fastboot_terminal">Open terminal</string>
     <string name="vbmeta_off_warn_title">⚠️ Disable verity (vbmeta off)</string>
     <string name="vbmeta_off_warn_message">This will flash vbmeta with verity AND verification DISABLED (flags=0x3).
 

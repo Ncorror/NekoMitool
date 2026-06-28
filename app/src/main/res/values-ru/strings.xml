@@ -319,7 +319,7 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
     <string name="continue_upper">ПРОДОЛЖИТЬ</string>
 
     <!-- 2.5.1 Classic Recovery UI -->
-    <string name="layout_tile_xiaomi_rom">🐱 Прошить</string>
+    <string name="layout_tile_xiaomi_rom">Прошить</string>
     <string name="layout_tile_console">😼 Терминал\nКонсоль</string>
     <string name="layout_tile_reports">🐾 Отчёты\nСервис</string>
 
@@ -376,7 +376,7 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
     <string name="settings_open_language">🌐  Язык</string>
     <string name="settings_open_permissions">🔐  Разрешения</string>
     <string name="settings_open_battery">🔋  Оптимизация батареи</string>
-    <string name="terminal_title">😼 ТЕРМИНАЛ</string>
+    <string name="terminal_title">ТЕРМИНАЛ</string>
     <string name="terminal_filter_all">Все</string>
     <string name="terminal_filter_info">Инфо</string>
     <string name="terminal_filter_warn">Предупр</string>
@@ -384,7 +384,7 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
     <string name="terminal_autoscroll_on">↓ Авто</string>
     <string name="terminal_autoscroll_off">↓ Стоп</string>
     <string name="terminal_clear">Очистить</string>
-    <string name="layout_fastboot_terminal">😼 Открыть терминал</string>
+    <string name="layout_fastboot_terminal">Открыть терминал</string>
     <string name="vbmeta_off_warn_title">⚠️ Отключить verity (vbmeta off)</string>
     <string name="vbmeta_off_warn_message">Будет прошит vbmeta с ОТКЛЮЧЁННЫМИ verity И verification (flags=0x3).
 
