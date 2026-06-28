@@ -144,10 +144,11 @@ class MainActivity : AppCompatActivity() {
         applySavedLanguage()
         super.onCreate(savedInstanceState)
 
-        // Онбординг-гейт: если обязательные разрешения не выданы и это не USB-attach,
-        // отправляем пользователя на WelcomeActivity.
-        if (!PermissionGate.areAllRequiredGranted(this) &&
-            intent?.action != UsbManager.ACTION_USB_DEVICE_ATTACHED
+        // Онбординг показывается при КАЖДОМ запуске (кроме USB-attach,
+        // когда телефон подключают как устройство — там welcome помешал бы).
+        // Флаг from_welcome означает, что мы уже прошли онбординг в этом запуске.
+        if (intent?.action != UsbManager.ACTION_USB_DEVICE_ATTACHED &&
+            intent?.getBooleanExtra("from_welcome", false) != true
         ) {
             startActivity(Intent(this, WelcomeActivity::class.java))
             finish()

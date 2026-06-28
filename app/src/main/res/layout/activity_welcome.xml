@@ -3,7 +3,7 @@
     Онбординг-экран.
     - Полноэкранный фон bg_welcome.png (centerCrop)
     - Нижний блок на полупрозрачной подложке (scrim) для читабельности
-    - Кастомный чекбокс через @drawable/checkbox_onboarding
+    - Переключатель (SwitchCompat) подтверждения
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -30,8 +30,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#99000000"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
             android:text="@string/app_name"
-            android:textColor="#00E5FF"
+            android:textColor="#F97316"
             android:textSize="26sp"
             android:textStyle="bold"
             android:fontFamily="monospace"
@@ -40,9 +43,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="8dp"
+            android:background="#99000000"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
             android:text="@string/onboarding_subtitle"
-            android:textColor="#9B5CFF"
+            android:textColor="#FFD9A0"
             android:textSize="13sp"
             android:fontFamily="monospace" />
     </LinearLayout>
@@ -91,16 +97,17 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <CheckBox
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/checkboxAgree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@drawable/checkbox_onboarding"
                 android:enabled="false"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
-                android:paddingStart="0dp"
-                android:paddingEnd="0dp" />
+                android:scaleX="1.3"
+                android:scaleY="1.3"
+                android:thumbTint="@color/switch_thumb"
+                android:trackTint="@color/switch_track" />
 
             <TextView
                 android:layout_width="0dp"

@@ -7,7 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Button
-import android.widget.CheckBox
+import androidx.appcompat.widget.SwitchCompat
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
  *
  * Поведение по ТЗ:
  *  - Полноэкранный фон bg_welcome.png (centerCrop) — задаётся в layout.
- *  - Кастомный чекбокс (selector в @drawable/checkbox_onboarding).
+ *  - Переключатель (SwitchCompat) для подтверждения входа.
  *  - Чекбокс ЗАБЛОКИРОВАН, пока не выданы все обязательные разрешения.
  *  - Кнопка «Дать разрешения» открывает системные диалоги.
  *  - Как только всё выдано — чекбокс разблокируется.
@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
  */
 class WelcomeActivity : AppCompatActivity() {
 
-    private lateinit var checkbox: CheckBox
+    private lateinit var checkbox: SwitchCompat
     private lateinit var btnPermissions: Button
     private lateinit var tvPermissionStatus: TextView
 
@@ -60,8 +60,11 @@ class WelcomeActivity : AppCompatActivity() {
                 refreshGateState()
                 return@setOnClickListener
             }
-            // Все разрешения есть — открываем главный экран
-            startActivity(Intent(this, MainActivity::class.java))
+            // Все разрешения есть — открываем главный экран.
+            // Флаг говорит MainActivity не отправлять нас обратно на Welcome.
+            startActivity(Intent(this, MainActivity::class.java).apply {
+                putExtra("from_welcome", true)
+            })
             finish()
         }
 
