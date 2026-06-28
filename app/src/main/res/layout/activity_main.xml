@@ -424,8 +424,9 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnTileXiaomiRom"
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="96dp"
+                                android:layout_weight="1"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"
                                 android:text="@string/layout_tile_xiaomi_rom"
@@ -441,24 +442,29 @@
                                 app:iconPadding="8dp"
                                 app:iconSize="28dp"
                                 app:iconTint="#E8E0D4" />
-                        </LinearLayout>
 
-                        <!-- ADB/Fastboot терминал — быстрый доступ с главной -->
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnHomeTerminal"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:layout_marginTop="10dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:text="@string/layout_home_terminal"
-                            android:textAllCaps="false"
-                            android:textColor="#0B0B0D"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:fontFamily="monospace"
-                            app:backgroundTint="#B0A8C8"
-                            app:cornerRadius="12dp" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnHomeTerminal"
+                                android:layout_width="0dp"
+                                android:layout_height="96dp"
+                                android:layout_weight="1"
+                                android:layout_marginStart="10dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="@string/layout_home_terminal"
+                                android:textAllCaps="false"
+                                android:textColor="#F5F5F7"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:fontFamily="monospace"
+                                app:backgroundTint="#1C1C21"
+                                app:cornerRadius="12dp"
+                                app:icon="@drawable/ic_nf_terminal_tile"
+                                app:iconGravity="top"
+                                app:iconPadding="8dp"
+                                app:iconSize="28dp"
+                                app:iconTint="#B0A8C8" />
+                        </LinearLayout>
 
                         <!-- Console / Reports плитки скрыты (функции доступны:
                              Console — нижняя консоль, Reports — кнопка «Отчёты»).
@@ -844,15 +850,10 @@
                                 android:text="@string/layout_flash_reboot_mode"
                                 android:textAllCaps="false"
                                 android:textColor="#F5F5F7"
-                                android:textSize="12sp"
+                                android:textSize="13sp"
                                 android:fontFamily="monospace"
-                                app:backgroundTint="#141417"
-                                app:cornerRadius="10dp"
-                                app:icon="@drawable/ic_nf_reboot"
-                                app:iconGravity="textStart"
-                                app:iconPadding="2dp"
-                                app:iconSize="18dp"
-                                app:iconTint="#E8E0D4" />
+                                app:backgroundTint="#1C1C21"
+                                app:cornerRadius="10dp" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

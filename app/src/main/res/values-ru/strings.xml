@@ -423,11 +423,11 @@ NekoMiFlash прочитает flash_all-скрипты, заблокирует 
 
 Используйте на свой риск. Прошивка может превратить устройство в кирпич.</string>
     <string name="layout_icon_settings_tab">⚙ НАСТРОЙКИ</string>
-    <string name="layout_flash_reboot_mode">🔄 Режим перезагрузки</string>
+    <string name="layout_flash_reboot_mode">Reboot</string>
     <string name="sideload_memo_text">Чтобы прошить: сначала импортируйте файл в папку приложения кнопкой «Импорт файла», затем выберите .zip для Sideload. На устройстве войдите в Recovery → Apply update → Apply from ADB.</string>
     <string name="sideload_memo_icon">💡</string>
     <string name="safety_not_expert_toast">Вы не эксперт, вы новичок. Переключите на эксперт в Настройках.</string>
     <string name="slot_hint_ab_device">🔁 Обнаружено A/B устройство (slot-count=2). Рекомендуется: прошить в ОБА слота, чтобы избежать bootloop после переключения слота.</string>
     <string name="slot_hint_single_device">📱 Устройство с одним слотом (без A/B). Используйте простую прошивку — вариант «оба слота» не нужен.</string>
-    <string name="layout_home_terminal">🐱 ADB / Fastboot терминал</string>
+    <string name="layout_home_terminal">Терминал</string>
 </resources>

@@ -423,11 +423,11 @@ Flash without a PC — phone flashes phone.
 
 Use at your own risk. Flashing can brick a device.</string>
     <string name="layout_icon_settings_tab">⚙ SETTINGS</string>
-    <string name="layout_flash_reboot_mode">🔄 Reboot mode</string>
+    <string name="layout_flash_reboot_mode">Reboot</string>
     <string name="sideload_memo_text">To flash: first import the file into the app folder via the Import file button, then select the .zip for Sideload. On the device, enter Recovery → Apply update → Apply from ADB.</string>
     <string name="sideload_memo_icon">💡</string>
     <string name="safety_not_expert_toast">You\'re not an expert, you\'re a novice. Switch to Expert profile in Settings.</string>
     <string name="slot_hint_ab_device">🔁 A/B device detected (slot-count=2). Recommended: flash to BOTH slots to avoid bootloop after slot switch.</string>
     <string name="slot_hint_single_device">📱 Single-slot device (no A/B). Use simple flash — both-slots option is not needed.</string>
-    <string name="layout_home_terminal">🐱 ADB / Fastboot terminal</string>
+    <string name="layout_home_terminal">Terminal</string>
 </resources>
