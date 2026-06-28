@@ -7,7 +7,8 @@ import java.util.Locale
 class FastbootProtocol(
     private val usbManager: UsbManager,
     private val device: UsbDevice,
-    private val onLog: (String) -> Unit
+    private val onLog: (String) -> Unit,
+    private val onLogVerbose: (String) -> Unit = onLog
 ) {
     private var connection: UsbDeviceConnection? = null
     private var endpointIn: UsbEndpoint? = null
@@ -727,7 +728,7 @@ class FastbootProtocol(
             return false
         }
         if (debugLogging) onLog("[debug] USB OUT command bytes=${cmdBytes.size}")
-        onLog("-> $command")
+        onLogVerbose("-> $command")
         return true
     }
 
@@ -748,7 +749,7 @@ class FastbootProtocol(
         val raw = String(buffer, 0, bytesRead, Charsets.US_ASCII).replace("\u0000", "").trim()
         if (raw.isNotEmpty()) {
             if (debugLogging) onLog("[debug] USB IN bytes=$bytesRead")
-            onLog("<- $raw")
+            onLogVerbose("<- $raw")
         }
         if (raw.length < 4) return FastbootPacket("UNKNOWN", raw, raw)
         return FastbootPacket(raw.take(4), raw.drop(4).trim(), raw)

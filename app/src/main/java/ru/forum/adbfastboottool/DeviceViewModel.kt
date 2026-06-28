@@ -173,6 +173,16 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
         log(text(R.string.log_cleared))
     }
 
+    /**
+     * Лог только в файл, минуя экранную консоль. Для подробных сырых строк
+     * (-> getvar / <- OKAY), которые засоряют экран, но нужны при диагностике.
+     */
+    fun logFileOnly(message: String) {
+        synchronized(logLock) {
+            appendRawToLogFile(formatLogLine(message))
+        }
+    }
+
     private fun appendRawToLogFile(text: String) {
         try { logFile?.appendText(text) } catch (_: Exception) {}
     }
@@ -193,7 +203,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
 
         activeJob = viewModelScope.launch(Dispatchers.IO) {
             if (isFastboot) {
-                val proto = FastbootProtocol(usbManager, device) { msg -> log(msg) }
+                val proto = FastbootProtocol(usbManager, device, { msg -> log(msg) }, { msg -> logFileOnly(msg) })
                 proto.debugLogging = debugLoggingEnabled
                 if (proto.connect()) {
                     proto.profilesDirectory = profilesDir

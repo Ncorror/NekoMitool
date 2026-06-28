@@ -102,7 +102,6 @@ Device profiles:
 Inside: log.txt, usb-info.txt, fastboot-info.txt, app-info.txt, files.txt, and profiles/*.json. You can attach it to a forum thread.</string>
     <string name="share_file_chooser">Send file</string>
     <string name="share_file_text">File: %1$s</string>
-    <string name="workspace_path_copied">Path copied: %1$s</string>
     <string name="log_file_not_created">ERROR: log file has not been created yet</string>
     <string name="log_dialog_message">File:
 %1$s
@@ -212,7 +211,6 @@ This writes images to bootloader partitions. Review model, slot, and file names 
     <!-- Layout text extracted from activity_main.xml -->
     <string name="layout_status_no_device">● No device</string>
     <string name="layout_icon_scan">🔌</string>
-    <string name="layout_icon_expert">⚙</string>
     <string name="layout_icon_cancel">✕</string>
     <string name="layout_icon_home">⌂ HOME</string>
     <string name="layout_icon_fastboot">⚡ FLASH</string>
@@ -348,9 +346,6 @@ Use this only for bootloop recovery when the other slot contains a bootable syst
     <string name="safety_profile_standard_desc">STANDARD: guided flash actions are available; terminal stays locked and high-risk write actions are blocked.</string>
     <string name="safety_profile_expert_desc">EXPERT: full terminal visible.</string>
     <string name="safety_profile_expert_unlocked_desc">EXPERT + HIGH RISK: full terminal and high-risk write actions are enabled. Typed confirmations are still required.</string>
-    <string name="safety_header_novice">SAFE</string>
-    <string name="safety_header_standard">STD</string>
-    <string name="safety_header_expert">EXP</string>
     <string name="safety_profile_dialog_title">Safety profile</string>
     <string name="safety_profile_changed_log">Safety profile changed: %1$s</string>
     <string name="safety_high_risk_locked">High-risk actions: locked</string>
@@ -429,9 +424,10 @@ Flash without a PC — phone flashes phone.
 Use at your own risk. Flashing can brick a device.</string>
     <string name="layout_icon_settings_tab">⚙ SETTINGS</string>
     <string name="layout_flash_reboot_mode">🔄 Reboot mode</string>
-    <string name="sideload_memo_text">To import files, put the device into Recovery → Apply update → Apply from ADB (sideload mode).</string>
+    <string name="sideload_memo_text">To flash: first import the file into the app folder via the Import file button, then select the .zip for Sideload. On the device, enter Recovery → Apply update → Apply from ADB.</string>
     <string name="sideload_memo_icon">💡</string>
     <string name="safety_not_expert_toast">You\'re not an expert, you\'re a novice. Switch to Expert profile in Settings.</string>
     <string name="slot_hint_ab_device">🔁 A/B device detected (slot-count=2). Recommended: flash to BOTH slots to avoid bootloop after slot switch.</string>
     <string name="slot_hint_single_device">📱 Single-slot device (no A/B). Use simple flash — both-slots option is not needed.</string>
+    <string name="layout_home_terminal">🐱 ADB / Fastboot terminal</string>
 </resources>

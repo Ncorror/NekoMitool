@@ -53,20 +53,7 @@
             app:backgroundTint="#26262B"
             app:cornerRadius="10dp" />
 
-        <!-- EXPERT режим -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnExpertMode"
-            android:layout_width="40dp"
-            android:layout_height="36dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:text="@string/layout_icon_expert"
-            android:textSize="16sp"
-            android:layout_marginStart="6dp"
-            app:backgroundTint="#26262B"
-            app:cornerRadius="10dp" />
+        <!-- EXPERT режим убран из хедера — профиль теперь в Настройках -->
 
         <!-- СТОП (красная) — всегда видна -->
         <com.google.android.material.button.MaterialButton
@@ -456,6 +443,23 @@
                                 app:iconTint="#E8E0D4" />
                         </LinearLayout>
 
+                        <!-- ADB/Fastboot терминал — быстрый доступ с главной -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnHomeTerminal"
+                            android:layout_width="match_parent"
+                            android:layout_height="44dp"
+                            android:layout_marginTop="10dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="@string/layout_home_terminal"
+                            android:textAllCaps="false"
+                            android:textColor="#0B0B0D"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:fontFamily="monospace"
+                            app:backgroundTint="#B0A8C8"
+                            app:cornerRadius="12dp" />
+
                         <!-- Console / Reports плитки скрыты (функции доступны:
                              Console — нижняя консоль, Reports — кнопка «Отчёты»).
                              ID сохранены для обработчиков. -->
@@ -612,64 +616,6 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Быстрые действия Reboot -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="#141417"
-                    app:cardCornerRadius="12dp"
-                    app:strokeColor="#26262B"
-                    app:strokeWidth="1dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/layout_reboot_title"
-                            android:textColor="#E8E0D4"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.1"
-                            android:fontFamily="monospace" />
-
-                        <!-- Меню перезагрузки убрано с главной (пункт плана 2).
-                             Reboot доступен в Fastboot и терминале. Кнопка скрыта,
-                             но ID сохранён — showRebootMenu() остаётся доступен коду. -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
-
-                            <!-- Единая кнопка «Reboot» — открывает BottomSheet с вариантами -->
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnRebootMenu"
-                                android:layout_width="match_parent"
-                                android:layout_height="38dp"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:text="@string/layout_reboot_menu"
-                                android:textAllCaps="false"
-                                android:textColor="#F5F5F7"
-                                android:textSize="12sp"
-                                app:backgroundTint="#141417"
-                                app:cornerRadius="8dp"
-                                app:icon="@drawable/ic_nf_reboot"
-                                app:iconGravity="textStart"
-                                app:iconTint="#E8E0D4" />
-
-                            <!-- Старые reboot-кнопки сохранены скрытыми: их обработчики
-                                 и ID остаются живыми, BottomSheet вызывает ту же логику. -->
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
 
                 <!-- Сервис/Язык скрыты: Сервис = вкладка диагностики (плитка),
                      Язык = в меню «Настройки». ID сохранены для обработчиков. -->
@@ -730,19 +676,19 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnFastbootTerminal"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="46dp"
                     android:layout_marginBottom="8dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:text="@string/layout_fastboot_terminal"
                     android:textAllCaps="false"
                     android:textColor="#0B0B0D"
-                    android:textSize="11sp"
+                    android:textSize="13sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.05"
                     android:fontFamily="monospace"
                     app:backgroundTint="#B0A8C8"
-                    app:cornerRadius="8dp" />
+                    app:cornerRadius="10dp" />
 
                 <!-- Одиночная прошивка -->
                 <com.google.android.material.card.MaterialCardView
@@ -886,31 +832,28 @@
                                 app:backgroundTint="#1C1C21"
                                 app:cornerRadius="10dp" />
 
-                            <!-- Заглушка для выравнивания -->
-                            <View
+                            <!-- Reboot mode на месте бывшей пустой ячейки сетки -->
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFlashRebootMode"
                                 android:layout_width="0dp"
                                 android:layout_height="48dp"
                                 android:layout_weight="1"
-                                android:layout_marginStart="6dp" />
+                                android:layout_marginStart="6dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:text="@string/layout_flash_reboot_mode"
+                                android:textAllCaps="false"
+                                android:textColor="#F5F5F7"
+                                android:textSize="12sp"
+                                android:fontFamily="monospace"
+                                app:backgroundTint="#141417"
+                                app:cornerRadius="10dp"
+                                app:icon="@drawable/ic_nf_reboot"
+                                app:iconGravity="textStart"
+                                app:iconPadding="2dp"
+                                app:iconSize="18dp"
+                                app:iconTint="#E8E0D4" />
                         </LinearLayout>
-
-                        <!-- Режим перезагрузки (reboot mode) — в контексте прошивки -->
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnFlashRebootMode"
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="10dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:text="@string/layout_flash_reboot_mode"
-                            android:textAllCaps="false"
-                            android:textColor="#F5F5F7"
-                            android:textSize="12sp"
-                            app:backgroundTint="#141417"
-                            app:cornerRadius="10dp"
-                            app:icon="@drawable/ic_nf_reboot"
-                            app:iconGravity="textStart"
-                            app:iconTint="#E8E0D4" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -1963,6 +1906,7 @@
         <com.google.android.material.button.MaterialButton android:id="@+id/tabDiagnostics" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
         <com.google.android.material.button.MaterialButton android:id="@+id/tabReports"     android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
         <!-- btnRebootMenu для совместимости с кодом (не виден) -->
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnRebootMenu" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
         <!-- btnFlashMenu для совместимости с кодом (не виден) -->
         <!-- btnHomeConsole -->
         <com.google.android.material.button.MaterialButton android:id="@+id/btnHomeConsole" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />

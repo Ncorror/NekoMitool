@@ -237,7 +237,6 @@ class MainActivity : AppCompatActivity() {
     private fun setupButtons() {
         findViewById<Button>(R.id.btnScan).setOnClickListener { scanForDevices() }
         findViewById<Button>(R.id.btnLanguage).setOnClickListener { showLanguageDialog() }
-        findViewById<Button>(R.id.btnExpertMode).setOnClickListener { showSafetyProfileDialog() }
         findViewById<Button>(R.id.btnHelp).setOnClickListener { showHelpDialog() }
         findViewById<Button>(R.id.btnSafetyNovice).setOnClickListener { setSafetyProfile(SafetyProfile.NOVICE) }
         findViewById<Button>(R.id.btnSafetyStandard).setOnClickListener { setSafetyProfile(SafetyProfile.STANDARD) }
@@ -277,6 +276,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnTileXiaomiRom).setOnClickListener {
             switchTab("fastboot")
         }
+        findViewById<View>(R.id.btnHomeTerminal).setOnClickListener { switchTab("console") }
         findViewById<Button>(R.id.btnTileConsole).setOnClickListener { switchTab("console") }
         findViewById<Button>(R.id.btnTileReports).setOnClickListener { switchTab("diagnostics") }
         findViewById<Button>(R.id.btnOperationCenterConsole).setOnClickListener { switchTab("console") }
@@ -338,13 +338,13 @@ class MainActivity : AppCompatActivity() {
         // а не закрываем приложение. На главном — стандартный выход.
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (tabController.selectedWindow != "home") {
-                    switchTab("home")
-                } else {
-                    // На главном экране — отключаем наш перехват и отдаём
-                    // системе стандартное поведение (выход).
-                    isEnabled = false
-                    onBackPressedDispatcher.onBackPressed()
+                val current = tabController.selectedWindow
+                viewModel.log("← Back pressed (current tab: $current)")
+                when {
+                    // Не на главной — возвращаемся на главный экран.
+                    current != "home" -> switchTab("home")
+                    // На главной — сворачиваем в фон (не убивая процесс).
+                    else -> moveTaskToBack(true)
                 }
             }
         })
@@ -1805,7 +1805,7 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.safety_high_risk_unlocked)
             else
                 getString(R.string.safety_high_risk_locked)
-            profileCard.addView(row("⚠\uFE0F  $hrLabel") { toggleHighRiskActions(); buildSettingsPage() })
+            profileCard.addView(row("⚠\uFE0F  $hrLabel") { toggleHighRiskActions() })
         }
         container.addView(profileCard)
 
@@ -2724,19 +2724,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.log(getString(R.string.safety_profile_changed_log, safetyProfileTitle()))
     }
 
-    private fun showSafetyProfileDialog() {
-        val labels = arrayOf(
-            getString(R.string.safety_profile_novice),
-            getString(R.string.safety_profile_standard),
-            getString(R.string.safety_profile_expert)
-        )
-        val profiles = arrayOf(SafetyProfile.NOVICE, SafetyProfile.STANDARD, SafetyProfile.EXPERT)
-        MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.safety_profile_dialog_title))
-            .setItems(labels) { _, which -> setSafetyProfile(profiles[which]) }
-            .setNegativeButton(getString(R.string.cancel_upper), null)
-            .show()
-    }
 
     private fun toggleHighRiskActions() {
         if (safetyProfile != SafetyProfile.EXPERT) {
@@ -2750,6 +2737,7 @@ class MainActivity : AppCompatActivity() {
                 .putBoolean(PREF_HIGH_RISK_UNLOCKED, false)
                 .apply()
             updateSafetyProfileUi()
+            buildSettingsPage()
             viewModel.log(getString(R.string.safety_high_risk_disabled_log))
             return
         }
@@ -2765,6 +2753,7 @@ class MainActivity : AppCompatActivity() {
                 .putBoolean(PREF_HIGH_RISK_UNLOCKED, true)
                 .apply()
             updateSafetyProfileUi()
+            buildSettingsPage()
             viewModel.log(getString(R.string.safety_high_risk_enabled_log))
         }
     }
@@ -2777,11 +2766,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateSafetyProfileUi() {
         expertModeEnabled = safetyProfile == SafetyProfile.EXPERT
-        findViewById<Button>(R.id.btnExpertMode).text = when (safetyProfile) {
-            SafetyProfile.NOVICE -> getString(R.string.safety_header_novice)
-            SafetyProfile.STANDARD -> getString(R.string.safety_header_standard)
-            SafetyProfile.EXPERT -> getString(R.string.safety_header_expert)
-        }
         findViewById<View>(R.id.consoleInputBar).visibility = if (expertModeEnabled) View.VISIBLE else View.GONE
 
         val description = when (safetyProfile) {
