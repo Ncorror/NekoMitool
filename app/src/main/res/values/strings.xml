@@ -431,7 +431,7 @@ Use at your own risk. Flashing can brick a device.</string>
     <string name="layout_flash_reboot_mode">🔄 Reboot mode</string>
     <string name="sideload_memo_text">To import files, put the device into Recovery → Apply update → Apply from ADB (sideload mode).</string>
     <string name="sideload_memo_icon">💡</string>
-    <string name="safety_not_expert_toast">You're not an expert, you're a novice. Switch to Expert profile in Settings.</string>
+    <string name="safety_not_expert_toast">You\'re not an expert, you\'re a novice. Switch to Expert profile in Settings.</string>
     <string name="slot_hint_ab_device">🔁 A/B device detected (slot-count=2). Recommended: flash to BOTH slots to avoid bootloop after slot switch.</string>
     <string name="slot_hint_single_device">📱 Single-slot device (no A/B). Use simple flash — both-slots option is not needed.</string>
 </resources>

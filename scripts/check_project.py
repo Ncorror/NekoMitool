@@ -106,6 +106,10 @@ def check_string_values_aapt_safe() -> None:
             name, value = m.group(1), m.group(2)
             if value[:1] in ("?", "@"):
                 bad.append(f"{rel}: {name} starts with '{value[:1]}' (escape as '\\{value[:1]}')")
+            # Неэкранированный апостроф ломает AAPT (нужно \' или строка в "...").
+            unescaped = re.sub(r"\\'", "", value)
+            if "'" in unescaped and not (value.startswith('"') and value.endswith('"')):
+                bad.append(f"{rel}: {name} has an unescaped apostrophe (use \\' )")
     if bad:
         fail("AAPT-unsafe string values:\n  " + "\n  ".join(bad))
     else:
