@@ -601,6 +601,57 @@ class FastbootProtocol(
         }
     }
 
+    /**
+     * Разблокировка загрузчика Xiaomi: загружает encryptData (полученный от Mi
+     * API) в download-буфер устройства, затем выполняет oem unlock.
+     * Это финальный шаг официального протокола Mi Unlock.
+     */
+    fun stageAndOemUnlock(encryptDataFile: File): Boolean {
+        if (!isConnected) {
+            onLog("❌ Нет соединения с устройством")
+            return false
+        }
+        cancelled = false
+        if (!encryptDataFile.exists() || !encryptDataFile.isFile || encryptDataFile.length() <= 0L) {
+            onLog("❌ ОШИБКА: файл разблокировки недоступен или пуст")
+            return false
+        }
+
+        onLog("🔓 Staging данных разблокировки (${encryptDataFile.length()} байт)...")
+        val hexSize = String.format("%08x", encryptDataFile.length())
+        if (!writeCommand("download:$hexSize", 5000)) {
+            onLog("❌ ОШИБКА: сбой команды download для разблокировки")
+            return false
+        }
+        val downloadPacket = readUntilDataOrFinal(10000) ?: return false
+        when (downloadPacket.type) {
+            "DATA" -> onLog("Загрузчик готов принять данные разблокировки")
+            "FAIL" -> { logFastbootFailure("Загрузчик отказал в download", downloadPacket.payload); return false }
+            else   -> { onLog("❌ ОШИБКА: ожидался DATA, получено ${downloadPacket.raw}"); return false }
+        }
+        if (!transferDownloadPayload(encryptDataFile, "unlock data")) return false
+
+        val downloadDone = readUntilFinal(30000) ?: return false
+        if (downloadDone.type != "OKAY") {
+            onLog("❌ ОШИБКА: download разблокировки не подтверждён: ${downloadDone.raw}")
+            return false
+        }
+
+        onLog("🔓 Выполняется fastboot oem unlock...")
+        if (!writeCommand("oem unlock", 10000)) {
+            onLog("❌ ОШИБКА: сбой отправки oem unlock")
+            return false
+        }
+        val unlockDone = readUntilFinal(30000) ?: return false
+        return if (unlockDone.type == "OKAY") {
+            onLog("✅ Загрузчик разблокирован успешно!")
+            true
+        } else {
+            logFastbootFailure("oem unlock отклонён", unlockDone.payload)
+            false
+        }
+    }
+
     private fun transferDownloadPayload(file: File, label: String): Boolean {
         val chunk = ByteArray(64 * 1024)
         val totalBytes = file.length().coerceAtLeast(1L)

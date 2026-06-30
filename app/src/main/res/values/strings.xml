@@ -461,4 +461,8 @@ Recommended: switch to fastbootd now and reconnect OTG, then flashing runs witho
     <string name="layout_icon_unlock_tab">🔓
 Unlock</string>
     <string name="console_open_terminal_btn">⌨ Terminal</string>
+    <string name="mi_login_continue">Continue</string>
+    <string name="mi_login_logout">Log out</string>
+    <string name="mi_login_already">Already logged in as ID: %1$s</string>
+    <string name="mi_login_success">Logged in as ID: %1$s</string>
 </resources>

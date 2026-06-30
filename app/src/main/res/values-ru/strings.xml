@@ -461,4 +461,8 @@ NekoFlash прочитает flash_all-скрипты, заблокирует к
     <string name="layout_icon_unlock_tab">🔓
 Unlock</string>
     <string name="console_open_terminal_btn">⌨ Терминал</string>
+    <string name="mi_login_continue">Продолжить</string>
+    <string name="mi_login_logout">Выйти</string>
+    <string name="mi_login_already">Уже выполнен вход, ID: %1$s</string>
+    <string name="mi_login_success">Вход выполнен, ID: %1$s</string>
 </resources>

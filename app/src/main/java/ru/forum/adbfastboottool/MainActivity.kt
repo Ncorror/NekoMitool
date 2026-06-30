@@ -82,6 +82,8 @@ class MainActivity : AppCompatActivity() {
     private val folderName = "NekoFlash"
     private lateinit var workspacePath: File
     private lateinit var importFileLauncher: ActivityResultLauncher<Intent>
+    private lateinit var miLoginLauncher: ActivityResultLauncher<Intent>
+    private var miAuth: MiAccountClient.AuthResult? = null
 
     // Управление вкладками вынесено в TabController (декомпозиция MainActivity).
     // by lazy — чтобы не обращаться к this в инициализаторе поля (leaking this).
@@ -241,6 +243,7 @@ class MainActivity : AppCompatActivity() {
 
         registerUsbReceiver()
         registerImportLauncher()
+        registerMiLoginLauncher()
         setupButtons()
         loadSafetyPreferences()
         updateSafetyProfileUi()
@@ -1333,6 +1336,43 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun registerMiLoginLauncher() {
+        miLoginLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode != Activity.RESULT_OK) {
+                viewModel.log("Вход в Mi-аккаунт отменён")
+                return@registerForActivityResult
+            }
+            val passToken = result.data?.getStringExtra("passToken")
+            val deviceId = result.data?.getStringExtra("deviceId")
+            val userId = result.data?.getStringExtra("userId")
+            if (passToken.isNullOrEmpty() || deviceId.isNullOrEmpty() || userId.isNullOrEmpty()) {
+                viewModel.log("❌ Вход в Mi-аккаунт: не получены данные авторизации")
+                return@registerForActivityResult
+            }
+            viewModel.log("🔑 Вход выполнен (ID: $userId). Получение сервисного токена...")
+            // Обмен токена — в фоновом потоке (сеть нельзя в main).
+            Thread {
+                try {
+                    val auth = MiAccountClient.exchangeToken(passToken, userId, deviceId)
+                    runOnUiThread {
+                        miAuth = auth
+                        viewModel.log("✅ Mi-аккаунт авторизован. Регион: ${auth.region}")
+                        buildUnlockPage()
+                    }
+                } catch (e: Exception) {
+                    runOnUiThread {
+                        viewModel.log("❌ Ошибка получения токена: ${e.message ?: e.javaClass.simpleName}")
+                        viewModel.log("💡 Если используете VPN — отключите его и попробуйте снова.")
+                    }
+                }
+            }.start()
+        }
+    }
+
+    private fun startMiLogin() {
+        miLoginLauncher.launch(Intent(this, MiLoginActivity::class.java))
+    }
+
     private fun startImportFilePicker() {
         if (!ensureWorkspaceReady()) return
 
@@ -1847,6 +1887,27 @@ class MainActivity : AppCompatActivity() {
      * объясняет процесс и показывает шаги. Логин в Mi-аккаунт и сама
      * разблокировка добавляются на следующих этапах.
      */
+    private fun confirmAndRunMiUnlock(auth: MiAccountClient.AuthResult) {
+        val input = android.widget.EditText(this).apply {
+            hint = "UNLOCK"
+            setTextColor(android.graphics.Color.parseColor("#F5F5F7"))
+        }
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Разблокировать загрузчик?")
+            .setMessage("Это СОТРЁТ все данные устройства и снимет защиту загрузчика. Действие необратимо.\n\nДля подтверждения введите UNLOCK:")
+            .setView(input)
+            .setNegativeButton(getString(R.string.cancel_upper), null)
+            .setPositiveButton("Разблокировать") { _, _ ->
+                if (input.text.toString().trim().equals("UNLOCK", ignoreCase = true)) {
+                    switchTab("console")
+                    viewModel.runMiUnlock(auth) { _, _ -> }
+                } else {
+                    Toast.makeText(this, "Подтверждение не совпало", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .show()
+    }
+
     private fun buildUnlockPage() {
         val container = findViewById<android.widget.LinearLayout>(R.id.unlockContainer)
         container.removeAllViews()
@@ -1890,10 +1951,49 @@ class MainActivity : AppCompatActivity() {
             addView(body("3. Устройство переведено в режим Fastboot и подключено по OTG."))
         })
 
-        container.addView(title("СТАТУС"))
-        container.addView(card().apply {
-            addView(body("Функция входа в Mi-аккаунт и разблокировки готовится. Получение одобрения выполняется пользователем через официальные каналы Xiaomi.", "#D4B483"))
-        })
+        container.addView(title("ВХОД В MI-АККАУНТ"))
+        val auth = miAuth
+        if (auth == null) {
+            container.addView(card().apply {
+                addView(body("Войдите в свой Mi-аккаунт (официальная страница Xiaomi), чтобы продолжить разблокировку.", "#F5F5F7"))
+                addView(android.widget.Button(this@MainActivity).apply {
+                    text = "🔑 Войти в Mi-аккаунт"
+                    isAllCaps = false
+                    setTextColor(android.graphics.Color.parseColor("#0B0B0D"))
+                    setBackgroundColor(android.graphics.Color.parseColor("#B0A8C8"))
+                    setOnClickListener { startMiLogin() }
+                })
+            })
+        } else {
+            container.addView(card().apply {
+                addView(body("✅ Авторизован. ID: ${auth.userId}", "#7FB88A"))
+                addView(body("Регион: ${auth.region}", "#8A8A93"))
+                addView(android.widget.Button(this@MainActivity).apply {
+                    text = "Выйти / сменить аккаунт"
+                    isAllCaps = false
+                    setTextColor(android.graphics.Color.parseColor("#F5F5F7"))
+                    setBackgroundColor(android.graphics.Color.parseColor("#1C1C21"))
+                    setOnClickListener {
+                        miAuth = null
+                        android.webkit.CookieManager.getInstance().removeAllCookies(null)
+                        buildUnlockPage()
+                    }
+                })
+            })
+
+            container.addView(title("РАЗБЛОКИРОВКА", "#F97316"))
+            container.addView(card().apply {
+                addView(body("Устройство должно быть в режиме Fastboot и подключено по OTG. Убедитесь, что аккаунт одобрен для разблокировки.", "#F5F5F7"))
+                addView(body("⚠️ Все данные устройства будут стёрты.", "#D4B483"))
+                addView(android.widget.Button(this@MainActivity).apply {
+                    text = "🔓 Разблокировать загрузчик"
+                    isAllCaps = false
+                    setTextColor(android.graphics.Color.parseColor("#0B0B0D"))
+                    setBackgroundColor(android.graphics.Color.parseColor("#F97316"))
+                    setOnClickListener { confirmAndRunMiUnlock(auth) }
+                })
+            })
+        }
 
         container.addView(title("ПРОЦЕСС (как будет)"))
         container.addView(card().apply {

@@ -559,6 +559,93 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /**
+     * Полный процесс разблокировки загрузчика Xiaomi (официальный Mi Unlock).
+     * Требует: устройство в fastboot + авторизованный Mi-аккаунт (auth).
+     * Шаги: чтение product+token с устройства → nonce → clear → ahaUnlock →
+     * staging encryptData + oem unlock.
+     */
+    fun runMiUnlock(auth: MiAccountClient.AuthResult, onClearInfo: (String, Boolean) -> Unit) {
+        startOperation(text(R.string.notif_fastboot_command), "Mi Unlock", heavy = true) {
+            val proto = fastbootProtocol
+            if (proto?.isConnected != true) {
+                log("❌ Устройство не в режиме Fastboot. Переведите в Fastboot и подключите по OTG.")
+                return@startOperation
+            }
+
+            // 1. Читаем product и token с устройства.
+            log("🔍 Чтение данных устройства...")
+            val product = proto.getVar("product")?.replace(Regex("\\s"), "")
+            if (product.isNullOrEmpty()) {
+                log("❌ Не удалось прочитать product устройства")
+                return@startOperation
+            }
+            log("📱 product: $product")
+
+            val deviceToken = (proto.getVar("token") ?: run {
+                proto.sendCommand("oem get_token")
+                proto.getVar("token")
+            })?.replace(Regex("\\s"), "")
+            if (deviceToken.isNullOrEmpty()) {
+                log("❌ Не удалось прочитать token устройства")
+                return@startOperation
+            }
+            log("🔑 deviceToken получен")
+
+            // 2. Mi API: nonce → clear → unlock.
+            try {
+                val client = MiUnlockClient(
+                    host = auth.host,
+                    ssecurity = auth.ssecurity,
+                    serviceToken = auth.serviceToken,
+                    userId = auth.userId,
+                    deviceId = auth.deviceId
+                )
+                log("🌐 Запрос nonce у Mi сервера...")
+                val nonce = client.getNonce()
+
+                log("🌐 Проверка устройства...")
+                val clearInfo = client.checkClear(product, nonce)
+                if (clearInfo.notice.isNotEmpty()) log("ℹ️ ${clearInfo.notice}")
+                log(if (clearInfo.clearsData) "⚠️ Разблокировка СОТРЁТ данные устройства" else "ℹ️ Данные не будут стёрты")
+                postMainThread { onClearInfo(clearInfo.notice, clearInfo.clearsData) }
+
+                log("🌐 Запрос разблокировки у Mi сервера...")
+                val encryptDataHex = client.requestUnlock(product, deviceToken, nonce)
+                log("✅ Сервер выдал данные разблокировки")
+
+                // 3. Записываем encryptData во временный файл и шьём в устройство.
+                val bytes = hexToBytes(encryptDataHex)
+                val file = java.io.File(getApplication<android.app.Application>().filesDir, "encryptData")
+                file.outputStream().use { it.write(bytes) }
+
+                val ok = proto.stageAndOemUnlock(file)
+                file.delete()
+                if (ok) {
+                    log("🎉 ЗАГРУЗЧИК РАЗБЛОКИРОВАН. Устройство перезагрузится и сбросится.")
+                } else {
+                    log("❌ Разблокировка не удалась на этапе устройства")
+                }
+            } catch (e: Exception) {
+                log("❌ Ошибка разблокировки: ${e.message ?: e.javaClass.simpleName}")
+                log("💡 Возможные причины: аккаунт не одобрен, ещё не прошло 7 дней привязки, VPN, или лимит. Проверьте статус в официальном приложении Xiaomi.")
+            }
+        }
+    }
+
+    private fun hexToBytes(hex: String): ByteArray {
+        val clean = hex.trim()
+        require(clean.length % 2 == 0) { "Hex must have even length" }
+        return ByteArray(clean.length / 2) {
+            ((Character.digit(clean[it * 2], 16) shl 4) +
+                Character.digit(clean[it * 2 + 1], 16)).toByte()
+        }
+    }
+
+    private fun postMainThread(block: () -> Unit) {
+        android.os.Handler(android.os.Looper.getMainLooper()).post(block)
+    }
+
     fun runFastbootCommand(cmd: String) {
         // Команды терминала (getvar, reboot, oem, неизвестные) короткие и не пишут
         // образы — им не нужен foreground-сервис. Поднятие FGS ради мгновенной

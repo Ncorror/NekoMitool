@@ -30,9 +30,12 @@ No source code from these projects is included; only concepts were studied.
   * termux-adb / termux-api (https://github.com/nohajc/termux-adb)
       Inspiration for operating ADB/USB from Android without root.
 
-  * MiTool by offici5l (https://github.com/offici5l/MiTool)
+  * MiTools by offici5l (https://github.com/offici5l/MiTool)
       Licensed under the Apache License, Version 2.0.
-      Inspiration for flashing Xiaomi devices from a phone without a PC.
+      The Mi account login flow, serviceToken exchange, and Mi Unlock API
+      request signing in NekoFlash are adapted (re-implemented in Kotlin on
+      HttpURLConnection) from MiTools. Inspiration also taken for flashing
+      Xiaomi devices from a phone without a PC.
 
   * Xiaomi Flash Master
       UI inspiration (e.g. recovery accent treatment).

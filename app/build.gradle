@@ -17,8 +17,8 @@ android {
         applicationId "ru.forum.adbfastboottool"
         minSdk 26
         targetSdk 34
-        versionCode 120
-        versionName "2.9.34-nekoflash"
+        versionCode 122
+        versionName "2.9.36-nekoflash"
     }
 
     buildTypes {
