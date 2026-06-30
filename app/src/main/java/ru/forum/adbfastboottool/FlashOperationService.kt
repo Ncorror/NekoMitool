@@ -30,6 +30,24 @@ class FlashOperationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Команда остановки, пришедшая раньше, чем сервис успел показать
+        // уведомление. Мы ОБЯЗАНЫ всё равно вызвать startForeground() хотя бы
+        // на миг — иначе система убьёт приложение с
+        // ForegroundServiceDidNotStartInTimeException. Затем сразу останавливаемся.
+        if (intent?.getBooleanExtra(EXTRA_STOP, false) == true) {
+            if (!isForegroundStarted) {
+                try {
+                    startForeground(
+                        NOTIFICATION_ID,
+                        buildNotification(getString(R.string.app_name), "")
+                    )
+                } catch (_: Exception) { }
+            }
+            stopForegroundCompat()
+            stopSelf()
+            return START_NOT_STICKY
+        }
+
         val title = intent?.getStringExtra(EXTRA_TITLE) ?: getString(R.string.app_name)
         val text  = intent?.getStringExtra(EXTRA_TEXT)  ?: getString(R.string.service_default_text)
 
@@ -38,23 +56,26 @@ class FlashOperationService : Service() {
                 startForeground(NOTIFICATION_ID, buildNotification(title, text))
                 isForegroundStarted = true
             } catch (e: Exception) {
-                // КРИТИЧНО: если startForeground() не удался, мы ОБЯЗАНЫ немедленно
-                // остановить сервис. Иначе система через ~5 сек убьёт всё приложение
-                // с ForegroundServiceDidNotStartInTimeException, потому что сервис был
-                // запущен через startForegroundService(), но так и не показал уведомление.
-                // USB-операция при этом продолжится в DeviceViewModel (она не зависит
-                // от этого сервиса напрямую — он лишь держит процесс живым).
                 android.util.Log.w("FlashOpService", "startForeground failed, stopping self: ${e.message}")
                 stopSelf()
                 return START_NOT_STICKY
             }
         } else {
-            // Уже запущен — просто обновляем уведомление
             getSystemService(NotificationManager::class.java)
                 ?.notify(NOTIFICATION_ID, buildNotification(title, text))
         }
 
         return START_NOT_STICKY
+    }
+
+    private fun stopForegroundCompat() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                stopForeground(STOP_FOREGROUND_REMOVE)
+            } else {
+                @Suppress("DEPRECATION") stopForeground(true)
+            }
+        } catch (_: Exception) { }
     }
 
     override fun onDestroy() {
@@ -93,6 +114,7 @@ class FlashOperationService : Service() {
         private const val NOTIFICATION_ID  = 1401
         private const val EXTRA_TITLE      = "extra_title"
         private const val EXTRA_TEXT       = "extra_text"
+        private const val EXTRA_STOP       = "extra_stop"
 
         fun start(context: Context, title: String, text: String) {
             val intent = Intent(context, FlashOperationService::class.java).apply {
@@ -108,7 +130,18 @@ class FlashOperationService : Service() {
         }
 
         fun stop(context: Context) {
-            context.stopService(Intent(context, FlashOperationService::class.java))
+            // Останавливаем через команду самому сервису (а не stopService напрямую),
+            // чтобы он успел корректно вызвать startForeground()+stopForeground() и
+            // не словить ForegroundServiceDidNotStartInTimeException, если stop
+            // пришёл раньше, чем сервис показал уведомление.
+            val intent = Intent(context, FlashOperationService::class.java).apply {
+                putExtra(EXTRA_STOP, true)
+            }
+            try {
+                ContextCompat.startForegroundService(context, intent)
+            } catch (_: Exception) {
+                try { context.stopService(Intent(context, FlashOperationService::class.java)) } catch (_: Exception) { }
+            }
         }
     }
 }

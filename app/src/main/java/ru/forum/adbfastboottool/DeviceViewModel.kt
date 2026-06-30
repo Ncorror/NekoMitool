@@ -560,7 +560,11 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun runFastbootCommand(cmd: String) {
-        startOperation(text(R.string.notif_fastboot_command), text(R.string.notif_executing, cmd)) {
+        // Команды терминала (getvar, reboot, oem, неизвестные) короткие и не пишут
+        // образы — им не нужен foreground-сервис. Поднятие FGS ради мгновенной
+        // команды (например ошибочной "fastboot ffd") приводило к гонке
+        // start/stop и крашу ForegroundServiceDidNotStartInTimeException.
+        startOperation(text(R.string.notif_fastboot_command), text(R.string.notif_executing, cmd), heavy = false) {
             fastbootProtocol?.sendCommand(cmd) ?: log(text(R.string.error_no_fastboot))
         }
     }
