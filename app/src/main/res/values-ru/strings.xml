@@ -212,9 +212,12 @@ ADB:
     <string name="layout_status_no_device">● Нет устройства</string>
     <string name="layout_icon_scan">🔌</string>
     <string name="layout_icon_cancel">✕</string>
-    <string name="layout_icon_home">⌂ ГЛАВНАЯ</string>
-    <string name="layout_icon_fastboot">⚡ ПРОШИТЬ</string>
-    <string name="layout_icon_adb">↯ SIDELOAD</string>
+    <string name="layout_icon_home">⌂
+Главная</string>
+    <string name="layout_icon_fastboot">⚡
+Прошить</string>
+    <string name="layout_icon_adb">↯
+Sideload</string>
     <string name="layout_device_title">УСТРОЙСТВО</string>
     <string name="layout_mode_empty">Режим: —</string>
     <string name="layout_model_empty">Модель: —</string>
@@ -422,7 +425,8 @@ NekoFlash прочитает flash_all-скрипты, заблокирует к
 Прошивка без ПК — телефон прошивает телефон.
 
 Используйте на свой риск. Прошивка может превратить устройство в кирпич.</string>
-    <string name="layout_icon_settings_tab">⚙ НАСТРОЙКИ</string>
+    <string name="layout_icon_settings_tab">⚙
+Настр.</string>
     <string name="layout_flash_reboot_mode">Reboot</string>
     <string name="sideload_memo_text">Чтобы прошить: сначала импортируйте файл в папку приложения кнопкой «Импорт файла», затем выберите .zip для Sideload. На устройстве войдите в Recovery → Apply update → Apply from ADB.</string>
     <string name="sideload_memo_icon">💡</string>
@@ -454,6 +458,7 @@ NekoFlash прочитает flash_all-скрипты, заблокирует к
     <string name="fastbootd_prep_already">✅ Устройство уже в fastbootd — прошивка без перезагрузки.</string>
     <string name="fastbootd_waiting_banner">⏳ Ожидание fastbootd... Переподключите OTG-кабель, если устройство пропало. Следите за индикатором OTG выше.</string>
     <string name="fastbootd_switch_sent">⚡ Переход в fastbootd. Когда устройство снова появится — переподключите OTG и запустите прошивку.</string>
-    <string name="layout_icon_terminal_short">>_</string>
-    <string name="layout_icon_unlock_tab">🔓 UNLOCK</string>
+    <string name="layout_icon_unlock_tab">🔓
+Unlock</string>
+    <string name="console_open_terminal_btn">⌨ Терминал</string>
 </resources>

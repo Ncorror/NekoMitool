@@ -212,9 +212,12 @@ This writes images to bootloader partitions. Review model, slot, and file names 
     <string name="layout_status_no_device">● No device</string>
     <string name="layout_icon_scan">🔌</string>
     <string name="layout_icon_cancel">✕</string>
-    <string name="layout_icon_home">⌂ HOME</string>
-    <string name="layout_icon_fastboot">⚡ FLASH</string>
-    <string name="layout_icon_adb">↯ SIDELOAD</string>
+    <string name="layout_icon_home">⌂
+Главная</string>
+    <string name="layout_icon_fastboot">⚡
+Прошить</string>
+    <string name="layout_icon_adb">↯
+Sideload</string>
     <string name="layout_device_title">DEVICE</string>
     <string name="layout_mode_empty">Mode: —</string>
     <string name="layout_model_empty">Model: —</string>
@@ -422,7 +425,8 @@ Android USB-host flashing tool (ADB/Fastboot).
 Flash without a PC — phone flashes phone.
 
 Use at your own risk. Flashing can brick a device.</string>
-    <string name="layout_icon_settings_tab">⚙ SETTINGS</string>
+    <string name="layout_icon_settings_tab">⚙
+Настр.</string>
     <string name="layout_flash_reboot_mode">Reboot</string>
     <string name="sideload_memo_text">To flash: first import the file into the app folder via the Import file button, then select the .zip for Sideload. On the device, enter Recovery → Apply update → Apply from ADB.</string>
     <string name="sideload_memo_icon">💡</string>
@@ -454,6 +458,7 @@ Recommended: switch to fastbootd now and reconnect OTG, then flashing runs witho
     <string name="fastbootd_prep_already">✅ Device already in fastbootd — flashing without reboot.</string>
     <string name="fastbootd_waiting_banner">⏳ Waiting for fastbootd... Reconnect OTG cable if the device disappeared. Watch the OTG indicator above.</string>
     <string name="fastbootd_switch_sent">⚡ Switching to fastbootd. Reconnect OTG when the device reappears, then start the flash.</string>
-    <string name="layout_icon_terminal_short">>_</string>
-    <string name="layout_icon_unlock_tab">🔓 UNLOCK</string>
+    <string name="layout_icon_unlock_tab">🔓
+Unlock</string>
+    <string name="console_open_terminal_btn">⌨ Terminal</string>
 </resources>
