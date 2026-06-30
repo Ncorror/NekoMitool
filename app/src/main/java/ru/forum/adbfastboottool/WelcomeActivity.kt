@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -115,7 +116,26 @@ class WelcomeActivity : AppCompatActivity() {
                         }
                     )
                 } catch (_: Exception) {
-                    storagePermissionLauncher.launch(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION))
+                    // На части прошивок (MIUI/HyperOS и др.) точечный экран
+                    // недоступен. Пробуем общий список «все файлы», затем —
+                    // как крайний фолбэк — экран сведений о приложении.
+                    try {
+                        storagePermissionLauncher.launch(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION))
+                    } catch (_: Exception) {
+                        try {
+                            storagePermissionLauncher.launch(
+                                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                    data = Uri.parse("package:$packageName")
+                                }
+                            )
+                        } catch (_: Exception) {
+                            Toast.makeText(
+                                this,
+                                getString(R.string.perm_open_settings_manually),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
                 }
             } else {
                 requestPermissions(

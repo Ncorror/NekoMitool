@@ -8,7 +8,8 @@ class FastbootProtocol(
     private val usbManager: UsbManager,
     private val device: UsbDevice,
     private val onLog: (String) -> Unit,
-    private val onLogVerbose: (String) -> Unit = onLog
+    private val onLogVerbose: (String) -> Unit = onLog,
+    private val onProgress: (Int, String) -> Unit = { _, _ -> }
 ) {
     private var connection: UsbDeviceConnection? = null
     private var endpointIn: UsbEndpoint? = null
@@ -611,6 +612,10 @@ class FastbootProtocol(
 
         onLog("Передача $label: ${formatBytes(totalBytes)}. Не сворачивайте приложение и не отключайте OTG/кабель.")
 
+        // Короткая пауза перед стартом: даём USB-стеку устройства подготовиться
+        // принимать данные после ответа DATA. Снижает обрывы на первом чанке.
+        Thread.sleep(60)
+
         try {
             file.inputStream().use { input ->
                 while (!cancelled) {
@@ -619,8 +624,20 @@ class FastbootProtocol(
 
                     var offset = 0
                     while (offset < read) {
-                        val sent = bulkWrite(chunk, offset, read - offset, 10000)
-                        if (sent <= 0) throw Exception("Сбой передачи чанка USB: код $sent")
+                        // USB OTG бывает нестабилен (особенно первый чанк / разные
+                        // контроллеры). Один сбойный bulkTransfer не должен ронять всю
+                        // прошивку — пробуем несколько раз с короткой паузой.
+                        var sent = bulkWrite(chunk, offset, read - offset, 10000)
+                        if (sent <= 0) {
+                            var retry = 0
+                            while (sent <= 0 && retry < 4 && !cancelled) {
+                                retry++
+                                Thread.sleep(120)
+                                onLogVerbose("⚠️ Повтор передачи чанка (попытка $retry) на offset $totalSent")
+                                sent = bulkWrite(chunk, offset, read - offset, 10000)
+                            }
+                            if (sent <= 0) throw Exception("Сбой передачи чанка USB после повторов: код $sent")
+                        }
                         offset += sent
                     }
                     totalSent += read
@@ -642,6 +659,12 @@ class FastbootProtocol(
                                 "speed=${formatBytesPerSecond(instantBytesPerSec)}, " +
                                 "avg=${formatBytesPerSecond(avgBytesPerSec)}, " +
                                 "eta=${formatDuration(etaMs)}"
+                        )
+                        // Прогресс в полноэкранный диалог: процент + компактная деталь.
+                        onProgress(
+                            progress,
+                            "${formatBytes(totalSent)} / ${formatBytes(totalBytes)}  ·  " +
+                                "${formatBytesPerSecond(instantBytesPerSec)}  ·  ETA ${formatDuration(etaMs)}"
                         )
                         lastLoggedProgress = progress
                         lastRateLogMs = now

@@ -335,7 +335,7 @@ object XiaomiFastbootRomManager {
 
         val blocked = selected.blockedReasons.toMutableList()
         val warnings = selected.warnings.toMutableList()
-        if (selected.lockCommandDetected) blocked += "Selected script contains bootloader lock command. NekoMiFlash blocks flash_all_lock scenarios."
+        if (selected.lockCommandDetected) blocked += "Selected script contains bootloader lock command. NekoFlash blocks flash_all_lock scenarios."
         if (mode == FlashMode.SAVE_USER_DATA && selected.dataImpact.hasDataLossRisk()) {
             blocked += "Save user data mode selected, but the script has data-loss risk: ${selected.dataImpact.shortLabel()}."
         }
@@ -499,7 +499,7 @@ object XiaomiFastbootRomManager {
             warnings += "Large image transfer detected: ${largeImages.take(3).joinToString { it.archivePath + " (" + formatBytes(it.size) + ")" }}. Keep OTG power stable and do not background the app."
         }
         if (requiresFastbootd) {
-            warnings += "The selected plan requires fastbootd/userspace for dynamic partitions or update-super. NekoMiFlash will checkpoint before the transition."
+            warnings += "The selected plan requires fastbootd/userspace for dynamic partitions or update-super. NekoFlash will checkpoint before the transition."
         }
 
         val extractionRoot = extractionDir.parentFile ?: workspaceDir
@@ -674,7 +674,7 @@ object XiaomiFastbootRomManager {
                 val wipe = PlanCommand.WipeData("fastboot -w / --wipe before ${parsed.toDisplayText()}")
                 commands += wipe
                 wipeDetected = true
-                warnings += "Explicit fastboot -w / --wipe flag detected before ${parsed.toDisplayText()}. NekoMiFlash converts it into guarded userdata/metadata/cache erases."
+                warnings += "Explicit fastboot -w / --wipe flag detected before ${parsed.toDisplayText()}. NekoFlash converts it into guarded userdata/metadata/cache erases."
             }
 
             when (parsed) {
@@ -686,13 +686,13 @@ object XiaomiFastbootRomManager {
                 is PlanCommand.WipeData -> {
                     commands += parsed
                     wipeDetected = true
-                    warnings += "Explicit ${parsed.reason} detected. NekoMiFlash converts it into guarded userdata/metadata/cache erases."
+                    warnings += "Explicit ${parsed.reason} detected. NekoFlash converts it into guarded userdata/metadata/cache erases."
                 }
                 is PlanCommand.SetActive -> commands += parsed
                 is PlanCommand.UpdateSuper -> {
                     commands += parsed
                     if (parsed.wipe) wipeDetected = true
-                    warnings += "update-super detected. NekoMiFlash will execute it only after fastbootd/userspace is confirmed."
+                    warnings += "update-super detected. NekoFlash will execute it only after fastbootd/userspace is confirmed."
                 }
                 is PlanCommand.Reboot -> commands += parsed
             }
@@ -703,8 +703,8 @@ object XiaomiFastbootRomManager {
         val criticalDetected = commands.any { command ->
             command is PlanCommand.Flash && isCriticalFirmwarePartition(command.partition)
         }
-        if (antiRollbackIndexes.isNotEmpty()) warnings += "Anti-rollback index detected in ROM script: ${antiRollbackIndexes.joinToString(", ")}. NekoMiFlash will compare it with getvar:anti before flashing."
-        if (criticalDetected) warnings += "Critical firmware partitions detected. NekoMiFlash keeps product/unlocked/ARB guards enabled before flashing them."
+        if (antiRollbackIndexes.isNotEmpty()) warnings += "Anti-rollback index detected in ROM script: ${antiRollbackIndexes.joinToString(", ")}. NekoFlash will compare it with getvar:anti before flashing."
+        if (criticalDetected) warnings += "Critical firmware partitions detected. NekoFlash keeps product/unlocked/ARB guards enabled before flashing them."
         if (expectedProducts.isEmpty()) warnings += "Product guard was not detected in the script. The app will rely on fastboot diagnostics only."
         if (unsupportedFastbootLines > 0) blocked += "Unsupported fastboot lines detected: $unsupportedFastbootLines. Partial ROM flashing is blocked."
         if (lockDetected) blocked += "Bootloader lock command detected. Use flash_all, not flash_all_lock."

@@ -13,7 +13,8 @@ class AdbProtocol(
     private val usbManager: UsbManager,
     private val device: UsbDevice,
     private val keyDirectory: File,
-    private val onLog: (String) -> Unit
+    private val onLog: (String) -> Unit,
+    private val onProgress: (Int, String) -> Unit = { _, _ -> }
 ) {
     private var connection: UsbDeviceConnection? = null
     private var endpointIn: UsbEndpoint? = null
@@ -123,7 +124,7 @@ class AdbProtocol(
 
         // Отправляем CNXN — инициируем рукопожатие
         sendMessageInternal(A_CNXN, 0x01000000, MAX_PAYLOAD,
-            "host::NekoMiFlash\u0000".toByteArray(Charsets.UTF_8))
+            "host::NekoFlash\u0000".toByteArray(Charsets.UTF_8))
 
         val header = readHeader() ?: run {
             onLog("ОШИБКА: Сбой подключения ADB (нет ответа)")
@@ -345,6 +346,7 @@ class AdbProtocol(
                                         val progress = ((processedBlocks.size.toLong() * 100L) / totalBlocks).toInt()
                                         if (progress % 5 == 0 && progress != lastLoggedProgress) {
                                             onLog("Sideload: $progress% (блок $blockNum)")
+                                            onProgress(progress, "ADB Sideload · блок $blockNum")
                                             lastLoggedProgress = progress
                                         }
                                     }

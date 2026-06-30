@@ -58,6 +58,25 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
     private val _operationSteps = MutableLiveData<List<OperationStep>>(emptyList())
     val operationSteps: LiveData<List<OperationStep>> = _operationSteps
 
+    /**
+     * Прогресс активной операции записи (для полноэкранного диалога прошивки).
+     * null — операция без явного прогресса или не идёт.
+     */
+    data class OperationProgress(
+        val title: String,        // что прошивается, напр. "flash recovery_a"
+        val percent: Int,         // 0..100, -1 = неопределённый (busy)
+        val detail: String,       // строка скорости/ETA или статус
+        val finished: Boolean = false,  // операция завершена (показать результат)
+        val success: Boolean = false    // успех (для финального состояния)
+    )
+
+    private val _operationProgress = MutableLiveData<OperationProgress?>(null)
+    val operationProgress: LiveData<OperationProgress?> = _operationProgress
+
+    fun postOperationProgress(progress: OperationProgress?) {
+        _operationProgress.postValue(progress)
+    }
+
     private val _selfTestStatus = MutableLiveData(
         SelfTestStatus(
             result = SelfTestResult.NOT_RUN,
@@ -153,7 +172,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
         logFile = createdLog
         appendRawToLogFile("# ADB Fastboot Tool log\n# Created: $stamp\n\n")
         synchronized(logLock) { lines.forEach { appendRawToLogFile(formatLogLine(it)) } }
-        log("Лог-файл: /sdcard/Download/NekoMiFlash/logs/${createdLog.name}")
+        log("Лог-файл: /sdcard/Download/NekoFlash/logs/${createdLog.name}")
     }
 
     fun log(message: String) {
@@ -203,7 +222,21 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
 
         activeJob = viewModelScope.launch(Dispatchers.IO) {
             if (isFastboot) {
-                val proto = FastbootProtocol(usbManager, device, { msg -> log(msg) }, { msg -> logFileOnly(msg) })
+                val proto = FastbootProtocol(
+                    usbManager, device,
+                    { msg -> log(msg) },
+                    { msg -> logFileOnly(msg) },
+                    { percent, detail ->
+                        val current = _operationProgress.value
+                        _operationProgress.postValue(
+                            OperationProgress(
+                                title = current?.title ?: text(R.string.flash_progress_writing),
+                                percent = percent,
+                                detail = detail
+                            )
+                        )
+                    }
+                )
                 proto.debugLogging = debugLoggingEnabled
                 if (proto.connect()) {
                     proto.profilesDirectory = profilesDir
@@ -217,7 +250,18 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
                     _connectionState.postValue(ConnectionState.ERROR)
                 }
             } else {
-                val proto = AdbProtocol(usbManager, device, adbKeyDir) { msg -> log(msg) }
+                val proto = AdbProtocol(usbManager, device, adbKeyDir, { msg -> log(msg) },
+                    { percent, detail ->
+                        val current = _operationProgress.value
+                        _operationProgress.postValue(
+                            OperationProgress(
+                                title = current?.title ?: text(R.string.flash_progress_writing),
+                                percent = percent,
+                                detail = detail
+                            )
+                        )
+                    }
+                )
                 if (proto.connect()) {
                     adbProtocol = proto
                     _fastbootDiagnostics.postValue(null)
@@ -749,7 +793,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
         val stamp = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.US).format(Date())
         val report = File(reportsDir, "xiaomi-rom-analysis-$stamp.txt")
         val text = buildString {
-            appendLine("NekoMiFlash — Xiaomi Fastboot ROM analysis")
+            appendLine("NekoFlash — Xiaomi Fastboot ROM analysis")
             appendLine("Created: $stamp")
             appendLine("Version: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
             appendLine("Source file: ${file.name}")
@@ -1047,7 +1091,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
             totalActions = prepared.actions.size
         )
         report.writeText(buildString {
-            appendLine("NekoMiFlash — Xiaomi Fastboot ROM flash session")
+            appendLine("NekoFlash — Xiaomi Fastboot ROM flash session")
             appendLine("Created: $stamp")
             appendLine("Version: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
             appendLine("Source file: ${prepared.source.name}")
@@ -1155,13 +1199,13 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
         appendLine("=== FASTBOOT DOWNLOAD LIMIT PREFLIGHT ===")
         appendLine("Transfer actions: ${items.size}")
         appendLine("Device max-download-size: ${deviceLimit?.let { formatBytesShort(it) } ?: diagnostics.maxDownloadSizeRaw?.takeIf { it.isNotBlank() } ?: "unknown"}")
-        appendLine("NekoMiFlash single-download implementation limit: ${formatBytesShort(FASTBOOT_DOWNLOAD_IMPLEMENTATION_LIMIT_BYTES)}")
+        appendLine("NekoFlash single-download implementation limit: ${formatBytesShort(FASTBOOT_DOWNLOAD_IMPLEMENTATION_LIMIT_BYTES)}")
         appendLine("Largest transfer: ${largest?.let { "step ${it.step}: ${formatBytesShort(it.bytes)} — ${it.label}" } ?: "none"}")
         val blocks = xiaomiTransferLimitBlockReasons(prepared, diagnostics)
         if (blocks.isEmpty()) {
             if (deviceLimit == null) {
                 appendLine("Warnings:")
-                appendLine("  - Device did not report max-download-size. NekoMiFlash will rely on protocol/runtime checks during download.")
+                appendLine("  - Device did not report max-download-size. NekoFlash will rely on protocol/runtime checks during download.")
             } else {
                 appendLine("Result: OK — all planned transfers are within the reported download limit.")
             }
@@ -1245,7 +1289,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
         action: XiaomiFastbootRomManager.PreparedAction.WipeData
     ): Boolean {
         log("Fastboot wipe requested by ROM script: ${action.reason}")
-        log("NekoMiFlash protocol equivalent: erase userdata, then erase metadata/cache only if the partition exists.")
+        log("NekoFlash protocol equivalent: erase userdata, then erase metadata/cache only if the partition exists.")
 
         val targets = mutableListOf("userdata")
         listOf("metadata", "cache").forEach { partition ->
@@ -1353,7 +1397,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
             val stamp = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.US).format(Date())
             val marker = File(reportsDir, "xiaomi-rom-resume-state-$stamp.txt")
             marker.writeText(buildString {
-                appendLine("NekoMiFlash — Xiaomi Fastboot ROM resume state")
+                appendLine("NekoFlash — Xiaomi Fastboot ROM resume state")
                 appendLine("Created: $stamp")
                 appendLine("Version: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
                 appendLine("Source file: ${file.absolutePath}")
@@ -1405,7 +1449,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
         log("=== FASTBOOTD TRANSITION ===")
         log("Причина: $reason")
         log("Команда: fastboot reboot fastboot")
-        log("После перезагрузки в fastbootd NekoMiFlash автоматически продолжит с шага ${resumeIndex + 1}, если Android снова выдаст USB-доступ.")
+        log("После перезагрузки в fastbootd NekoFlash автоматически продолжит с шага ${resumeIndex + 1}, если Android снова выдаст USB-доступ.")
         val ok = proto.sendCommand(fastbootRebootCommand("fastboot"))
         if (!ok) {
             pendingXiaomiRomFlash = null
@@ -1506,6 +1550,8 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
             releaseOperationWakeLock(logRelease = false)
             acquireOperationWakeLock()
             FlashOperationService.start(getApplication(), title, text)
+            // Полноэкранный диалог прогресса: стартовое состояние (неопределённый %).
+            _operationProgress.postValue(OperationProgress(title = title, percent = -1, detail = text))
         }
         _operationActive.postValue(true)
 
@@ -1516,9 +1562,11 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
                 try { previousJob.cancelAndJoin() } catch (_: Exception) {}
             }
 
+            var opFailed = false
             try {
                 block()
             } catch (e: Exception) {
+                opFailed = true
                 log(text(R.string.operation_error, e.message ?: e.javaClass.simpleName))
             } finally {
                 if (gen == operationGeneration.get()) {
@@ -1526,6 +1574,17 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
                     if (heavy) {
                         releaseOperationWakeLock(logRelease = true)
                         FlashOperationService.stop(getApplication())
+                        // Финальное состояние диалога: успех/ошибка, диалог сам закроется.
+                        val finishedProgress = _operationProgress.value
+                        _operationProgress.postValue(
+                            OperationProgress(
+                                title = finishedProgress?.title ?: title,
+                                percent = if (opFailed) (finishedProgress?.percent ?: 0) else 100,
+                                detail = finishedProgress?.detail ?: "",
+                                finished = true,
+                                success = !opFailed
+                            )
+                        )
                     }
                 }
             }
@@ -1537,7 +1596,7 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
         try {
             val wl = getApplication<Application>()
                 .getSystemService(PowerManager::class.java)
-                .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "NekoMiFlash:FlashOperation")
+                .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "NekoFlash:FlashOperation")
                 .apply { setReferenceCounted(false); acquire(WAKE_LOCK_TIMEOUT_MS) }
             operationWakeLock = wl
             log(text(R.string.wake_lock_acquired))

@@ -120,7 +120,7 @@ class AdbKeyStore(
     private fun adbPublicKeyLine(keyPair: KeyPair): String {
         val publicKey = keyPair.public as RSAPublicKey
         val encoded = Base64.getEncoder().encodeToString(androidPubkeyBytes(publicKey))
-        return "$encoded NekoMiFlash@Android"
+        return "$encoded NekoFlash@Android"
     }
 
     private fun androidPubkeyBytes(publicKey: RSAPublicKey): ByteArray {

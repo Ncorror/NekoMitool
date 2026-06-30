@@ -127,8 +127,8 @@ def check_versions() -> None:
     if int(code.group(1)) < 31:
         fail("versionCode must be >= 31 for NekoFlash rebrand")
     version_name = name.group(1)
-    if not re.fullmatch(r"2\.\d+\.\d+-nekomiflash", version_name):
-        fail("versionName must match 2.x.y-nekomiflash")
+    if not re.fullmatch(r"2\.\d+\.\d+-nekoflash", version_name):
+        fail("versionName must match 2.x.y-nekoflash")
 
 
 def check_gradle_wrapper() -> None:
@@ -195,7 +195,7 @@ def check_fileprovider_scope() -> None:
     text = path.read_text(encoding="utf-8")
     if 'path="."' in text:
         fail("FileProvider must not expose the whole external storage with path=\".\"")
-    for token in ('path="Download/NekoMiFlash/logs/"', 'path="Download/NekoMiFlash/reports/"'):
+    for token in ('path="Download/NekoFlash/logs/"', 'path="Download/NekoFlash/reports/"'):
         if token not in text:
             fail(f"FileProvider missing scoped entry: {token}")
 

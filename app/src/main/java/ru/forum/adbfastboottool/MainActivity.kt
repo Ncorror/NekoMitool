@@ -64,14 +64,22 @@ class MainActivity : AppCompatActivity() {
     private var terminalFilter = 0  // 0=все, 1=info, 2=warn, 3=error
     private var lastLogLines: List<String> = emptyList()
     private lateinit var tvStatus: TextView
+    private var tvOtgStatus: TextView? = null
     private lateinit var tvSelfTestStatus: TextView
     private lateinit var tvOperationCenterStatus: TextView
     private lateinit var tvOperationCenterLastEvent: TextView
     private lateinit var tvOperationStepQueue: TextView
+    private var flashProgressDialog: android.app.Dialog? = null
+    private var flashProgressBar: android.widget.ProgressBar? = null
+    private var flashProgressPercent: TextView? = null
+    private var flashProgressDetail: TextView? = null
+    private var flashProgressTitleTv: TextView? = null
+    private var flashProgressButton: Button? = null
+    private var flashProgressWarning: TextView? = null
     private lateinit var viewModel: DeviceViewModel
 
     private val actionUsbPermission: String by lazy { "$packageName.USB_PERMISSION" }
-    private val folderName = "NekoMiFlash"
+    private val folderName = "NekoFlash"
     private lateinit var workspacePath: File
     private lateinit var importFileLauncher: ActivityResultLauncher<Intent>
 
@@ -146,10 +154,12 @@ class MainActivity : AppCompatActivity() {
         applySavedLanguage()
         super.onCreate(savedInstanceState)
 
-        // Онбординг показывается при КАЖДОМ запуске (кроме USB-attach,
-        // когда телефон подключают как устройство — там welcome помешал бы).
-        // Флаг from_welcome означает, что мы уже прошли онбординг в этом запуске.
-        if (intent?.action != UsbManager.ACTION_USB_DEVICE_ATTACHED &&
+        // Онбординг показывается при первом запуске. Но если активность
+        // ПЕРЕСОЗДАётся системой (поворот, возврат из фона после убийства процесса),
+        // savedInstanceState != null — онбординг уже был пройден, повторно
+        // выкидывать на Welcome нельзя (иначе сворачивание сбрасывает на welcome).
+        if (savedInstanceState == null &&
+            intent?.action != UsbManager.ACTION_USB_DEVICE_ATTACHED &&
             intent?.getBooleanExtra("from_welcome", false) != true
         ) {
             startActivity(Intent(this, WelcomeActivity::class.java))
@@ -164,6 +174,8 @@ class MainActivity : AppCompatActivity() {
         setupCollapsibleConsole()
         setupTerminal()
         tvStatus = findViewById(R.id.tvStatus)
+        tvOtgStatus = findViewById(R.id.tvOtgStatus)
+        updateOtgStatus()
         tvSelfTestStatus = findViewById(R.id.tvSelfTestStatus)
         tvOperationCenterStatus = findViewById(R.id.tvOperationCenterStatus)
         tvOperationCenterLastEvent = findViewById(R.id.tvOperationCenterLastEvent)
@@ -183,7 +195,13 @@ class MainActivity : AppCompatActivity() {
             val (text, color) = when (state) {
                 DeviceViewModel.ConnectionState.NONE -> getString(R.string.status_no_device) to "#55555E"
                 DeviceViewModel.ConnectionState.CONNECTING -> getString(R.string.status_connecting) to "#D4B483"
-                DeviceViewModel.ConnectionState.FASTBOOT -> getString(R.string.status_fastboot) to "#E8E0D4"
+                DeviceViewModel.ConnectionState.FASTBOOT -> {
+                    // Различаем fastbootd (userspace) и обычный bootloader fastboot.
+                    val userspace = viewModel.fastbootDiagnostics.value?.isUserspace
+                        ?.equals("yes", ignoreCase = true) == true
+                    if (userspace) getString(R.string.status_fastbootd) to "#B0A8C8"
+                    else getString(R.string.status_fastboot) to "#E8E0D4"
+                }
                 DeviceViewModel.ConnectionState.ADB -> getString(R.string.status_adb) to "#7FB88A"
                 DeviceViewModel.ConnectionState.ERROR -> getString(R.string.status_error) to "#D88B8B"
             }
@@ -193,7 +211,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.connectionInfo.observe(this) { updateDeviceOverview() }
-        viewModel.fastbootDiagnostics.observe(this) { updateDeviceOverview() }
+        viewModel.fastbootDiagnostics.observe(this) {
+            // Диагностика приходит после connectionState — переобновим статус,
+            // чтобы FASTBOOT → FASTBOOTD отрисовался, когда is-userspace известен.
+            refreshConnectionStatusLabel()
+            updateDeviceOverview()
+        }
         viewModel.selfTestStatus.observe(this) { renderSelfTestStatus(it) }
 
         viewModel.operationActive.observe(this) { active ->
@@ -214,6 +237,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.operationSteps.observe(this) { steps -> renderOperationSteps(steps) }
+        viewModel.operationProgress.observe(this) { progress -> renderFlashProgressDialog(progress) }
 
         registerUsbReceiver()
         registerImportLauncher()
@@ -235,7 +259,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
-        findViewById<Button>(R.id.btnScan).setOnClickListener { scanForDevices() }
+        findViewById<Button>(R.id.btnScan).setOnClickListener { updateOtgStatus(); scanForDevices() }
         findViewById<Button>(R.id.btnLanguage).setOnClickListener { showLanguageDialog() }
         findViewById<Button>(R.id.btnHelp).setOnClickListener { showHelpDialog() }
         findViewById<Button>(R.id.btnSafetyNovice).setOnClickListener { setSafetyProfile(SafetyProfile.NOVICE) }
@@ -400,6 +424,7 @@ class MainActivity : AppCompatActivity() {
         }
         viewModel.log("USB-устройство отключено: ${device?.productName ?: "неизвестно"}")
         viewModel.disconnectCurrent()
+        updateOtgStatus()
     }
 
     private fun handleAutoUsbIntent(intent: Intent?) {
@@ -410,6 +435,7 @@ class MainActivity : AppCompatActivity() {
                 @Suppress("DEPRECATION") intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
             }
             device?.let { requestUsbAccess(it) }
+            updateOtgStatus()
         }
     }
 
@@ -1420,7 +1446,22 @@ class MainActivity : AppCompatActivity() {
                         data = Uri.parse("package:$packageName")
                     })
                 } catch (e: Exception) {
-                    startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION))
+                    // Многоуровневый фолбэк для прошивок без точечного экрана.
+                    try {
+                        startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION))
+                    } catch (e2: Exception) {
+                        try {
+                            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                data = Uri.parse("package:$packageName")
+                            })
+                        } catch (e3: Exception) {
+                            Toast.makeText(
+                                this,
+                                getString(R.string.perm_open_settings_manually),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
                 }
             } else if (!::workspacePath.isInitialized) {
                 initWorkspace()
@@ -1463,6 +1504,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         enableOverlayProtection()
+        updateOtgStatus()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Environment.isExternalStorageManager() && !::workspacePath.isInitialized) {
                 initWorkspace()
@@ -1471,7 +1513,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initWorkspace() {
-        // Рабочая папка теперь в системной папке «Загрузки»: /sdcard/Download/NekoMiFlash
+        // Рабочая папка теперь в системной папке «Загрузки»: /sdcard/Download/NekoFlash
         val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         workspacePath = File(downloadsDir, folderName)
         if (!workspacePath.exists() && !workspacePath.mkdirs()) {
@@ -1591,9 +1633,56 @@ class MainActivity : AppCompatActivity() {
             requiredPhrase = phrase,
             logLabel = "Xiaomi ROM flash: ${file.name}, mode=$modeTitle"
         ) {
+            maybePrepFastbootdThenFlash(file, mode)
+        }
+    }
+
+    /**
+     * Идея A: перед Xiaomi ROM прошивкой предлагаем заранее перейти в fastbootd,
+     * чтобы не было рискованного reboot в середине процесса. Если устройство уже
+     * в fastbootd — сразу прошиваем. Если нет — даём выбор: перейти сейчас (и
+     * переподключиться) или прошить как есть со старым авто-reboot.
+     */
+    /**
+     * Идея B: заметный баннер ожидания fastbootd. Показывается после команды
+     * перехода, подсказывает переподключить OTG. Скрывается, когда устройство
+     * снова в fastbootd (updateOtgStatus/refreshConnectionStatusLabel заметят).
+     */
+    private var waitingForFastbootd = false
+    private fun showFastbootdWaitingBanner(show: Boolean) {
+        waitingForFastbootd = show
+        val tv = tvOtgStatus ?: return
+        if (show) {
+            tv.text = getString(R.string.fastbootd_waiting_banner)
+            tv.setTextColor(android.graphics.Color.parseColor("#B0A8C8"))
+        } else {
+            updateOtgStatus()
+        }
+    }
+
+    private fun maybePrepFastbootdThenFlash(file: File, mode: XiaomiFastbootRomManager.FlashMode) {
+        val userspace = viewModel.currentFastbootDiagnostics()?.isUserspace
+            ?.equals("yes", ignoreCase = true) == true
+        if (userspace) {
+            viewModel.log(getString(R.string.fastbootd_prep_already))
             viewModel.runXiaomiFastbootRom(file, workspacePath, mode)
             switchTab("console")
+            return
         }
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.fastbootd_prep_title))
+            .setMessage(getString(R.string.fastbootd_prep_message))
+            .setPositiveButton(getString(R.string.fastbootd_prep_switch)) { _, _ ->
+                viewModel.log(getString(R.string.fastbootd_switch_sent))
+                viewModel.runFastbootCommand("reboot:fastboot")
+                showFastbootdWaitingBanner(true)
+                switchTab("console")
+            }
+            .setNegativeButton(getString(R.string.fastbootd_prep_continue)) { _, _ ->
+                viewModel.runXiaomiFastbootRom(file, workspacePath, mode)
+                switchTab("console")
+            }
+            .show()
     }
 
     private fun ensureFastbootForTool(): Boolean {
@@ -2882,6 +2971,206 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+
+    /**
+     * Полноэкранный диалог прогресса прошивки. Показывается при любой тяжёлой
+     * операции записи, поверх любой вкладки — чтобы статус нельзя было не заметить.
+     */
+    /**
+     * Перерисовывает текст индикатора подключения с учётом fastbootd.
+     * Вызывается, когда диагностика приходит после смены connectionState.
+     */
+    /**
+     * Обновляет OTG-индикатор. Прямого API «OTG вкл/выкл» в Android нет, поэтому
+     * статус выводится косвенно: поддержка USB Host (железо) + наличие устройств
+     * в deviceList. Если OTG отключён в системе, deviceList пуст даже при кабеле —
+     * пользователь видит подсказку включить OTG.
+     */
+    private fun updateOtgStatus() {
+        val tv = tvOtgStatus ?: return
+        // Если ждём fastbootd и устройство уже в нём — снимаем баннер ожидания.
+        if (waitingForFastbootd) {
+            val userspace = viewModel.currentFastbootDiagnostics()?.isUserspace
+                ?.equals("yes", ignoreCase = true) == true
+            if (userspace) {
+                waitingForFastbootd = false
+            } else {
+                tv.text = getString(R.string.fastbootd_waiting_banner)
+                tv.setTextColor(android.graphics.Color.parseColor("#B0A8C8"))
+                return
+            }
+        }
+        if (!packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_USB_HOST)) {
+            tv.text = getString(R.string.otg_status_unsupported)
+            tv.setTextColor(android.graphics.Color.parseColor("#D88B8B"))
+            return
+        }
+        val hasDevices = try { usbManager.deviceList.isNotEmpty() } catch (_: Exception) { false }
+        if (hasDevices) {
+            tv.text = getString(R.string.otg_status_active)
+            tv.setTextColor(android.graphics.Color.parseColor("#7FB88A"))
+        } else {
+            tv.text = getString(R.string.otg_status_no_device)
+            tv.setTextColor(android.graphics.Color.parseColor("#D4B483"))
+        }
+    }
+
+    private fun refreshConnectionStatusLabel() {
+        if (!::tvStatus.isInitialized) return
+        val state = viewModel.connectionState.value ?: return
+        val (text, color) = when (state) {
+            DeviceViewModel.ConnectionState.NONE -> getString(R.string.status_no_device) to "#55555E"
+            DeviceViewModel.ConnectionState.CONNECTING -> getString(R.string.status_connecting) to "#D4B483"
+            DeviceViewModel.ConnectionState.FASTBOOT -> {
+                val userspace = viewModel.fastbootDiagnostics.value?.isUserspace
+                    ?.equals("yes", ignoreCase = true) == true
+                if (userspace) getString(R.string.status_fastbootd) to "#B0A8C8"
+                else getString(R.string.status_fastboot) to "#E8E0D4"
+            }
+            DeviceViewModel.ConnectionState.ADB -> getString(R.string.status_adb) to "#7FB88A"
+            DeviceViewModel.ConnectionState.ERROR -> getString(R.string.status_error) to "#D88B8B"
+        }
+        tvStatus.text = text
+        tvStatus.setTextColor(android.graphics.Color.parseColor(color))
+    }
+
+    private fun renderFlashProgressDialog(progress: DeviceViewModel.OperationProgress?) {
+        if (progress == null) {
+            flashProgressDialog?.dismiss()
+            flashProgressDialog = null
+            return
+        }
+
+        if (flashProgressDialog == null) {
+            buildFlashProgressDialog()
+        }
+
+        flashProgressTitleTv?.text = progress.title
+        val pct = progress.percent
+        if (pct < 0) {
+            flashProgressBar?.isIndeterminate = true
+            flashProgressPercent?.text = ""
+        } else {
+            flashProgressBar?.isIndeterminate = false
+            flashProgressBar?.progress = pct
+            flashProgressPercent?.text = "$pct%"
+        }
+        flashProgressDetail?.text = progress.detail
+
+        if (progress.finished) {
+            // Финальное состояние: показываем результат, кнопка → Закрыть.
+            flashProgressBar?.isIndeterminate = false
+            if (progress.success) {
+                flashProgressBar?.progress = 100
+                flashProgressPercent?.text = "100%"
+                flashProgressTitleTv?.text = getString(R.string.flash_progress_done_ok)
+                flashProgressTitleTv?.setTextColor(android.graphics.Color.parseColor("#63FF4B"))
+            } else {
+                flashProgressTitleTv?.text = getString(R.string.flash_progress_done_fail)
+                flashProgressTitleTv?.setTextColor(android.graphics.Color.parseColor("#F97316"))
+            }
+            flashProgressWarning?.visibility = View.GONE
+            flashProgressButton?.text = getString(R.string.flash_progress_close)
+            flashProgressButton?.setOnClickListener {
+                flashProgressDialog?.dismiss()
+                flashProgressDialog = null
+                viewModel.postOperationProgress(null)
+            }
+        } else {
+            flashProgressTitleTv?.setTextColor(android.graphics.Color.parseColor("#F5F5F7"))
+            flashProgressWarning?.visibility = View.VISIBLE
+            flashProgressButton?.text = getString(R.string.flash_progress_cancel)
+            flashProgressButton?.setOnClickListener { confirmCancelFlashProgress() }
+        }
+
+        if (flashProgressDialog?.isShowing != true) {
+            flashProgressDialog?.show()
+        }
+    }
+
+    private fun confirmCancelFlashProgress() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.flash_progress_cancel_confirm_title))
+            .setMessage(getString(R.string.flash_progress_cancel_confirm_body))
+            .setNegativeButton(getString(R.string.cancel_upper), null)
+            .setPositiveButton(getString(R.string.flash_progress_cancel)) { _, _ ->
+                viewModel.cancelActiveOperation()
+            }
+            .show()
+    }
+
+    private fun buildFlashProgressDialog() {
+        val dp = { v: Int -> (v * resources.displayMetrics.density).toInt() }
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(28), dp(32), dp(28), dp(24))
+            setBackgroundColor(android.graphics.Color.parseColor("#141417"))
+        }
+        flashProgressTitleTv = TextView(this).apply {
+            text = getString(R.string.flash_progress_title)
+            textSize = 18f
+            setTextColor(android.graphics.Color.parseColor("#F5F5F7"))
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            gravity = android.view.Gravity.CENTER
+        }
+        root.addView(flashProgressTitleTv)
+
+        flashProgressPercent = TextView(this).apply {
+            textSize = 40f
+            setTextColor(android.graphics.Color.parseColor("#E8E0D4"))
+            typeface = android.graphics.Typeface.MONOSPACE
+            gravity = android.view.Gravity.CENTER
+            setPadding(0, dp(20), 0, dp(12))
+        }
+        root.addView(flashProgressPercent)
+
+        flashProgressBar = android.widget.ProgressBar(
+            this, null, android.R.attr.progressBarStyleHorizontal
+        ).apply {
+            max = 100
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dp(10)
+            ).apply { topMargin = dp(4); bottomMargin = dp(16) }
+        }
+        root.addView(flashProgressBar)
+
+        flashProgressDetail = TextView(this).apply {
+            textSize = 13f
+            setTextColor(android.graphics.Color.parseColor("#8A8A93"))
+            typeface = android.graphics.Typeface.MONOSPACE
+            gravity = android.view.Gravity.CENTER
+        }
+        root.addView(flashProgressDetail)
+
+        flashProgressWarning = TextView(this).apply {
+            text = getString(R.string.flash_progress_warning)
+            textSize = 13f
+            setTextColor(android.graphics.Color.parseColor("#F97316"))
+            gravity = android.view.Gravity.CENTER
+            setPadding(0, dp(24), 0, dp(20))
+        }
+        root.addView(flashProgressWarning)
+
+        flashProgressButton = Button(this).apply {
+            text = getString(R.string.flash_progress_cancel)
+            setTextColor(android.graphics.Color.parseColor("#F5F5F7"))
+            setBackgroundColor(android.graphics.Color.parseColor("#1C1C21"))
+            isAllCaps = false
+        }
+        root.addView(flashProgressButton)
+
+        flashProgressDialog = android.app.Dialog(this).apply {
+            setContentView(root)
+            setCancelable(false)
+            window?.setBackgroundDrawable(
+                android.graphics.drawable.ColorDrawable(android.graphics.Color.parseColor("#0B0B0D"))
+            )
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.88).toInt(),
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+    }
 
     private fun renderOperationSteps(steps: List<DeviceViewModel.OperationStep>) {
         if (!::tvOperationStepQueue.isInitialized) return

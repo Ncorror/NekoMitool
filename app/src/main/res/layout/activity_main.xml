@@ -71,6 +71,20 @@
             app:cornerRadius="10dp" />
     </LinearLayout>
 
+    <!-- ═══ OTG-индикатор: тонкая строка под верхней панелью ═══════════════ -->
+    <TextView
+        android:id="@+id/tvOtgStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0E0E11"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="5dp"
+        android:text="@string/otg_status_checking"
+        android:textColor="#8A8A93"
+        android:textSize="11sp"
+        android:fontFamily="monospace" />
+
     <!-- ═══ НАВИГАЦИЯ: 4 иконки ══════════════════════════════════════════ -->
     <LinearLayout
         android:layout_width="match_parent"

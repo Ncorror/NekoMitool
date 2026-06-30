@@ -4,7 +4,7 @@ import org.json.JSONObject
 import java.io.File
 
 /**
- * Опциональные профили безопасности по устройствам (JSON в /sdcard/Download/NekoMiFlash/profiles/).
+ * Опциональные профили безопасности по устройствам (JSON в /sdcard/Download/NekoFlash/profiles/).
  *
  * FIX #13: findProfile теперь ищет сначала точное совпадение поля "product" внутри JSON
  * (primary key), а не по имени файла. Файл alioth_global.json с product=alioth
@@ -38,7 +38,7 @@ object DeviceProfileManager {
                     }
                     """.trimIndent()
                 )
-                onLog("Создан пример профиля: /sdcard/Download/NekoMiFlash/profiles/sample-profile.json")
+                onLog("Создан пример профиля: /sdcard/Download/NekoFlash/profiles/sample-profile.json")
             } catch (e: Exception) {
                 onLog("⚠️ Не удалось создать пример профиля: ${e.message}")
             }
@@ -63,7 +63,7 @@ object DeviceProfileManager {
         val profile = findProfile(profilesDir, product)
         if (profile == null) {
             onLog("Профиль для product=$product не найден")
-            onLog("💡 Создайте /sdcard/Download/NekoMiFlash/profiles/$product.json с allowed_partitions")
+            onLog("💡 Создайте /sdcard/Download/NekoFlash/profiles/$product.json с allowed_partitions")
             return
         }
 

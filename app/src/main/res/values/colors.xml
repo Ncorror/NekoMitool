@@ -2,7 +2,7 @@
 <resources>
     <color name="ic_launcher_background">#1A1A1A</color>
 
-    <!-- ═══ NekoMiFlash — монохромная neko-палитра ═══ -->
+    <!-- ═══ NekoFlash — монохромная neko-палитра ═══ -->
     <!-- Фоны -->
     <color name="bg_base">#0B0B0D</color>        <!-- глубокий чёрный фон -->
     <color name="bg_card">#141417</color>        <!-- карточки/секции -->

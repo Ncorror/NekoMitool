@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NekoMiFlash</string>
+    <string name="app_name">NekoFlash</string>
     <string name="status_no_device">● No device</string>
     <string name="button_auto_off">Auto: off</string>
     <string name="button_debug_off">Debug: off</string>
@@ -56,7 +56,7 @@ Safety gate: type exactly `%2$s` to continue.</string>
     <string name="help_long">1. Install the APK on the host phone.
 2. Connect the target device through USB OTG.
 3. Put the second device into Fastboot or Recovery Sideload.
-4. Put .img/.zip files into /sdcard/Download/NekoMiFlash or press “Import”.
+4. Put .img/.zip files into /sdcard/Download/NekoFlash or press “Import”.
 5. Press “Scan USB”. If several devices are found, choose the required one.
 6. Grant USB access. If Android does not respond within 30 seconds, reconnect OTG.
 
@@ -69,7 +69,7 @@ Cable and OTG:
 Fastboot:
 • “Flash .IMG” remains available for guided download → flash;
 • manual terminal accepts fastboot getvar/flash/erase/format/oem/flashing/reboot and raw commands;
-• fastboot flash &lt;partition&gt; &lt;file.img&gt; uses /sdcard/Download/NekoMiFlash for relative paths;
+• fastboot flash &lt;partition&gt; &lt;file.img&gt; uses /sdcard/Download/NekoFlash for relative paths;
 • file-based operations still check getvar, max-download-size, and sidecar .sha256/.md5.
 
 Forum diagnostics:
@@ -78,7 +78,7 @@ Forum diagnostics:
 • “Report” creates a ZIP with log.txt, usb-info.txt, fastboot-info.txt, and app-info.txt.
 
 Files and logs:
-• “Import” copies .img/.zip/.bin/.sha256/.md5 into /sdcard/Download/NekoMiFlash;
+• “Import” copies .img/.zip/.bin/.sha256/.md5 into /sdcard/Download/NekoFlash;
 • “Inspect” checks boot/vendor_boot/vbmeta/sparse/zip before flashing;
 • “Log” shares the log as a .txt file through FileProvider;
 • “Battery” opens battery optimization settings for long operations.
@@ -89,7 +89,7 @@ ADB:
 • push/pull/sync require the separate ADB sync protocol and are not emulated yet.
 
 Device profiles:
-• folder: /sdcard/Download/NekoMiFlash/profiles;
+• folder: /sdcard/Download/NekoFlash/profiles;
 • sample is created automatically;
 • a profile warns if the selected partition is not listed in allowed_partitions.</string>
 
@@ -150,7 +150,7 @@ Battery optimization exception: %3$s
 Overlay protection: %4$s
 
 Used permissions:
-• All files access — reads .img/.zip/.sha256/.md5 from /sdcard/Download/NekoMiFlash.
+• All files access — reads .img/.zip/.sha256/.md5 from /sdcard/Download/NekoFlash.
 • Notifications — shows a foreground operation notification.
 • Wake lock — keeps CPU awake only during flashing or sideload and is released after the operation.
 • Hide overlay windows — on Android 12+ blocks other apps from drawing over this app during sensitive actions.
@@ -177,7 +177,7 @@ Not requested:
     <string name="log_init_v20">Interface v2.1: full ADB/Fastboot terminal enabled without strict whitelist. SYSTEM_ALERT_WINDOW is not requested.</string>
 
     <!-- UX v3 full-window redesign -->
-    <string name="device_workspace_placeholder">Workspace: /sdcard/Download/NekoMiFlash</string>
+    <string name="device_workspace_placeholder">Workspace: /sdcard/Download/NekoFlash</string>
     <string name="flash_queue_empty">Queue is empty. Choose a partition below and select an .img file.</string>
     <string name="flash_queue_confirm_title">Confirm flash queue</string>
     <string name="flash_queue_confirm_message">The app will flash these images in order:\n\n%1$s\n\nChecks: Fastboot connection, getvar cache, max-download-size, and sidecar SHA-256/MD5 files. The strict partition list is removed; verify model and slot before continuing.</string>
@@ -270,7 +270,7 @@ This writes images to bootloader partitions. Review model, slot, and file names 
     <string name="layout_xiaomi_rom_flash_save_data">Flash save data</string>
     <string name="layout_xiaomi_rom_resume">↩ Resume last fastbootd step</string>
     <string name="xiaomi_rom_choose_title">Choose Xiaomi Fastboot ROM</string>
-    <string name="xiaomi_rom_no_files_log">ERROR: No .zip/.tgz/.tar Xiaomi Fastboot ROM files in /sdcard/Download/NekoMiFlash. Import the ROM first.</string>
+    <string name="xiaomi_rom_no_files_log">ERROR: No .zip/.tgz/.tar Xiaomi Fastboot ROM files in /sdcard/Download/NekoFlash. Import the ROM first.</string>
     <string name="xiaomi_rom_confirm_title">Confirm Xiaomi Fastboot ROM flash</string>
     <string name="xiaomi_rom_typed_confirm_title">Final Xiaomi ROM safety gate</string>
     <string name="xiaomi_rom_typed_confirm_message">ROM: %1$s
@@ -282,7 +282,7 @@ Mode: %2$s
 
 %3$s
 
-NekoMiFlash will parse flash_all scripts, block bootloader-lock commands, compare product with the connected device, extract referenced images, and execute only supported fastboot steps. Do not disconnect the cable.</string>
+NekoFlash will parse flash_all scripts, block bootloader-lock commands, compare product with the connected device, extract referenced images, and execute only supported fastboot steps. Do not disconnect the cable.</string>
     <string name="xiaomi_rom_mode_clean">clean all / wipe data</string>
     <string name="xiaomi_rom_mode_save_data">save user data</string>
     <string name="xiaomi_rom_clean_warning">This mode wipes userdata/metadata if the ROM script contains wipe commands.</string>
@@ -414,9 +414,9 @@ Proceed only if you understand the risk.</string>
 This cannot be undone.</string>
     <string name="settings_clear_workspace_do">Delete</string>
     <string name="settings_clear_workspace_done">🗑 Workspace cleared: %1$d file(s) deleted</string>
-    <string name="settings_about">ℹ️ About NekoMiFlash</string>
+    <string name="settings_about">ℹ️ About NekoFlash</string>
     <string name="settings_about_sub">Version %1$s</string>
-    <string name="settings_about_body">NekoMiFlash v%1$s
+    <string name="settings_about_body">NekoFlash v%1$s
 
 Android USB-host flashing tool (ADB/Fastboot).
 Flash without a PC — phone flashes phone.
@@ -430,4 +430,28 @@ Use at your own risk. Flashing can brick a device.</string>
     <string name="slot_hint_ab_device">🔁 A/B device detected (slot-count=2). Recommended: flash to BOTH slots to avoid bootloop after slot switch.</string>
     <string name="slot_hint_single_device">📱 Single-slot device (no A/B). Use simple flash — both-slots option is not needed.</string>
     <string name="layout_home_terminal">Terminal</string>
+    <string name="flash_progress_writing">Writing...</string>
+    <string name="flash_progress_title">⚡ Flashing in progress</string>
+    <string name="flash_progress_warning">⚠️ Do not disconnect the cable or minimize the app</string>
+    <string name="flash_progress_done_ok">✅ Operation completed</string>
+    <string name="flash_progress_done_fail">❌ Operation failed</string>
+    <string name="flash_progress_cancel">Cancel</string>
+    <string name="flash_progress_close">Close</string>
+    <string name="flash_progress_cancel_confirm_title">Cancel operation?</string>
+    <string name="flash_progress_cancel_confirm_body">Interrupting a flash mid-write can leave the partition in a broken state. Cancel anyway?</string>
+    <string name="status_fastbootd">● FASTBOOTD (userspace)</string>
+    <string name="otg_status_checking">🔌 OTG: checking...</string>
+    <string name="otg_status_unsupported">🔌 OTG: not supported by this phone</string>
+    <string name="otg_status_active">🔌 OTG: active · device detected</string>
+    <string name="otg_status_no_device">🔌 OTG: no devices · check cable or enable OTG in settings</string>
+    <string name="perm_open_settings_manually">Could not open settings automatically. Grant "All files access" to NekoFlash manually in Settings → Apps.</string>
+    <string name="fastbootd_prep_title">Switch to fastbootd first?</string>
+    <string name="fastbootd_prep_message">This ROM flash needs fastbootd (userspace). Your device is currently in bootloader fastboot.
+
+Recommended: switch to fastbootd now and reconnect OTG, then flashing runs without a risky mid-process reboot. On some phones (e.g. POCO X3 Pro) USB does not reconnect by itself after reboot — watch the OTG indicator and reconnect the cable if needed.</string>
+    <string name="fastbootd_prep_switch">Switch to fastbootd now</string>
+    <string name="fastbootd_prep_continue">Flash anyway (auto-reboot)</string>
+    <string name="fastbootd_prep_already">✅ Device already in fastbootd — flashing without reboot.</string>
+    <string name="fastbootd_waiting_banner">⏳ Waiting for fastbootd... Reconnect OTG cable if the device disappeared. Watch the OTG indicator above.</string>
+    <string name="fastbootd_switch_sent">⚡ Switching to fastbootd. Reconnect OTG when the device reappears, then start the flash.</string>
 </resources>
