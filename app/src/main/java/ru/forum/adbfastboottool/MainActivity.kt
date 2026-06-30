@@ -276,6 +276,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnFlashRebootMode).setOnClickListener { showRebootMenu() }
         // Тонкая кнопка терминала над плитками Fastboot.
         findViewById<View>(R.id.btnFastbootTerminal).setOnClickListener { switchTab("console") }
+        findViewById<View>(R.id.btnConsoleTerminal).setOnClickListener { switchTab("console") }
         findViewById<Button>(R.id.btnXiaomiRomAnalyze).setOnClickListener { chooseXiaomiRomForAnalysis() }
         findViewById<Button>(R.id.btnXiaomiRomWizard).setOnClickListener { chooseXiaomiRomWizard() }
         findViewById<Button>(R.id.btnXiaomiRomResume).setOnClickListener { resumeLastXiaomiRomFlashFromUi() }
@@ -375,6 +376,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.tabFastboot).setOnClickListener { switchTab("fastboot") }
         findViewById<Button>(R.id.tabAdb).setOnClickListener { switchTab("adb") }
         findViewById<Button>(R.id.tabSettings).setOnClickListener { switchTab("settings") }
+        findViewById<Button>(R.id.tabUnlock).setOnClickListener {
+            switchTab("unlock")
+            buildUnlockPage()
+        }
         findViewById<Button>(R.id.tabDiagnostics).setOnClickListener { switchTab("diagnostics") }
         findViewById<Button>(R.id.tabReports).setOnClickListener { switchTab("console") }
     }
@@ -1837,6 +1842,69 @@ class MainActivity : AppCompatActivity() {
      * батарея, плюс сервисные пункты (очистка папки, about). Вызывается из onCreate
      * и после смены профиля, чтобы отметки были актуальны.
      */
+    /**
+     * Страница «Разблокировка загрузчика» (Mi Unlock). Каркас этапа 1 —
+     * объясняет процесс и показывает шаги. Логин в Mi-аккаунт и сама
+     * разблокировка добавляются на следующих этапах.
+     */
+    private fun buildUnlockPage() {
+        val container = findViewById<android.widget.LinearLayout>(R.id.unlockContainer)
+        container.removeAllViews()
+
+        fun title(text: String, color: String = "#E8E0D4") = android.widget.TextView(this).apply {
+            this.text = text
+            setTextColor(android.graphics.Color.parseColor(color))
+            textSize = 13f
+            typeface = android.graphics.Typeface.MONOSPACE
+            setPadding(dp(6), dp(16), dp(6), dp(8))
+            letterSpacing = 0.08f
+        }
+        fun card(): android.widget.LinearLayout = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            background = android.graphics.drawable.GradientDrawable().apply {
+                setColor(android.graphics.Color.parseColor("#141417"))
+                cornerRadius = dp(12).toFloat()
+                setStroke(dp(1), android.graphics.Color.parseColor("#26262B"))
+            }
+            setPadding(dp(16), dp(14), dp(16), dp(14))
+        }
+        fun body(text: String, color: String = "#8A8A93") = android.widget.TextView(this).apply {
+            this.text = text
+            setTextColor(android.graphics.Color.parseColor(color))
+            textSize = 13f
+            typeface = android.graphics.Typeface.MONOSPACE
+            setPadding(dp(2), dp(2), dp(2), dp(6))
+        }
+
+        container.addView(title("🔓 РАЗБЛОКИРОВКА ЗАГРУЗЧИКА", "#F97316"))
+
+        container.addView(card().apply {
+            addView(body("Разблокировка загрузчика Xiaomi через официальный протокол Mi Unlock. Нужна для прошивки recovery, ROM и кастомных образов.", "#F5F5F7"))
+            addView(body("⚠️ Разблокировка СТИРАЕТ все данные устройства и снимает часть гарантий защиты. Выполняйте осознанно."))
+        })
+
+        container.addView(title("ТРЕБОВАНИЯ"))
+        container.addView(card().apply {
+            addView(body("1. Mi-аккаунт, привязанный к устройству (Настройки → Mi аккаунт)."))
+            addView(body("2. Получено одобрение разблокировки в официальном приложении/настройках Xiaomi (привязка аккаунта 7+ дней)."))
+            addView(body("3. Устройство переведено в режим Fastboot и подключено по OTG."))
+        })
+
+        container.addView(title("СТАТУС"))
+        container.addView(card().apply {
+            addView(body("Функция входа в Mi-аккаунт и разблокировки готовится. Получение одобрения выполняется пользователем через официальные каналы Xiaomi.", "#D4B483"))
+        })
+
+        container.addView(title("ПРОЦЕСС (как будет)"))
+        container.addView(card().apply {
+            addView(body("• Вход в Mi-аккаунт (официальная страница Xiaomi)"))
+            addView(body("• Проверка статуса одобрения"))
+            addView(body("• Чтение токена устройства (fastboot)"))
+            addView(body("• Запрос ключа разблокировки у Mi API"))
+            addView(body("• Выполнение fastboot oem unlock"))
+        })
+    }
+
     private fun buildSettingsPage() {
         val container = findViewById<android.widget.LinearLayout>(R.id.settingsContainer)
         container.removeAllViews()

@@ -144,6 +144,23 @@
         <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#26262B" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/tabUnlock"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:text="@string/layout_icon_unlock_tab"
+            android:textSize="10sp"
+            android:textColor="#8A8A93"
+            app:backgroundTint="#141417"
+            app:cornerRadius="0dp" />
+
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#26262B" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/tabSettings"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1920,6 +1937,22 @@
                 android:padding="14dp" />
         </ScrollView>
 
+        <!-- ── РАЗБЛОКИРОВКА ЗАГРУЗЧИКА (Mi Unlock) — наполняется программно ── -->
+        <ScrollView
+            android:id="@+id/pageUnlock"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="ifContentScrolls"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/unlockContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp" />
+        </ScrollView>
+
 
         <!-- Скрытые дублёры tabDiagnostics/tabReports -->
         <com.google.android.material.button.MaterialButton android:id="@+id/tabDiagnostics" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
@@ -2019,6 +2052,22 @@
                 android:textColor="#55555E"
                 android:layout_marginStart="4dp"
                 app:backgroundTint="#141417"
+                app:cornerRadius="6dp" />
+
+            <!-- Кнопка вызова терминала из консоли (видна всегда) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConsoleTerminal"
+                android:layout_width="28dp"
+                android:layout_height="26dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:text="@string/layout_icon_terminal_short"
+                android:textSize="11sp"
+                android:textColor="#B0A8C8"
+                android:layout_marginStart="4dp"
+                app:backgroundTint="#1C1C21"
                 app:cornerRadius="6dp" />
         </LinearLayout>
 

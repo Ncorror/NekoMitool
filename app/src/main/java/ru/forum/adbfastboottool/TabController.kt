@@ -35,14 +35,16 @@ class TabController(private val activity: Activity) {
         "diagnostics" to R.id.pageDiagnostics,
         "operation" to R.id.pageOperation,
         "console" to R.id.pageReports,
+        "unlock" to R.id.pageUnlock,
         "settings" to R.id.pageSettings
     )
 
-    /** Кнопки нижней навигации (только 4 таба с иконками). */
+    /** Кнопки нижней навигации (5 табов с иконками). */
     private val tabButtons = mapOf(
         "home" to R.id.tabHome,
         "fastboot" to R.id.tabFastboot,
         "adb" to R.id.tabAdb,
+        "unlock" to R.id.tabUnlock,
         "settings" to R.id.tabSettings
     )
 

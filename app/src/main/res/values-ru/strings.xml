@@ -454,4 +454,6 @@ NekoFlash прочитает flash_all-скрипты, заблокирует к
     <string name="fastbootd_prep_already">✅ Устройство уже в fastbootd — прошивка без перезагрузки.</string>
     <string name="fastbootd_waiting_banner">⏳ Ожидание fastbootd... Переподключите OTG-кабель, если устройство пропало. Следите за индикатором OTG выше.</string>
     <string name="fastbootd_switch_sent">⚡ Переход в fastbootd. Когда устройство снова появится — переподключите OTG и запустите прошивку.</string>
+    <string name="layout_icon_terminal_short">>_</string>
+    <string name="layout_icon_unlock_tab">🔓 UNLOCK</string>
 </resources>

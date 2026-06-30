@@ -454,4 +454,6 @@ Recommended: switch to fastbootd now and reconnect OTG, then flashing runs witho
     <string name="fastbootd_prep_already">✅ Device already in fastbootd — flashing without reboot.</string>
     <string name="fastbootd_waiting_banner">⏳ Waiting for fastbootd... Reconnect OTG cable if the device disappeared. Watch the OTG indicator above.</string>
     <string name="fastbootd_switch_sent">⚡ Switching to fastbootd. Reconnect OTG when the device reappears, then start the flash.</string>
+    <string name="layout_icon_terminal_short">>_</string>
+    <string name="layout_icon_unlock_tab">🔓 UNLOCK</string>
 </resources>
