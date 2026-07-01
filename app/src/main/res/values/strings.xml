@@ -436,7 +436,8 @@ Use at your own risk. Flashing can brick a device.</string>
     <string name="sideload_memo_icon">💡</string>
     <string name="safety_not_expert_toast">You\'re not an expert, you\'re a novice. Switch to Expert profile in Settings.</string>
     <string name="slot_hint_ab_device">🔁 A/B device detected (slot-count=2). Recommended: flash to BOTH slots to avoid bootloop after slot switch.</string>
-    <string name="slot_hint_single_device">📱 Single-slot device (no A/B). Use simple flash — both-slots option is not needed.</string>
+    <string name="slot_hint_single_device">📱 Single-slot device confirmed (slot-count=1, no A/B). The both-slots option is hidden — just use the regular flash button.</string>
+    <string name="slot_hint_unknown_device">❓ Slot count not detected yet (device data not read). Press "Data" on the Home tab to check if this is an A/B device before deciding.</string>
     <string name="layout_home_terminal">Terminal</string>
     <string name="flash_progress_writing">Writing...</string>
     <string name="flash_progress_title">⚡ Flashing in progress</string>

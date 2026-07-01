@@ -2352,14 +2352,15 @@ class MainActivity : AppCompatActivity() {
         val sizeMb = "%.2f".format(file.length().toDouble() / 1024.0 / 1024.0)
 
         // Авто-определение A/B: slot-count = 2 → устройство со слотами (рекомендуем оба),
-        // 1 или пусто → старое устройство без слотов (обычная прошивка).
+        // 1 → подтверждённо однослотовое (кнопка "оба слота" скрывается — бессмысленна),
+        // пусто/неизвестно → диагностика не запрошена, не блокируем кнопку без данных.
         val slotCount = diagnostics?.slotCount?.trim()
-        val isSlotted = isSlottedPartition(partition)
+        val isSlotted = isSlottedPartition(partition) && slotCount != "1"
         val slotHint = when {
-            !isSlotted -> ""
+            !isSlottedPartition(partition) -> ""
             slotCount == "2" -> "\n\n" + getString(R.string.slot_hint_ab_device)
-            slotCount == "1" || slotCount.isNullOrBlank() -> "\n\n" + getString(R.string.slot_hint_single_device)
-            else -> ""
+            slotCount == "1" -> "\n\n" + getString(R.string.slot_hint_single_device)
+            else -> "\n\n" + getString(R.string.slot_hint_unknown_device)
         }
 
         val builder = MaterialAlertDialogBuilder(this)

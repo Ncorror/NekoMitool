@@ -436,7 +436,8 @@ NekoFlash прочитает flash_all-скрипты, заблокирует к
     <string name="sideload_memo_icon">💡</string>
     <string name="safety_not_expert_toast">Вы не эксперт, вы новичок. Переключите на эксперт в Настройках.</string>
     <string name="slot_hint_ab_device">🔁 Обнаружено A/B устройство (slot-count=2). Рекомендуется: прошить в ОБА слота, чтобы избежать bootloop после переключения слота.</string>
-    <string name="slot_hint_single_device">📱 Устройство с одним слотом (без A/B). Используйте простую прошивку — вариант «оба слота» не нужен.</string>
+    <string name="slot_hint_single_device">📱 Подтверждено: устройство с одним слотом (slot-count=1, без A/B). Кнопка «оба слота» скрыта — используйте обычную прошивку.</string>
+    <string name="slot_hint_unknown_device">❓ Slot-count пока не определён (данные устройства не прочитаны). Нажмите «Данные» на главной вкладке, чтобы проверить, A/B ли это устройство, перед выбором.</string>
     <string name="layout_home_terminal">Терминал</string>
     <string name="flash_progress_writing">Запись...</string>
     <string name="flash_progress_title">⚡ Идёт прошивка</string>
