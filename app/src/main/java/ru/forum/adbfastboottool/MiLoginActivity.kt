@@ -150,6 +150,11 @@ class MiLoginActivity : AppCompatActivity() {
                 request: android.webkit.WebResourceRequest,
                 error: android.webkit.WebResourceError
             ) {
+                // Важно: сюда прилетают ошибки ЛЮБЫХ под-ресурсов страницы (шрифты,
+                // трекеры, аналитика, favicon и т.п.), а не только главного документа.
+                // Отменять вход можно только если не загрузился сам главный фрейм —
+                // иначе один недогруженный трекер Xiaomi рвёт весь логин.
+                if (!request.isForMainFrame) return
                 progressBar.visibility = View.GONE
                 monitoringEnded = true
                 setResult(Activity.RESULT_CANCELED)
