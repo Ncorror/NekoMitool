@@ -248,6 +248,9 @@ Sideload</string>
     <string name="layout_sideload_recovery_hint">Recovery → Apply update → Apply from ADB</string>
     <string name="layout_choose_zip_sideload">▶  Choose .zip for Sideload</string>
     <string name="layout_sideload_hash_note">Before transfer, the app checks SHA-256/MD5 if a .sha256 or .md5 file is next to the archive.</string>
+    <string name="layout_sideload_no_touch_title">⚡ TOUCHSCREEN DEAD IN RECOVERY?</string>
+    <string name="layout_sideload_no_touch_hint">If the touchscreen doesn\'t respond in recovery but the device still shows up over ADB (in normal system or in the regular recovery menu), you don\'t need to navigate menus by touch. This sends "reboot:sideload" — the same low-level adbd command as the desktop "adb reboot sideload" — which reboots the device straight into ADB Sideload mode, skipping menu navigation entirely.</string>
+    <string name="layout_sideload_no_touch_button">⚡ Reboot → Sideload (no touch needed)</string>
     <string name="layout_service_title_caps">SERVICE</string>
     <string name="layout_refresh_device_data">↻  Refresh device data</string>
     <string name="layout_self_test">🧪  Self-test / Smoke-test</string>

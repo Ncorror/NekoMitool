@@ -343,6 +343,18 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnSideloadImport).setOnClickListener { startImportFilePicker() }
         findViewById<View>(R.id.btnSideloadCheckArchive).setOnClickListener { showFirmwareAnalysisSelector() }
 
+        // Сценарий «не работает touch в recovery»: reboot:sideload — тот же
+        // низкоуровневый сервис adbd, что и десктопный "adb reboot sideload".
+        // Работает и из обычной системы, и из обычного (не-sideload) recovery-adb.
+        findViewById<View>(R.id.btnRebootIntoSideload).setOnClickListener {
+            if (viewModel.adbProtocol?.isConnected != true) {
+                viewModel.log(getString(R.string.error_no_adb))
+            } else {
+                viewModel.log("⚡ Reboot → Sideload: отправка reboot:sideload...")
+                viewModel.runAdbService("reboot:sideload")
+            }
+        }
+
         findViewById<Button>(R.id.btnCancel).setOnClickListener {
             viewModel.cancelActiveOperation()
         }
@@ -2005,9 +2017,16 @@ class MainActivity : AppCompatActivity() {
                     setTextColor(android.graphics.Color.parseColor("#F5F5F7"))
                     setBackgroundColor(android.graphics.Color.parseColor("#1C1C21"))
                     setOnClickListener {
-                        miAuth = null
-                        android.webkit.CookieManager.getInstance().removeAllCookies(null)
-                        buildUnlockPage()
+                        MaterialAlertDialogBuilder(this@MainActivity)
+                            .setTitle("Выйти из Mi-аккаунта?")
+                            .setMessage("ID: ${auth.userId} (регион ${auth.region}) будет отключён от NekoFlash. Для повторной разблокировки понадобится войти снова.")
+                            .setNegativeButton(getString(R.string.cancel_upper), null)
+                            .setPositiveButton("Выйти") { _, _ ->
+                                miAuth = null
+                                android.webkit.CookieManager.getInstance().removeAllCookies(null)
+                                buildUnlockPage()
+                            }
+                            .show()
                     }
                 })
             })
@@ -2880,6 +2899,7 @@ class MainActivity : AppCompatActivity() {
         val tag = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getString(PREF_LANGUAGE_TAG, "") ?: ""
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
+        ImageInspector.languageOverrideTag = tag
     }
 
     private fun showLanguageDialog() {
@@ -2900,6 +2920,7 @@ class MainActivity : AppCompatActivity() {
                 val selectedTag = tags[which]
                 prefs.edit().putString(PREF_LANGUAGE_TAG, selectedTag).apply()
                 AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(selectedTag))
+                ImageInspector.languageOverrideTag = selectedTag
                 dialog.dismiss()
                 viewModel.log(getString(R.string.language_changed))
                 recreate()

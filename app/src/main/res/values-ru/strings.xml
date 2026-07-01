@@ -248,6 +248,9 @@ Sideload</string>
     <string name="layout_sideload_recovery_hint">Recovery → Apply update → Apply from ADB</string>
     <string name="layout_choose_zip_sideload">▶  Выбрать .zip для Sideload</string>
     <string name="layout_sideload_hash_note">Перед отправкой приложение проверит SHA-256/MD5 если .sha256 или .md5 лежит рядом с архивом.</string>
+    <string name="layout_sideload_no_touch_title">⚡ НЕ РАБОТАЕТ TOUCH В RECOVERY?</string>
+    <string name="layout_sideload_no_touch_hint">Если тач не отвечает в recovery, но устройство всё равно видно по ADB (в обычной системе или в обычном меню recovery) — навигация по меню вслепую не нужна. Кнопка отправит "reboot:sideload" — тот же низкоуровневый сервис adbd, что и десктопный "adb reboot sideload" — устройство перезагрузится прямо в режим ADB Sideload, минуя навигацию по меню полностью.</string>
+    <string name="layout_sideload_no_touch_button">⚡ Reboot → Sideload (без touch)</string>
     <string name="layout_service_title_caps">СЕРВИС</string>
     <string name="layout_refresh_device_data">↻  Обновить данные устройства</string>
     <string name="layout_self_test">🧪  Self-test / Smoke-test</string>

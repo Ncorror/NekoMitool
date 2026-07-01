@@ -15,7 +15,19 @@ import java.util.zip.ZipFile
 object ImageInspector {
     private const val MAX_HEADER_BYTES = 4096
 
-    private fun ru(): Boolean = Locale.getDefault().language == "ru"
+    /**
+     * Тег языка из настроек приложения ("", "ru", "en" — см. MainActivity.PREF_LANGUAGE_TAG).
+     * Пустая строка = "Системный", тогда используется реальная локаль устройства.
+     * Устанавливается MainActivity при старте и при смене языка в настройках —
+     * без этого ImageInspector мог не совпадать с остальным UI, если пользователь
+     * вручную выбрал язык приложения отличный от системного.
+     */
+    var languageOverrideTag: String = ""
+
+    private fun ru(): Boolean {
+        val override = languageOverrideTag
+        return if (override.isNotBlank()) override == "ru" else Locale.getDefault().language == "ru"
+    }
     private fun tr(ru: String, en: String): String = if (ru()) ru else en
 
     data class Analysis(
