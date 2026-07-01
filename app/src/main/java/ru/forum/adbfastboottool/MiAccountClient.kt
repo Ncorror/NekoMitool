@@ -100,7 +100,11 @@ object MiAccountClient {
             requestMethod = "GET"
             connectTimeout = TIMEOUT_MS
             readTimeout = TIMEOUT_MS
-            instanceFollowRedirects = true
+            // ВАЖНО: extension-pragma (ssecurity) и Set-Cookie(serviceToken) приходят
+            // на самом 302-ответе serviceLogin. Если разрешить HttpURLConnection
+            // самому идти по Location, он отдаст заголовки уже конечной страницы,
+            // где этих заголовков нет — отсюда была ошибка "ssecurity not found".
+            instanceFollowRedirects = false
             setRequestProperty("User-Agent", UA)
             setRequestProperty("Cookie", cookie)
         }
