@@ -683,15 +683,24 @@ class FastbootProtocol(
                     while (offset < read) {
                         // USB OTG бывает нестабилен (особенно первый чанк / разные
                         // контроллеры). Один сбойный bulkTransfer не должен ронять всю
-                        // прошивку — пробуем несколько раз с короткой паузой.
+                        // прошивку — пробуем несколько раз с растущей паузой.
+                        //
+                        // ПРИМЕЧАНИЕ: 4×120мс (итого 0.48с) — это фикс из ПРОШЛОЙ сессии
+                        // именно под обрывы на A/B onyx. На практике этого оказалось
+                        // недостаточно (повторные сбои на реальном железе даже после этого
+                        // фикса) — увеличиваем до 8 попыток с экспоненциальной паузой
+                        // (150мс...2400мс, итого ~7.6с запаса), чтобы дать шине реальный
+                        // шанс восстановиться, а не символическую полсекунды.
                         var sent = bulkWrite(chunk, offset, read - offset, 10000)
                         if (sent <= 0) {
                             var retry = 0
-                            while (sent <= 0 && retry < 4 && !cancelled) {
+                            var backoffMs = 150L
+                            while (sent <= 0 && retry < 8 && !cancelled) {
                                 retry++
-                                Thread.sleep(120)
-                                onLogVerbose("⚠️ Повтор передачи чанка (попытка $retry) на offset $totalSent")
+                                Thread.sleep(backoffMs)
+                                onLogVerbose("⚠️ Повтор передачи чанка (попытка $retry, пауза ${backoffMs}мс) на offset $totalSent")
                                 sent = bulkWrite(chunk, offset, read - offset, 10000)
+                                backoffMs = (backoffMs * 3 / 2).coerceAtMost(2400L)
                             }
                             if (sent <= 0) throw Exception("Сбой передачи чанка USB после повторов: код $sent")
                         }
@@ -815,7 +824,19 @@ class FastbootProtocol(
     private fun bulkWrite(data: ByteArray, offset: Int, length: Int, timeout: Int): Int {
         val conn = connection ?: return -1
         val out  = endpointOut ?: return -1
-        return conn.bulkTransfer(out, data, offset, length, timeout)
+        // Известная особенность Android UsbDeviceConnection.bulkTransfer(): передачи
+        // крупнее ~16KB за один вызов ненадёжны на части USB host-контроллеров/ядер —
+        // AdbProtocol.safeBulkWrite() уже режет на chunkSize=16384 по этой причине,
+        // а здесь, в fastboot, резки не было — 64KB летели одним вызовом. Это вероятная
+        // настоящая причина непредсказуемых обрывов на больших образах (100MB recovery
+        // на onyx), а не кабель/питание: сбой одного слишком большого вызова выглядит
+        // как случайный обрыв на разных offset, retry иногда "спасает" по счастливой
+        // случайности. Ограничиваем один вызов тем же безопасным размером — вызывающий
+        // код (transferDownloadPayload) уже умеет докидывать остаток следующими
+        // вызовами (offset += sent, while offset < read), так что контракт функции
+        // не меняется.
+        val safeLength = length.coerceAtMost(16384)
+        return conn.bulkTransfer(out, data, offset, safeLength, timeout)
     }
 
     private fun readPacket(timeoutMs: Int): FastbootPacket? {
@@ -991,7 +1012,10 @@ class FastbootProtocol(
         var received = 0L
         var lastLoggedProgress = -1
         while (received < expectedBytes && !cancelled) {
-            val toRead = minOf(buffer.size.toLong(), expectedBytes - received).toInt()
+            // Тот же safe-лимит 16KB на один bulkTransfer, что и в bulkWrite() —
+            // см. комментарий там про ненадёжность крупных передач на части
+            // USB host-контроллеров.
+            val toRead = minOf(buffer.size.toLong(), expectedBytes - received, 16384L).toInt()
             val bytesRead = conn.bulkTransfer(input, buffer, toRead, 10000)
             if (bytesRead <= 0) {
                 onLog("❌ ОШИБКА fetch: таймаут/сбой чтения raw data ($received/$expectedBytes байт)")

@@ -813,6 +813,10 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
                 return@startOperation
             }
             log(text(R.string.flash_both_slots_ab_fallback, base))
+            // Если _ab упал только после серии ретраев на нестабильной линии,
+            // немедленный новый download: на той же деградировавшей USB-линии
+            // скорее всего провалится сразу же. Даём шине реально остыть.
+            Thread.sleep(1500)
 
             log(text(R.string.flash_both_slots_start, base))
             // Слот A

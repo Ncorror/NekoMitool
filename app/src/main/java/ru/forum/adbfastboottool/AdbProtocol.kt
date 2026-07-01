@@ -314,7 +314,11 @@ class AdbProtocol(
                 var lastLoggedProgress = -1
 
                 while (!cancelled) {
-                    val reqHeader = readHeader() ?: break
+                    val reqHeader = readHeader()
+                    if (reqHeader == null) {
+                        onLog("ℹ️ Соединение закрыто устройством без явного CLSE. Если прогресс был близок к 100%, sideload скорее всего завершился успешно — проверьте экран устройства.")
+                        break
+                    }
 
                     when (reqHeader.command) {
                         A_CLSE -> {
@@ -330,7 +334,7 @@ class AdbProtocol(
                                 val blockStr = String(reqData, 0, 8, Charsets.US_ASCII)
                                 val blockNum = blockStr.trim('\u0000', ' ').toIntOrNull()
 
-                                if (blockNum != null) {
+                                if (blockNum != null && blockNum >= 0) {
                                     val offset = blockNum.toLong() * SIDELOAD_BLOCK_SIZE
                                     raf.seek(offset)
                                     val buffer = ByteArray(SIDELOAD_BLOCK_SIZE)
@@ -350,8 +354,25 @@ class AdbProtocol(
                                             lastLoggedProgress = progress
                                         }
                                     }
+                                } else if (blockNum == -1) {
+                                    // Официальный сентинел протокола minadbd sideload:
+                                    // "-1" = устройство получило все нужные блоки, дальше
+                                    // ждёт CLSE/завершения установки. Это НЕ ошибка.
+                                    onLog("ℹ️ Устройство сообщило: все нужные блоки получены, завершение установки...")
+                                    sendMessageInternal(A_WRTE, 1, remoteId, ByteArray(0))
+                                    readHeader()
                                 } else {
-                                    onLog("ОШИБКА: Не удалось распознать номер блока")
+                                    // Действительно нераспознанные данные — вероятно, это уже
+                                    // хвост протокола после фактического завершения передачи
+                                    // (recovery-форки типа OrangeFox не всегда 1:1 повторяют
+                                    // upstream minadbd). Даём hex для диагностики, но не пугаем,
+                                    // если прогресс уже был близок к 100%.
+                                    val hex = reqData.joinToString(" ") { "%02x".format(it) }
+                                    if (lastLoggedProgress >= 95) {
+                                        onLog("ℹ️ Нераспознанные данные в хвосте передачи (после ~100%), похоже на штатное завершение: $hex")
+                                    } else {
+                                        onLog("⚠️ Не удалось распознать номер блока (${reqData.size} байт): $hex")
+                                    }
                                     sendMessageInternal(A_WRTE, 1, remoteId, ByteArray(0))
                                     readHeader()
                                 }
@@ -1956,6 +1977,14 @@ class AdbProtocol(
             while (!cancelled) {
                 val header = readHeader(timeoutMs = 10_000)
                 if (header == null) {
+                    // bulkTransfer() возвращает <=0 одинаково и при настоящем таймауте,
+                    // и при мгновенном обрыве USB (например, устройство уже ушло с шины
+                    // после reboot:sideload/reboot:fastboot) — раньше оба случая писали
+                    // одно и то же "30 сек", хотя на деле проходило 1-3 секунды.
+                    if (!isConnected) {
+                        onLog("ℹ️ Соединение с устройством прервалось (вероятно, устройство перезагружается) — команда, скорее всего, выполнена.")
+                        return true
+                    }
                     if (!opened) {
                         onLog("❌ ОШИБКА: ADB service не ответил")
                         return false
@@ -2106,7 +2135,11 @@ class AdbProtocol(
         var totalRead = 0
 
         while (totalRead < length) {
-            val temp = ByteArray(length - totalRead)
+            // Тот же safe-лимит 16KB на один bulkTransfer, что и в safeBulkWrite() —
+            // без него один вызов мог запросить до MAX_PAYLOAD (1MB) сразу,
+            // что ненадёжно на части USB host-контроллеров/ядер.
+            val remaining = length - totalRead
+            val temp = ByteArray(remaining.coerceAtMost(16384))
             val read = conn.bulkTransfer(ep, temp, temp.size, 5000)
             if (read <= 0) return null
             System.arraycopy(temp, 0, buffer, totalRead, read)
