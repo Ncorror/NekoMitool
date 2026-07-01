@@ -778,14 +778,22 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * Прошивка образа в ОБА слота (A/B). На современных устройствах раздел нужно
      * записать и в _a, и в _b, иначе после переключения слота возможен bootloop.
-     * Команды fastboot flash boot_ab НЕ существует — это две последовательные команды:
-     * flash <partition>_a, затем flash <partition>_b (один и тот же образ).
-     * Работает для любого slotted-раздела (boot, init_boot, vendor_boot, dtbo, vbmeta, ...).
+     *
+     * СТРАТЕГИЯ (проверено на реальных flash_all-скриптах Xiaomi.eu): для onyx и
+     * похожих Qualcomm-устройств загрузчик сам понимает суффикс _ab — одна команда
+     * fastboot flash <partition>_ab пишет в оба слота силами устройства, и образ
+     * передаётся по USB только ОДИН раз (вместо двух подряд передач при раздельном
+     * _a/_b). Это не функция fastboot-бинаря — суффикс интерпретирует именно
+     * прошивка устройства.
+     *
+     * Раз это ещё не подтверждено на 100% для всех разделов/устройств, сначала
+     * пробуем единую команду _ab; если устройство её не поймёт и ответит FAIL —
+     * автоматически откатываемся на старый надёжный способ (раздельно _a, потом _b).
      */
     fun runFlashBothSlots(partition: String, file: File) {
         // Базовое имя без суффикса слота, если пользователь его уже указал.
         val base = partition.trim().lowercase()
-            .removeSuffix("_a").removeSuffix("_b")
+            .removeSuffix("_ab").removeSuffix("_a").removeSuffix("_b")
         startOperation(
             text(R.string.notif_flash_img),
             text(R.string.notif_flashing_both_slots, base)
@@ -795,6 +803,17 @@ class DeviceViewModel(application: Application) : AndroidViewModel(application) 
                 log(text(R.string.error_no_fastboot))
                 return@startOperation
             }
+
+            // Попытка 1: одна команда _ab — устройство сам пишет оба слота,
+            // образ передаётся по USB только один раз.
+            log(text(R.string.flash_both_slots_try_ab, "${base}_ab"))
+            val okAb = proto.flashPartition("${base}_ab", file)
+            if (okAb) {
+                log(text(R.string.flash_both_slots_done, base))
+                return@startOperation
+            }
+            log(text(R.string.flash_both_slots_ab_fallback, base))
+
             log(text(R.string.flash_both_slots_start, base))
             // Слот A
             log(text(R.string.flash_both_slots_slot, "${base}_a"))

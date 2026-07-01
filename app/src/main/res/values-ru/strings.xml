@@ -225,7 +225,6 @@ Sideload</string>
     <string name="layout_bl_empty">BL: —</string>
     <string name="layout_max_dl_empty">Max DL: —</string>
     <string name="layout_refresh">↻ Обновить</string>
-    <string name="layout_reboot_title">ПЕРЕЗАГРУЗКА</string>
     <string name="layout_reboot_system">Система</string>
     <string name="layout_reboot_bootloader">Загрузчик</string>
     <string name="layout_reboot_recovery">Recovery</string>
@@ -349,7 +348,6 @@ NekoFlash прочитает flash_all-скрипты, заблокирует к
     <string name="safety_profile_standard_desc">СТАНДАРТ: доступны управляемые действия прошивки; терминал закрыт, high-risk операции заблокированы.</string>
     <string name="safety_profile_expert_desc">ЭКСПЕРТ: виден полный терминал.</string>
     <string name="safety_profile_expert_unlocked_desc">ЭКСПЕРТ + HIGH RISK: полный терминал и high-risk операции включены. Typed-подтверждения всё равно обязательны.</string>
-    <string name="safety_profile_dialog_title">Профиль безопасности</string>
     <string name="safety_profile_changed_log">Профиль безопасности изменён: %1$s</string>
     <string name="safety_high_risk_locked">High-risk действия: заблокированы</string>
     <string name="safety_high_risk_unlocked">High-risk действия: разрешены на эту сессию</string>
@@ -380,6 +378,7 @@ NekoFlash прочитает flash_all-скрипты, заблокирует к
     <string name="settings_open_permissions">🔐  Разрешения</string>
     <string name="settings_open_battery">🔋  Оптимизация батареи</string>
     <string name="terminal_title">ТЕРМИНАЛ</string>
+    <string name="terminal_batch_syntax_hint">💡 Это синтаксис ПК-батника/shell-скрипта («%1$s»), а не команда fastboot/adb — у устройства нет такой wire-команды. Откройте .bat/.sh файл и выполняйте fastboot/adb-команды из него по одной, без служебных строк echo/if/for/set/pause/label.</string>
     <string name="terminal_filter_all">Все</string>
     <string name="terminal_filter_info">Инфо</string>
     <string name="terminal_filter_warn">Предупр</string>
@@ -403,6 +402,8 @@ NekoFlash прочитает flash_all-скрипты, заблокирует к
     <string name="layout_sideload_check_archive">🔍 Проверить архив</string>
     <string name="notif_flashing_both_slots">Прошивка %1$s в оба слота (A/B)</string>
     <string name="flash_both_slots_start">🔁 Прошивка %1$s в ОБА слота (A + B)</string>
+    <string name="flash_both_slots_try_ab">🔁 Пробуем %1$s одной командой (устройство пишет оба слота само)…</string>
+    <string name="flash_both_slots_ab_fallback">⚠️ Устройство не приняло %1$s_ab — переходим на раздельную прошивку _a и _b</string>
     <string name="flash_both_slots_slot">  → прошивка %1$s</string>
     <string name="flash_both_slots_slot_failed">❌ Слот %1$s не прошился — остановка. Второй слот не тронут.</string>
     <string name="flash_both_slots_done">✅ %1$s прошит в оба слота (A и B)</string>

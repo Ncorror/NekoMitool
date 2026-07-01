@@ -1412,7 +1412,7 @@ object XiaomiFastbootRomManager {
     }
 
     private fun isCriticalFirmwarePartition(partition: String): Boolean {
-        val clean = partition.lowercase(Locale.US).removeSuffix("_a").removeSuffix("_b")
+        val clean = partition.lowercase(Locale.US).removeSuffix("_ab").removeSuffix("_a").removeSuffix("_b")
         return clean in CRITICAL_FIRMWARE_PARTITIONS
     }
 

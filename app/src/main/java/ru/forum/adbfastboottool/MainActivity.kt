@@ -759,10 +759,17 @@ class MainActivity : AppCompatActivity() {
         if (tokens.isEmpty()) return null
         val op = tokens[0].lowercase(Locale.US)
 
+        if (warnIfBatchOrShellSyntax(op, clean)) return null
+
         return when (op) {
             "status", "devices" -> TerminalAction.LocalStatus
             "reports", "open-reports", "report-folder", "reports-folder" -> TerminalAction.OpenReportsFolder
             "self-test", "selftest", "smoke-test", "doctor" -> parseSelfTestAction(tokens)
+
+            "-w", "--wipe" -> TerminalAction.DestructiveFastboot(
+                "erase:userdata",
+                "Флаг -w — это команда ПК-версии fastboot (стирает userdata, на устройствах со старой разметкой также cache). У протокола устройства такой wire-команды нет, поэтому она разворачивается в erase:userdata. ВСЕ пользовательские данные будут удалены."
+            )
 
             "flash" -> {
                 if (tokens.size < 3) {
@@ -930,6 +937,8 @@ class MainActivity : AppCompatActivity() {
         val tokens = tokenizeCommandLine(clean)
         if (tokens.isEmpty()) return null
         val op = tokens[0].lowercase(Locale.US)
+
+        if (warnIfBatchOrShellSyntax(op, clean, isAdbTab = true)) return null
 
         return when (op) {
             "status", "devices", "get-state" -> TerminalAction.LocalStatus
@@ -1159,6 +1168,28 @@ class MainActivity : AppCompatActivity() {
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
 
+    /**
+     * Распознаёт строки, скопированные целиком из .bat/.sh flash-скрипта, а не
+     * реальные fastboot/adb-команды. Такие строки нельзя слать на устройство
+     * как есть — это управляющий синтаксис ПК-оболочки (echo, метки, циклы,
+     * условия, комментарии), у которого просто нет аналога в wire-протоколе.
+     * Вместо непонятного отказа устройства показываем понятную подсказку.
+     */
+    private fun warnIfBatchOrShellSyntax(op: String, clean: String, isAdbTab: Boolean = false): Boolean {
+        val isBatchOrShell = op == "@echo" || op == "echo" ||
+            op.startsWith(":") || // метка батника, например :label
+            op == "rem" || clean.startsWith("::") || clean.startsWith("#") ||
+            op == "pause" || op == "cls" || op == "goto" ||
+            op == "if" || op == "for" || op == "exit" || op == "set" ||
+            op == "printf" || op == "read" ||
+            // "cd" — легитимный шорткат в ADB-вкладке (adb shell cd), но в
+            // fastboot-вкладке такой команды нет вообще — там это точно батник.
+            (op == "cd" && !isAdbTab)
+        if (!isBatchOrShell) return false
+        viewModel.log(getString(R.string.terminal_batch_syntax_hint, clean))
+        return true
+    }
+
     private fun isPotentiallyDestructiveFastbootCommand(command: String): Boolean {
         val clean = command.trim().lowercase(Locale.US)
         val destructivePrefixes = listOf(
@@ -1214,8 +1245,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         val file = when {
+            // Любой абсолютный путь (/sdcard/..., /storage/..., и т.п.) — берём как есть.
             rawPath.startsWith("/") -> File(rawPath)
-            rawPath.startsWith("/sdcard/") -> File(rawPath)
             else -> {
                 if (!ensureWorkspaceReady()) return null
                 File(workspacePath, rawPath)
@@ -3114,6 +3145,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun isHighRiskPartition(partition: String): Boolean {
         val clean = partition.trim().lowercase(Locale.US)
+            .removeSuffix("_ab").removeSuffix("_a").removeSuffix("_b")
         return clean == "vbmeta" ||
             clean == "vbmeta_system" ||
             clean == "vbmeta_vendor" ||

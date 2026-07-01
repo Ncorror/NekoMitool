@@ -274,7 +274,13 @@ class FastbootProtocol(
             onLog("❌ ОШИБКА: некорректное имя раздела: $partition")
             return false
         }
-        if (normalizedPartition !in TYPICAL_FLASH_PARTITIONS) {
+        // Некоторые Qualcomm/Xiaomi firmware-разделы шлются с суффиксом _ab —
+        // это НЕ клиентская конвенция fastboot-бинаря (он суффикс не разбирает
+        // и передаёт имя как есть), а команда, которую напрямую понимает сам
+        // загрузчик устройства: пишет и в slot_a, и в slot_b за один вызов.
+        // Поэтому для проверки "типовой список" суффикс сначала снимаем.
+        val partitionBase = normalizedPartition.removeSuffix("_ab").removeSuffix("_a").removeSuffix("_b")
+        if (partitionBase !in TYPICAL_FLASH_PARTITIONS) {
             onLog("⚠️ Раздел $normalizedPartition не входит в типовой список. Жёсткая блокировка снята, команда разрешена терминальным режимом.")
         }
 
@@ -1030,9 +1036,16 @@ class FastbootProtocol(
         private const val DIAGNOSTICS_CACHE_TTL_MS = 5L * 60L * 1000L
         // Не whitelist: используется только для мягкого предупреждения в терминальном режиме.
         val TYPICAL_FLASH_PARTITIONS = setOf(
-            "boot", "init_boot", "vendor_boot", "recovery", "dtbo", "vbmeta",
-            "vendor_kernel_boot", "logo", "modem", "radio", "abl", "xbl", "tz", "hyp",
-            "system", "vendor", "product", "odm", "super", "userdata", "metadata"
+            "boot", "init_boot", "vendor_boot", "recovery", "dtbo", "vbmeta", "vbmeta_system",
+            "vbmeta_vendor", "vendor_kernel_boot", "logo", "modem", "modemfirmware", "radio",
+            "system", "vendor", "product", "odm", "super", "userdata", "metadata",
+            // Qualcomm/Xiaomi firmware-разделы, встречающиеся в flash_all-скриптах
+            // (обычно с суффиксом _ab, см. isKnownAbPartitionBase()):
+            "abl", "aop", "aop_config", "bluetooth", "countrycode", "cpucp", "cpucp_dtb",
+            "devcfg", "dsp", "featenabler", "hyp", "idmanager", "imagefv", "keymaster",
+            "multiimgqti", "pvmfw", "qupfw", "shrm", "soccp_dcd", "soccp_debug",
+            "spuservice", "tz", "uefi", "uefisecapp", "vm-bootsys", "xbl", "xbl_config",
+            "xbl_ramdump"
         )
     }
 }
